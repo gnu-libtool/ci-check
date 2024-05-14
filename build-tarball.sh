@@ -24,7 +24,12 @@ package="$1"
 set -e
 
 # Fetch sources (uses package 'git').
-git clone --depth 1 https://git.savannah.gnu.org/git/"$package".git
+# The depth here needs to be at least 2, because the number of commits in the
+# git history of HEAD is stored as "serial" number in m4/ltversion.m4, and if
+# it is not at least 2 the unit test
+#   libtoolize.at: "14: verbatim aclocal.m4 w/o AC_CONFIG_MACRO_DIRS"
+# fails.
+git clone --depth 2 https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
