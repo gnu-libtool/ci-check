@@ -143,7 +143,7 @@ jobs:
             pwd
             : "Install CentOS Linux packages"
             : "List of packages: http://mirror.centos.org/centos/7/os/x86_64/Packages/"
-            yum -y install make gcc
+            yum -y install m4 make gcc
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
@@ -186,7 +186,7 @@ jobs:
             pwd
             : "Install Alpine Linux packages"
             : "List of packages: https://pkgs.alpinelinux.org/packages"
-            apk add make gcc musl-dev
+            apk add m4 make gcc musl-dev
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
@@ -277,7 +277,7 @@ jobs:
             pwd
             : "Install FreeBSD packages"
             : "List of packages: https://ports.freebsd.org/cgi/ports.cgi"
-            : pkg install -y ...
+            pkg install -y m4
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -323,7 +323,7 @@ jobs:
             pwd
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
-            : pkg_add ...
+            pkg_add m4
             : "or"
             : pkg_add pkgin
             : pkgin install ...
@@ -373,7 +373,7 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            : pkg_add ...
+            pkg_add m4
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -515,7 +515,7 @@ jobs:
           platform: ${{ matrix.bitness == 32 && 'x86' || 'x86_64' }}
           # Install Cygwin packages.
           # List of packages: https://cygwin.com/packages/package_list.html
-          packages: gcc-core make
+          packages: m4 gcc-core make
       - name: cygcheck
         run: cygcheck -V
       - name: cygcheck
@@ -579,7 +579,7 @@ jobs:
           platform: x86_64
           # Install Cygwin packages.
           # List of packages: https://cygwin.com/packages/package_list.html
-          packages: ${{ matrix.bitness == 32 && 'mingw64-i686-gcc-core mingw64-i686-headers mingw64-i686-runtime' || 'mingw64-x86_64-gcc-core mingw64-x86_64-headers mingw64-x86_64-runtime' }} make
+          packages: m4 ${{ matrix.bitness == 32 && 'mingw64-i686-gcc-core mingw64-i686-headers mingw64-i686-runtime' || 'mingw64-x86_64-gcc-core mingw64-x86_64-headers mingw64-x86_64-runtime' }} make
       - name: cygcheck
         run: cygcheck -V
       - name: cygcheck
@@ -650,7 +650,7 @@ jobs:
           platform: x86_64
           # Install Cygwin packages.
           # List of packages: https://cygwin.com/packages/package_list.html
-          packages: wget make
+          packages: wget m4 make
       - name: cygcheck
         run: cygcheck -V
       - name: cygcheck
