@@ -29,7 +29,7 @@ index 336fc81b..23741aaf 100644
        # if aclocal.m4 contains an untagged --i.e older-- macro file):
        *)
 -        if test -f aclocal.m4; then
-+        if test -f aclocal.m4 && test "X$my_src_serial" != X; then
++        if test -f aclocal.m4 && test '' != "$my_src_serial"; then
            func_serial_max \
                "$my_src_serial" `func_serial aclocal.m4 "$my_macro_regex"`
            if test "X$my_src_serial" = "X$func_serial_max_result"; then
