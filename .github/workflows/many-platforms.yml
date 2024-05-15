@@ -229,7 +229,7 @@ jobs:
       - run: pwd
       # Install Homebrew packages.
       # List of packages: https://formulae.brew.sh/
-      # - run: brew install ...
+      - run: brew install gcc
       - run: |
           pwd
           export CPPFLAGS="-Wall"
