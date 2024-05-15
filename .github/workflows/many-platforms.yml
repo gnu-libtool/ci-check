@@ -411,10 +411,10 @@ jobs:
           # This image has gcc installed in /opt/csw/bin.
           release: '11.4-gcc'
           mem: 2048
-          #prepare: |
-          #  : "Install Solaris packages"
-          #  : "List of packages: http://pkg.oracle.com/solaris/release/en/index.shtml"
-          #  pkg install ...
+          prepare: |
+            : "Install Solaris packages"
+            : "List of packages: http://pkg.oracle.com/solaris/release/en/index.shtml"
+            pkg install gcc-c++ gcc-gfortran
           run: |
             set -x
             uname -a
