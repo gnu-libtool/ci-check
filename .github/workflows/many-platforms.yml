@@ -231,6 +231,7 @@ jobs:
       # List of packages: https://formulae.brew.sh/
       - run: brew install m4 automake gfortran
       - run: |
+          ls -lLd /usr/bin/m4 /usr/*/bin/m4 /opt/*/bin/m4 /opt/*/*/bin/m4 /opt/*/*/bin/m4 /opt/*/*/*/bin/m4
           pwd
           export CPPFLAGS="-Wall"
           export M4=m4
@@ -324,9 +325,9 @@ jobs:
             pwd
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
-            /usr/sbin/pkg_add m4
+            /usr/sbin/pkg_add m4 automake
             : "or"
-            : pkg_add pkgin
+            : /usr/sbin/pkg_add pkgin
             : pkgin install m4
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
@@ -374,7 +375,7 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            pkg_add m4 automake gmake
+            pkg_add m4 automake-1.16.5 gmake
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -415,7 +416,7 @@ jobs:
           prepare: |
             : "Install Solaris packages"
             : "List of packages: http://pkg.oracle.com/solaris/release/en/index.shtml"
-            pkg install gcc gcc-c++ gcc-gfortran
+            pkg install gnu-m4 gcc gcc-c++ gcc-gfortran
           run: |
             set -x
             uname -a
