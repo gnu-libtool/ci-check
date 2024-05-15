@@ -230,8 +230,9 @@ jobs:
       # Install Homebrew packages.
       # List of packages: https://formulae.brew.sh/
       - run: brew install m4 automake gfortran
+      # m4 is now installed in /usr/local/opt/m4/bin/m4.
       - run: |
-          ls -lLd /usr/bin/m4 /usr/*/bin/m4 /usr/*/*/bin/m4 /usr/*/*/*/bin/m4 /usr/*/*/*/*/bin/m4 /opt/*/bin/m4 /opt/*/*/bin/m4 /opt/*/*/*/bin/m4 /opt/*/*/*/*/bin/m4
+          ls -lLd /usr/bin/m4 /usr/*/bin/m4 /usr/*/*/bin/m4 /usr/*/*/*/bin/m4 /usr/*/*/*/*/bin/m4 /opt/*/bin/m4 /opt/*/*/bin/m4 /opt/*/*/*/bin/m4 /opt/*/*/*/*/bin/m4  /usr/bin/gm4 /usr/*/bin/gm4 /usr/*/*/bin/gm4 /usr/*/*/*/bin/gm4 /usr/*/*/*/*/bin/gm4 /opt/*/bin/gm4 /opt/*/*/bin/gm4 /opt/*/*/*/bin/gm4 /opt/*/*/*/*/bin/gm4  /usr/bin/automake /usr/*/bin/automake /usr/*/*/bin/automake /usr/*/*/*/bin/automake /usr/*/*/*/*/bin/automake /opt/*/bin/automake /opt/*/*/bin/automake /opt/*/*/*/bin/automake /opt/*/*/*/*/bin/automake  /usr/bin/gfortran /usr/*/bin/gfortran /usr/*/*/bin/gfortran /usr/*/*/*/bin/gfortran /usr/*/*/*/*/bin/gfortran /opt/*/bin/gfortran /opt/*/*/bin/gfortran /opt/*/*/*/bin/gfortran /opt/*/*/*/*/bin/gfortran
           pwd
           export CPPFLAGS="-Wall"
           export M4=m4
@@ -325,7 +326,7 @@ jobs:
             pwd
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
-            /usr/sbin/pkg_add m4 automake autoconf
+            /usr/sbin/pkg_add m4 automake autoconf flang
             : "or"
             : /usr/sbin/pkg_add pkgin
             : pkgin install m4
@@ -376,6 +377,7 @@ jobs:
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
             pkg_add m4 automake-1.16.5 autoconf-2.71 gmake
+            ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -416,7 +418,7 @@ jobs:
           prepare: |
             : "Install Solaris packages"
             : "List of packages: http://pkg.oracle.com/solaris/release/en/index.shtml"
-            pkg install gnu-m4 automake gcc gcc-c++ gcc-gfortran
+            pkg install gnu-m4 automake autoconf gcc gcc-c++ gcc-gfortran
           run: |
             set -x
             uname -a
