@@ -501,6 +501,10 @@ jobs:
       fail-fast: false
       matrix:
         bitness: [32, 64]
+        # On 32-bit Cygwin, the test "static linking flags for programs" would
+        # hang indefinitely.
+        exclude:
+          - bitness: 32
     runs-on: windows-2022
     defaults:
       run:
