@@ -186,7 +186,7 @@ jobs:
             pwd
             : "Install Alpine Linux packages"
             : "List of packages: https://pkgs.alpinelinux.org/packages"
-            apk add m4 automake make gcc musl-dev g++ gfortran
+            apk add m4 automake autoconf make gcc musl-dev g++ gfortran
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
@@ -233,6 +233,7 @@ jobs:
       - run: |
           pwd
           export CPPFLAGS="-Wall"
+          export M4=m4
           ./build-on.sh '${{ env.package }}' '' 'make'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
@@ -323,10 +324,10 @@ jobs:
             pwd
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
-            : pkg_add m4
+            /usr/sbin/pkg_add m4
             : "or"
             : pkg_add pkgin
-            pkgin install m4
+            : pkgin install m4
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
@@ -373,7 +374,7 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            pkg_add m4 gmake
+            pkg_add m4 automake gmake
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -409,12 +410,12 @@ jobs:
       - uses: vmactions/solaris-vm@v1
         with:
           # This image has gcc installed in /opt/csw/bin.
-          release: '11.4-gcc'
+          release: '11.4'
           mem: 2048
           prepare: |
             : "Install Solaris packages"
             : "List of packages: http://pkg.oracle.com/solaris/release/en/index.shtml"
-            pkg install gcc-c++ gcc-gfortran
+            pkg install gcc gcc-c++ gcc-gfortran
           run: |
             set -x
             uname -a
@@ -462,7 +463,7 @@ jobs:
             : "Install Solaris packages"
             : "List of packages: https://pkg.omnios.org/r151048/core/en/index.shtml"
             pkg install \
-                developer/build/automake \
+                developer/build/automake developer/build/autoconf \
                 developer/gcc13 developer/object-file system/header system/library/math \
                 developer/build/gnu-make
           run: |
