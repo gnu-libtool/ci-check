@@ -234,6 +234,7 @@ jobs:
       # automake is now installed in /usr/local/bin/automake = /usr/local/opt/automake/bin/automake.
       # gfortran is now installed in /usr/local/opt/gfortran/bin/gfortran = /usr/local/opt/gcc/bin/gfortran.
       - run: |
+          ls -lLd /usr/bin/m4 /usr/*/bin/m4 /usr/*/*/bin/m4 /usr/*/*/*/bin/m4 /usr/*/*/*/*/bin/m4 /opt/*/bin/m4 /opt/*/*/bin/m4 /opt/*/*/*/bin/m4 /opt/*/*/*/*/bin/m4  /usr/bin/gm4 /usr/*/bin/gm4 /usr/*/*/bin/gm4 /usr/*/*/*/bin/gm4 /usr/*/*/*/*/bin/gm4 /opt/*/bin/gm4 /opt/*/*/bin/gm4 /opt/*/*/*/bin/gm4 /opt/*/*/*/*/bin/gm4  /usr/bin/automake /usr/*/bin/automake /usr/*/*/bin/automake /usr/*/*/*/bin/automake /usr/*/*/*/*/bin/automake /opt/*/bin/automake /opt/*/*/bin/automake /opt/*/*/*/bin/automake /opt/*/*/*/*/bin/automake  /usr/bin/gfortran /usr/*/bin/gfortran /usr/*/*/bin/gfortran /usr/*/*/*/bin/gfortran /usr/*/*/*/*/bin/gfortran /opt/*/bin/gfortran /opt/*/*/bin/gfortran /opt/*/*/*/bin/gfortran /opt/*/*/*/*/bin/gfortran || true
           PATH=/usr/local/opt/m4/bin:/usr/local/opt/gcc/bin:/usr/local/bin:$PATH
           : "Set M4 environment variable, in order to ignore the broken 'gm4' that is also found in PATH."
           export M4=m4
@@ -378,8 +379,15 @@ jobs:
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
             pkg_add gtar-1.35 m4 automake-1.16.5 autoconf-2.71 gmake
+            : "We use GNU tar, because BSD tar gives errors for r--r--r-- files:"
+            :   "tar: Unable to create libtool-2024-05-15/build-aux/ltmain.sh: Permission denied"
+            : "GNU tar gives some warnings:"
+            :   "Cannot change ownership to uid 0, gid 0: Permission denied"
+            : "but they can be ignored."
             ln -s gtar /usr/local/bin/tar
             export PATH=/usr/local/bin:$PATH
+            : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
+            export AUTOCONF_VERSION=2.71
             ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto* /usr/bin/tar* /usr/local/bin/tar* /usr/local/bin/gtar*
             type tar
             type perl
