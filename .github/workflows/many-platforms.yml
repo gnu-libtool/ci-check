@@ -235,6 +235,8 @@ jobs:
       # gfortran is now installed in /usr/local/opt/gfortran/bin/gfortran = /usr/local/opt/gcc/bin/gfortran.
       - run: |
           PATH=/usr/local/opt/m4/bin:/usr/local/opt/gcc/bin:/usr/local/bin:$PATH
+          : "Set M4 environment variable, in order to ignore the broken 'gm4' that is also found in PATH."
+          export M4=m4
           pwd
           export CPPFLAGS="-Wall"
           ./build-on.sh '${{ env.package }}' '' 'make'
@@ -379,6 +381,11 @@ jobs:
             ln -s gtar /usr/local/bin/tar
             export PATH=/usr/local/bin:$PATH
             ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto* /usr/bin/tar* /usr/local/bin/tar* /usr/local/bin/gtar*
+            type tar
+            type perl
+            type autom4te
+            type aclocal
+            type aclocal-1.16
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
