@@ -369,7 +369,10 @@ jobs:
           release: '7.5'
           mem: 1024
           usesh: true
-          # Avoid 'sync: sshfs' since it causes trouble with file timestamps.
+          # Avoid 'sync: sshfs' since it causes trouble with file timestamps
+          # and errors from chown() calls:
+          # - BSD tar error messages for r--r--r-- files: "tar: Unable to create ...: Permission denied"
+          # - GNU tar warnings "Cannot change ownership to uid 0, gid 0: Permission denied"
           #sync: sshfs
           run: |
             set -x
@@ -379,22 +382,13 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            pkg_add gtar-1.35 m4 automake-1.16.5 autoconf-2.71 gmake
-            : "We use GNU tar, because BSD tar gives errors for r--r--r-- files:"
-            :   "tar: Unable to create libtool-2024-05-15/build-aux/ltmain.sh: Permission denied"
-            : "GNU tar gives some warnings:"
-            :   "Cannot change ownership to uid 0, gid 0: Permission denied"
-            : "but they can be ignored."
-            ln -s gtar /usr/local/bin/tar
+            pkg_add m4 automake-1.16.5 autoconf-2.71 gmake gcc-11.2.0p11 g++-11.2.0p12
+            ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
             export AUTOCONF_VERSION=2.71
-            ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto* /usr/bin/tar* /usr/local/bin/tar* /usr/local/bin/gtar*
-            type tar
-            type perl
-            type autom4te
-            type aclocal
-            type aclocal-1.16
+            : "The OpenBSD port of automake needs this, if more than one version is installed."
+            export AUTOMAKE_VERSION=1.16
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -411,6 +405,8 @@ jobs:
             ${{ env.package }}-*/build/config.status
             ${{ env.package }}-*/build/log[123]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
+            ${{ env.package }}-*/build/tests/testsuite.dir/122/*
+            ${{ env.package }}-*/build/tests/testsuite.dir/122/*/*
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
           overwrite: true
