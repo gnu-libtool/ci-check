@@ -230,12 +230,12 @@ jobs:
       # Install Homebrew packages.
       # List of packages: https://formulae.brew.sh/
       - run: brew install m4 automake gfortran
-      # m4 is now installed in /usr/local/opt/m4/bin/m4.
-      # automake is now installed in /usr/local/bin/automake = /usr/local/opt/automake/bin/automake.
-      # gfortran is now installed in /usr/local/opt/gfortran/bin/gfortran = /usr/local/opt/gcc/bin/gfortran.
+      # m4 is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/m4/bin/m4.
+      # automake is now installed in /usr/local/bin/automake = ${HOMEBREW_PREFIX-/usr/local}/opt/automake/bin/automake.
+      # gfortran is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/gfortran/bin/gfortran = ${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin/gfortran.
+      # (HOMEBREW_PREFIX is currently /opt/homebrew on the macOS 14/arm64 machines, and undefined on the older machines.)
       - run: |
-          ls -lLd /usr/bin/m4 /usr/*/bin/m4 /usr/*/*/bin/m4 /usr/*/*/*/bin/m4 /usr/*/*/*/*/bin/m4 /opt/*/bin/m4 /opt/*/*/bin/m4 /opt/*/*/*/bin/m4 /opt/*/*/*/*/bin/m4  /usr/bin/gm4 /usr/*/bin/gm4 /usr/*/*/bin/gm4 /usr/*/*/*/bin/gm4 /usr/*/*/*/*/bin/gm4 /opt/*/bin/gm4 /opt/*/*/bin/gm4 /opt/*/*/*/bin/gm4 /opt/*/*/*/*/bin/gm4  /usr/bin/automake /usr/*/bin/automake /usr/*/*/bin/automake /usr/*/*/*/bin/automake /usr/*/*/*/*/bin/automake /opt/*/bin/automake /opt/*/*/bin/automake /opt/*/*/*/bin/automake /opt/*/*/*/*/bin/automake  /usr/bin/gfortran /usr/*/bin/gfortran /usr/*/*/bin/gfortran /usr/*/*/*/bin/gfortran /usr/*/*/*/*/bin/gfortran /opt/*/bin/gfortran /opt/*/*/bin/gfortran /opt/*/*/*/bin/gfortran /opt/*/*/*/*/bin/gfortran || true
-          PATH=/usr/local/opt/m4/bin:/usr/local/opt/gcc/bin:/usr/local/bin:$PATH
+          PATH=${HOMEBREW_PREFIX-/usr/local}/opt/m4/bin:${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin:/usr/local/bin:$PATH
           : "Set M4 environment variable, in order to ignore the broken 'gm4' that is also found in PATH."
           export M4=m4
           pwd
@@ -369,7 +369,8 @@ jobs:
           release: '7.5'
           mem: 1024
           usesh: true
-          sync: sshfs
+          # Avoid 'sync: sshfs' since it causes trouble with file timestamps.
+          #sync: sshfs
           run: |
             set -x
             uname -a
