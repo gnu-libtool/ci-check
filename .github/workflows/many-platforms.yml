@@ -405,8 +405,6 @@ jobs:
             ${{ env.package }}-*/build/config.status
             ${{ env.package }}-*/build/log[123]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
-            ${{ env.package }}-*/build/tests/testsuite.dir/122/*
-            ${{ env.package }}-*/build/tests/testsuite.dir/122/*/*
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
           overwrite: true
