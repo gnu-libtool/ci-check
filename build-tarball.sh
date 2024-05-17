@@ -37,13 +37,8 @@ set -e
 git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
-cd "$package"
-
-# Switch branch
-git checkout "$branch"
-
 # Apply patches.
-patch -p1 < ../patches/0001-libtoolize-Don-t-use-uninitialized-variable.patch
+(cd "$package" && patch -p1 < ../patches/0001-libtoolize-Don-t-use-uninitialized-variable.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
