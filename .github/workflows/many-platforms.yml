@@ -41,6 +41,7 @@ on:
 # Variables.
 env:
   package: libtool
+  branch: development
 
 jobs:
   build-tarball:
@@ -56,7 +57,7 @@ jobs:
       # List of packages: https://packages.ubuntu.com/
       - run: sudo apt install help2man texlive
       - run: |
-          ./build-tarball.sh '${{ env.package }}'
+          ./build-tarball.sh '${{ env.package }}' '${{ env.branch }}'
       # Doc: https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v4
