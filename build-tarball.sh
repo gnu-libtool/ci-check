@@ -38,7 +38,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-Support-C-17-compilers-in-the-C-tests.patch)
+#(cd "$package" && patch -p1 < ../patches/<patch_file>)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
