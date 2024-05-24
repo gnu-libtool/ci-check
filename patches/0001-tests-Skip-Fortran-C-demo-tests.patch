@@ -1,0 +1,117 @@
+From 443f5cbf50320b31f887787d65a3232c214bef83 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Fri, 24 May 2024 21:13:13 +0300
+Subject: [PATCH] tests: Skip Fortran/C demo tests
+
+Using clang with fsanitize results in an incompatible ASan runtime.
+It results in the warning message "linked against incompatible ASan
+runtimes". This only occurs with the mixed Fortran/C demo.
+
+* tests/f77demo.at: Skip tests for clang compiling with fsanitize.
+* tests/fcdemo.at: Skip tests for clang compiling with fsanitize.
+---
+ tests/f77demo.at | 24 ++++++++++++++++++++++++
+ tests/fcdemo.at  | 24 ++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/tests/f77demo.at b/tests/f77demo.at
+index 1026a468..82d84b98 100644
+--- a/tests/f77demo.at
++++ b/tests/f77demo.at
+@@ -295,6 +295,14 @@ AT_CHECK([$GREP 'Welcome to GNU libtool mixed C/Fortran demo!' stdout],
+ 
+ AT_SETUP([static library])
+ 
++# Using clang with fsanitize results in an incompatible ASan runtime.
++# It results in the warning message "linked against incompatible ASan
++# runtimes". This only occurs with the mixed Fortran/C demo.
++if [ $LIBTOOL --config | $EGREP '^CC="clang' ]
++then
++  AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
++fi
++
+ # Executing the static fprogram might be interactive on MSYS.
+ AT_KEYWORDS([interactive])
+ 
+@@ -313,6 +321,14 @@ AT_CLEANUP
+ 
+ AT_SETUP([shared library])
+ 
++# Using clang with fsanitize results in an incompatible ASan runtime.
++# It results in the warning message "linked against incompatible ASan
++# runtimes". This only occurs with the mixed Fortran/C demo.
++if [ $LIBTOOL --config | $EGREP '^CC="clang' ]
++then
++  AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
++fi
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([--disable-static],
+@@ -328,6 +344,14 @@ AT_CLEANUP
+ 
+ AT_SETUP([shared and static together])
+ 
++# Using clang with fsanitize results in an incompatible ASan runtime.
++# It results in the warning message "linked against incompatible ASan
++# runtimes". This only occurs with the mixed Fortran/C demo.
++if [ $LIBTOOL --config | $EGREP '^CC="clang' ]
++then
++  AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
++fi
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([],
+diff --git a/tests/fcdemo.at b/tests/fcdemo.at
+index 48ff13ac..4086443d 100644
+--- a/tests/fcdemo.at
++++ b/tests/fcdemo.at
+@@ -309,6 +309,14 @@ AT_CHECK([$GREP 'Welcome to GNU libtool mixed C/Fortran demo!' stdout],
+ 
+ AT_SETUP([static library])
+ 
++# Using clang with fsanitize results in an incompatible ASan runtime.
++# It results in the warning message "linked against incompatible ASan
++# runtimes". This only occurs with the mixed Fortran/C demo.
++if [ $LIBTOOL --config | $EGREP '^CC="clang' ]
++then
++  AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
++fi
++
+ # Executing the static fprogram might be interactive on MSYS.
+ AT_KEYWORDS([interactive])
+ 
+@@ -327,6 +335,14 @@ AT_CLEANUP
+ 
+ AT_SETUP([shared library])
+ 
++# Using clang with fsanitize results in an incompatible ASan runtime.
++# It results in the warning message "linked against incompatible ASan
++# runtimes". This only occurs with the mixed Fortran/C demo.
++if [ $LIBTOOL --config | $EGREP '^CC="clang' ]
++then
++  AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
++fi
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([--disable-static],
+@@ -342,6 +358,14 @@ AT_CLEANUP
+ 
+ AT_SETUP([shared and static together])
+ 
++# Using clang with fsanitize results in an incompatible ASan runtime.
++# It results in the warning message "linked against incompatible ASan
++# runtimes". This only occurs with the mixed Fortran/C demo.
++if [ $LIBTOOL --config | $EGREP '^CC="clang' ]
++then
++  AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
++fi
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([],
+-- 
+2.43.0
+
