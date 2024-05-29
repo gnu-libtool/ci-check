@@ -1,0 +1,31 @@
+From 18afb9236c575b7a5556f383bc3d5f9dea8a70c8 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 16 Apr 2022 18:58:21 +0100
+Subject: [PATCH] ltmain.in: Add missing sysroot to library path
+
+When using a sysroot we should append it to libdir, which is helpful in
+cross builds as the system is staged in the sysroot. For normal builds,
+i.e. when lt_sysroot is not set, it will still behave the same and add
+-L/usr/lib to the relink command.
+
+* build-aux/ltmain.in: Prepend sysroot to libdir.
+---
+ build-aux/ltmain.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 7e096a1a..721f3078 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -6508,7 +6508,7 @@ func_mode_link ()
+ 	      fi
+ 	    else
+ 	      # We cannot seem to hardcode it, guess we'll fake it.
+-	      add_dir=-L$libdir
++	      add_dir="-L$lt_sysroot$libdir"
+ 	      # Try looking first in the location we're being installed to.
+ 	      if test -n "$inst_prefix_dir"; then
+ 		case $libdir in
+-- 
+2.45.1
+
