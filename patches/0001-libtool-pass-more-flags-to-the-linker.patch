@@ -1,0 +1,38 @@
+From 9610219ebcf280af5a455b33bb49e452e5c427e1 Mon Sep 17 00:00:00 2001
+From: Vincent Lefevre <vincent@vinc17.net>
+Date: Fri, 3 May 2019 15:19:19 +0200
+Subject: [PATCH] libtool: pass more flags to the linker
+
+Resolves bug 17750.
+
+* build-aux/ltmain.in (func_mode_link): In the flags to be passed
+through unchanged, also pass -static-* and -fcilkplus.
+---
+ build-aux/ltmain.in | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 35218830..44785403 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5414,6 +5414,8 @@ func_mode_link ()
+       # -static-libsan       Link with static sanitizer runtimes (Clang)
+       # -no-canonical-prefixes Do not expand any symbolic links
+       # -fuse-ld=*           Linker select flags for GCC
++      # -static-*            direct GCC to link specific libraries statically
++      # -fcilkplus           Cilk Plus language extension features for C/C++
+       # -rtlib=*             select c runtime lib with clang
+       # --unwindlib=*        select unwinder library with clang
+       # -f{file|debug|macro|profile}-prefix-map=* needed for lto linking
+@@ -5426,7 +5428,7 @@ func_mode_link ()
+       -specs=*|-fsanitize=*|-fno-sanitize*|-shared-libsan|-static-libsan| \
+       -ffile-prefix-map=*|-fdebug-prefix-map=*|-fmacro-prefix-map=*|-fprofile-prefix-map=*| \
+       -fdiagnostics-color*|-frecord-gcc-switches| \
+-      -fuse-ld=*|-Wa,*|-Werror|-Werror=*)
++      -fuse-ld=*|-static-*|-fcilkplus|-Wa,*|-Werror|-Werror=*)
+         func_quote_arg pretty "$arg"
+ 	arg=$func_quote_arg_result
+         func_append compile_command " $arg"
+-- 
+2.45.1
+
