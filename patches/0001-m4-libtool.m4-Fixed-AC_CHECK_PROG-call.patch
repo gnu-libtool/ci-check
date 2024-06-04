@@ -1,0 +1,31 @@
+From 3341739c47c07eba9dd80dd007c9be7c06d8a116 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Tue, 4 Jun 2024 20:34:16 +0300
+Subject: [PATCH] m4/libtool.m4: Fixed AC_CHECK_PROG call
+
+AC_CHECK_TOOL was changed to AC_CHECK_PROG however the arguments are
+different and this result is a value of ":". Change this to match the
+original intent.
+
+The lack of FILECMD was causing failures for mips64 builds as -m elf was
+being passed to LD which isn't supported on our targets.
+---
+ m4/libtool.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index c5be6436..bbf2d21f 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -8216,7 +8216,7 @@ AC_SUBST([DLLTOOL])
+ # ----------------
+ # Check for a file(cmd) program that can be used to detect file type and magic
+ m4_defun([_LT_DECL_FILECMD],
+-[AC_CHECK_PROG([FILECMD], [file], [:])
++[AC_CHECK_PROG([FILECMD], [file], [file], [:])
+ _LT_DECL([], [FILECMD], [1], [A file(cmd) program that detects file types])
+ ])# _LD_DECL_FILECMD
+
+--
+2.45.1
+
