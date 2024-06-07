@@ -40,7 +40,7 @@ index 05839dc4..5174682a 100644
 +result=$?
  
 -AT_CHECK([$LIBTOOL --mode=compile --tag=CXX g++ -c x.cpp], [0], [stdout], [stderr])
-+if test $result -ne 0; then
++if test 0 -ne "$result"; then
 +    AT_SKIP_IF([:])
 +fi
 +
