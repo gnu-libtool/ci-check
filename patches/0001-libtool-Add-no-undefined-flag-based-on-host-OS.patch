@@ -1,0 +1,39 @@
+From f910b0f7f12586b5b2bb93e97337964f7f7fc428 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Tue, 11 Jun 2024 16:34:22 +0300
+Subject: [PATCH] libtool: Add no-undefined flag based on host OS
+
+Without the no-undefined flag, the test will fail on Mingw and
+Cygwin, so the flag will be appended for windows compilation.
+
+* tests/bug_62343.at: Add no-undefined flag for windows-based
+  compilation.
+---
+ tests/bug_62343.at | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/tests/bug_62343.at b/tests/bug_62343.at
+index 43a74b6f..7f2b680f 100644
+--- a/tests/bug_62343.at
++++ b/tests/bug_62343.at
+@@ -54,7 +54,16 @@ AT_CHECK([$LIBTOOL --mode=compile --tag=CXX g++ -no-canonical-prefixes -c x.cpp]
+ 
+ AT_CHECK([$GREP -- '-no-canonical-prefixes' stdout], [0], [ignore])
+ 
+-AT_CHECK([$LIBTOOL --mode=link --tag=CXX g++ -no-canonical-prefixes -o libx.la -rpath /usr/lib64/ x.lo], [0], [stdout], [stderr])
++host_flags=:
++case $host_os in
++  cygwin* | mingw* | windows*)
++    host_flags="-no-undefined"
++    ;;
++  *)
++    ;;
++esac
++
++AT_CHECK([$LIBTOOL --mode=link --tag=CXX g++ -no-canonical-prefixes $host_flags -o libx.la -rpath /usr/lib64/ x.lo], [0], [stdout], [stderr])
+ 
+ AT_CHECK([$GREP -- '-no-canonical-prefixes' stdout], [0], [ignore])
+ 
+-- 
+2.45.1
+
