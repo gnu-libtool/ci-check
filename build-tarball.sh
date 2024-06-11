@@ -38,7 +38,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-libtool-Add-no-undefined-flag-based-on-host-OS.patch)
+(cd "$package" && patch -p1 < ../patches/0001-libtool-Remove-no-undefined-for-test-with-NetBSD.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
