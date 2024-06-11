@@ -24,7 +24,7 @@ index 43a74b6f..7f2b680f 100644
 +host_flags=:
 +case $host_os in
 +  cygwin* | mingw* | windows*)
-+    host_flags="-no-undefined"
++    host_flags=-no-undefined
 +    ;;
 +  *)
 +    ;;
