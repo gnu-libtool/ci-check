@@ -22,7 +22,7 @@ index fb4109db..e60b649c 100644
 -LDFLAGS="$LDFLAGS -no-undefined"
 +case $host_os in
 +  netbsd*)
-+    CXXFLAGS="$CXXFLAGS -shared-libgcc"
++    LDFLAGS="$LDFLAGS -shared-libgcc"
 +    ;;
 +  *)
 +    LDFLAGS="$LDFLAGS -no-undefined"
