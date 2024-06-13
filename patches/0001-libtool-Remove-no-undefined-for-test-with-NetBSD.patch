@@ -15,13 +15,14 @@ diff --git a/tests/flags.at b/tests/flags.at
 index fb4109db..e60b649c 100644
 --- a/tests/flags.at
 +++ b/tests/flags.at
-@@ -26,7 +26,13 @@ m4_foreach([lt_tag], [CC, CXX, F77, FC, GCJ],
+@@ -26,7 +26,14 @@ m4_foreach([lt_tag], [CC, CXX, F77, FC, GCJ],
  AT_KEYWORDS([libtool])
  LT_AT_TAG(m4_defn([lt_tag]))
  
 -LDFLAGS="$LDFLAGS -no-undefined"
 +case $host_os in
 +  netbsd*)
++    CXXFLAGS="$CXXFLAGS -shared-libgcc"
 +    ;;
 +  *)
 +    LDFLAGS="$LDFLAGS -no-undefined"
