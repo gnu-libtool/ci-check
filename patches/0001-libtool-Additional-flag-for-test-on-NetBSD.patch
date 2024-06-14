@@ -1,13 +1,14 @@
 From b542ad8784ca135d804f8ae3fd3f09ff21aa203b Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 11 Jun 2024 17:58:47 +0300
-Subject: [PATCH] libtool: Skip passing CXX flags test on NetBSD
+Subject: [PATCH] libtool: Additional flag for test on NetBSD
 
 When linking on NetBSD, the test fails to locate a shared version of
 gcc, so a static version of the module is generated, which does not pass
-the defined checks. A FIXME note has been added for future debugging.
+the defined checks. NetBSD seems to be falling back to using dlopen, so
+an additional flag has been added for linking.
 
-* tests/flags.at: Skip passing CXX flags test on NetBSD.
+* tests/flags.at: Add export-dynamic flag on NetBSD.
 ---
  tests/flags.at | 8 +++++++-
  1 file changed, 7 insertions(+), 1 deletion(-)
@@ -21,11 +22,11 @@ index fb4109db..e60b649c 100644
  LT_AT_TAG(m4_defn([lt_tag]))
  
 -LDFLAGS="$LDFLAGS -no-undefined"
++# Utilize dlopen to test passing CXX flags through libtool
 +case $host_os in
-+  # FIXME: Locate shared version of gcc library for NetBSD.
 +  netbsd*)
 +    if test "CXX" = "lt_tag"; then
-+      AT_SKIP_IF([:])
++      LDFLAGS="$LDFLAGS -export-dynamic"
 +    fi
 +    ;;
 +  *)
@@ -34,7 +35,8 @@ index fb4109db..e60b649c 100644
 +esac
  eval "`$LIBTOOL --config | $EGREP '^(FGREP)='`"
  
- m4_case(lt_tag,
+ m4_case(lt_tag,$FGREP " $flag_prefix_lib-foo" stdout], [], [ignore])
+     else
 -- 
 2.45.1
 
