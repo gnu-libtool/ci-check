@@ -17,7 +17,7 @@ diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
 index abb7b0c7..db7b63d7 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -2813,8 +2813,15 @@ extern \"C\" {
+@@ -2813,8 +2813,16 @@ extern \"C\" {
  	            eval '$ECHO ": $name " >> "$nlist"'
  	          fi
  	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
@@ -32,6 +32,7 @@ index abb7b0c7..db7b63d7 100644
 +	              eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
 +	                $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/__nm_//' >> '$nlist'"
 +	            ;;
++	          esac
  	        }
  	      else # not an import lib
  	        $opt_dry_run || {
