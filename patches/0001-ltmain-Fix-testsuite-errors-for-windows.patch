@@ -1,0 +1,31 @@
+From d2ee249bb8c29309e63f0d3360febbd6e65dff8d Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Mon, 17 Jun 2024 16:13:07 +0300
+Subject: [PATCH] ltmain: Fix testsuite errors for windows
+
+Numerous test failures on windows/cygwin/mingw result with:
+	did not find the 'nothing' variable
+
+A syntax fix should resolve these test failures.
+
+build-aux/ltmain.in: Fix syntax error in sed command.
+---
+ build-aux/ltmain.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index abb7b0c7..db7b63d7 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -2814,7 +2814,7 @@ extern \"C\" {
+ 	          fi
+ 	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+ 	          eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
+-	            $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/_nm__//' >> '$nlist'"
++	            $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/__nm_//' >> '$nlist'"
+ 	        }
+ 	      else # not an import lib
+ 	        $opt_dry_run || {
+-- 
+2.45.1
+
