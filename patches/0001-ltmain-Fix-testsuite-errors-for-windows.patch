@@ -24,7 +24,7 @@ index abb7b0c7..db7b63d7 100644
 -	          eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
 -	            $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/_nm__//' >> '$nlist'"
 +	          case $host in
-+	            *mingw32*)
++	            i[3456]86-*-mingw32*)
 +	              eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
 +	                $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/_nm__//' >> '$nlist'"
 +	            ;;
