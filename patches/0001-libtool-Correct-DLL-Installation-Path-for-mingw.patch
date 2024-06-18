@@ -1,0 +1,59 @@
+From 532732edc0f8e20e9177b1fb9d05d92842e34d06 Mon Sep 17 00:00:00 2001
+From: cqwrteur <100043421+trcrsired@users.noreply.github.com>
+Date: Tue, May 14 2024 20:26:40 +0100
+Subject: [PATCH] libtool: Correct DLL Installation Path for mingw
+
+When building native GCC for the x86_64-w64-mingw32 host, the
+compiler copies its library DLLs to the `bin` directory. However,
+in the case of a multilib configuration, both 32-bit and 64-bit
+libraries end up in the same `bin` directory, leading to conflicts
+where 64-bit DLLs are overridden by their 32-bit counterparts.
+
+This patch addresses the issue by adjusting the installation path
+for the libraries. Specifically, it installs the libraries to
+separate directories: `lib` for 64-bit and `lib32` for 32-bit. This
+behavior aligns with how libraries are installed when creating an
+x86_64-w64-mingw32 cross-compiler without copying them to the `bin`
+directory if it is a multilib build.
+
+* m4/libtool.m4: Install DLL to $(libdir), not $(libdir)/bin, if
+  multilib build.
+---
+ m4/libtool.m4 | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index bbf2d21f..20a907fb 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -2546,6 +2546,19 @@ cygwin* | mingw* | windows* | pw32* | cegcc*)
+     # gcc
+     library_names_spec='$libname.dll.a'
+     # DLL is installed to $(libdir)/../bin by postinstall_cmds
++    # If user builds GCC with mulitlibs enabled,
++    # it should just install on $(libdir)
++    # not on $(libdir)/../bin or 32 bits dlls would override 64 bit ones.
++    if test ${multilib} = yes; then
++    postinstall_cmds='base_file=`basename \${file}`~
++      dlpath=`$SHELL 2>&1 -c '\''. $dir/'\''\${base_file}'\''i; echo \$dlname'\''`~
++      dldir=$destdir/`dirname \$dlpath`~
++      $install_prog $dir/$dlname $destdir/$dlname~
++      chmod a+x $destdir/$dlname~
++      if test -n '\''$stripme'\'' && test -n '\''$striplib'\''; then
++        eval '\''$striplib $destdir/$dlname'\'' || exit \$?;
++      fi'
++    else
+     postinstall_cmds='base_file=`basename \$file`~
+       dlpath=`$SHELL 2>&1 -c '\''. $dir/'\''\$base_file'\''i; echo \$dlname'\''`~
+       dldir=$destdir/`dirname \$dlpath`~
+@@ -2555,6 +2568,7 @@ cygwin* | mingw* | windows* | pw32* | cegcc*)
+       if test -n '\''$stripme'\'' && test -n '\''$striplib'\''; then
+         eval '\''$striplib \$dldir/$dlname'\'' || exit \$?;
+       fi'
++    fi
+     postuninstall_cmds='dldll=`$SHELL 2>&1 -c '\''. $file; echo \$dlname'\''`~
+       dlpath=$dir/\$dldll~
+        $RM \$dlpath'
+-- 
+2.45.1
+
