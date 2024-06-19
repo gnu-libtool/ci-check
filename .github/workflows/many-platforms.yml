@@ -54,6 +54,7 @@ jobs:
       - run: pwd
       # Install Ubuntu packages.
       # List of packages: https://packages.ubuntu.com/
+      - run: sudo apt update
       - run: sudo apt install help2man texlive-base texlive-latex-base
       - run: |
           ./build-tarball.sh '${{ env.package }}'
