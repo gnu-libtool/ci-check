@@ -38,7 +38,8 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-libtool-Correct-DLL-Installation-Path-for-mingw.patch)
+(cd "$package" && patch -p1 < ../patches/0001-ltmain.in-Fix-preserve-dup-deps-stripping-duplicates.patch \
+    && patch -p1 < ../patches/0001-libtool-Alter-test-to-expect-pass.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"

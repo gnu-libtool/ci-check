@@ -1,0 +1,28 @@
+From c1917f63bc93b9736dc0d5297d7004467a4e0ce7 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 19 Jun 2024 21:27:03 +0300
+Subject: [PATCH] libtool: Alter test to expect pass
+
+* tests/duplicate_deps.at: Remove expected failure for testing
+  with preserve-dup-deps flag, since it has been fixed.
+---
+ tests/duplicate_deps.at | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tests/duplicate_deps.at b/tests/duplicate_deps.at
+index f2e9f667..1e987528 100644
+--- a/tests/duplicate_deps.at
++++ b/tests/duplicate_deps.at
+@@ -68,8 +68,7 @@ AT_CHECK([$LIBTOOL --mode=link --tag=CC \
+ 	  $CC $CFLAGS $LDFLAGS -o main$EXEEXT main.$OBJEXT liba.la libb.la liba.la \
+ 	  && exit 77],
+ 	  [1], [ignore], [ignore])
+-# Other systems need special treatment, which currently fails.
+-AT_XFAIL_IF([:])
++# Other systems need special treatment, so preserve-dup-deps flag is used.
+ AT_CHECK([$LIBTOOL --mode=link --preserve-dup-deps --tag=CC \
+ 	  $CC $CFLAGS $LDFLAGS -o main$EXEEXT main.$OBJEXT liba.la libb.la liba.la],
+ 	  [0], [ignore], [ignore])
+-- 
+2.45.1
+
