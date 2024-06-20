@@ -1,0 +1,72 @@
+From 4161944012a5af199941e6ed8e6dbd600716fd41 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Thu, 20 Jun 2024 16:57:26 +0300
+Subject: [PATCH] m4: Disable chained fixups for macOS
+
+* m4/libtool.m4: Append '-no_fixup_chains' flag to disable chained
+  fixups since it is not compatible with '-undefined dynamic_lookup'.
+* NO-THANKS: Add thanks for Carlo Cabrera and Dave Allured.
+---
+ NO-THANKS     |  2 ++
+ m4/libtool.m4 | 20 ++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/NO-THANKS b/NO-THANKS
+index 6b6a2415..9e0264bb 100644
+--- a/NO-THANKS
++++ b/NO-THANKS
+@@ -75,12 +75,14 @@ Andreas Stieger		Andreas.Stieger@gmx.de
+ Brent Leback			brent.leback@st.com
+ Camilo La Rota			camilo.larota@ens-lyon.fr
+ Carl D. Roth			roth@cse.ucsc.edu
++Carlo Cabrera			carlo.antonio.cabrera@gmail.com
+ Chris P. Ross			cross@eng.us.uu.net
+ Christian Rössel		christian.roessel@gmx.de
+ Christopher Hulbert		cchgroupmail@gmail.com
+ Craig Tierney			Craig.Tierney@noaa.gov
+ Dan McMahill			mcmahill@mtl.mit.edu
+ Daniel Richard G.		skunk@iSKUNK.ORG
++Dave Allured			dave.allured@noaa.gov
+ Dave Yost			Dave@Yost.com
+ Dimitri Papadopoulos		dpo@sfr.fr
+ Donn Washburn			n5xwb@comcast.net
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 1187330a..7f8ac371 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -1069,12 +1069,32 @@ _LT_EOF
+     darwin1.*)
+       _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
+     darwin*)
++      # $MACOSX_DEPLOYMENT_TARGET seems to be deprecated as a darwin
++      # environment variable
+       case $MACOSX_DEPLOYMENT_TARGET,$host in
+         10.[[012]],*|,*powerpc*-darwin[[5-8]]*)
+           _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
+         *)
+           _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup' ;;
+       esac
++      # Disable chained fixups since it is not compatible with
++      # '-undefined dynamic_lookup'
++      macos_version=`sw_vers -productVersion`
++      echo "\$macos_version: $macos_version"
++      case $macos_version in
++        11.[3-7]*|1[2-4]*)
++          xcode_version=`pkgutil --pkg-info=com.apple.pkg.CLTools_Executables`
++          echo "\$xcode_version: $xcode_version"
++          case $xcode_version in
++            1[3-5]*)
++              _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup -no_fixup_chains' ;;
++            *)
++            ;;
++          esac
++        ;;
++        *)
++        ;;
++      esac
+     ;;
+   esac
+     if test yes = "$lt_cv_apple_cc_single_mod"; then
+-- 
+2.45.1
+
