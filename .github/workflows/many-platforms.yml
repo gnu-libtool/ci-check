@@ -33,10 +33,12 @@ name: Produce tarball and make check
 
 on:
   push:
+    if: ${{ startsWith(github.event.head_commit.message, '[all]') }}
   schedule:
     # Doc: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
     # POSIX cron syntax: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07
     - cron: '31 4 * * 1'
+  workflow_dispatch:
 
 # Variables.
 env:
