@@ -54,8 +54,7 @@ jobs:
       - run: pwd
       # Install Ubuntu packages.
       # List of packages: https://packages.ubuntu.com/
-      - run: sudo apt update
-      - run: sudo apt install help2man texlive-base texlive-latex-base
+      - run: sudo apt update; sudo apt install help2man texlive-base texlive-latex-base
       - run: |
           ./build-tarball.sh '${{ env.package }}'
       # Doc: https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
@@ -101,7 +100,7 @@ jobs:
       - run: pwd
       # Install Ubuntu packages.
       # List of packages: https://packages.ubuntu.com/
-      # - run: sudo apt install ...
+      # - run: sudo apt update; sudo apt install ...
       - run: |
           pwd
           export CPPFLAGS="-Wall"
@@ -765,7 +764,7 @@ jobs:
       - run: pwd
       # Install Ubuntu packages.
       # List of packages: https://packages.ubuntu.com/
-      # - run: sudo apt install ...
+      # - run: sudo apt update; sudo apt install ...
       - run: |
           pwd
           export CPPFLAGS="-Wall"
