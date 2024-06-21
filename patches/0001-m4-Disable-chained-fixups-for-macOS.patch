@@ -1,4 +1,4 @@
-From 4161944012a5af199941e6ed8e6dbd600716fd41 Mon Sep 17 00:00:00 2001
+From 001d22d7d587e85a911c71c4d0c798ede8014b77 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 20 Jun 2024 16:57:26 +0300
 Subject: [PATCH] m4: Disable chained fixups for macOS
@@ -8,8 +8,8 @@ Subject: [PATCH] m4: Disable chained fixups for macOS
 * NO-THANKS: Add thanks for Carlo Cabrera and Dave Allured.
 ---
  NO-THANKS     |  2 ++
- m4/libtool.m4 | 20 ++++++++++++++++++++
- 2 files changed, 22 insertions(+)
+ m4/libtool.m4 | 18 ++++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
 diff --git a/NO-THANKS b/NO-THANKS
 index 6b6a2415..9e0264bb 100644
@@ -31,10 +31,10 @@ index 6b6a2415..9e0264bb 100644
  Dimitri Papadopoulos		dpo@sfr.fr
  Donn Washburn			n5xwb@comcast.net
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index 1187330a..7f8ac371 100644
+index 1187330a..a1fcdf7a 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -1069,12 +1069,32 @@ _LT_EOF
+@@ -1069,12 +1069,30 @@ _LT_EOF
      darwin1.*)
        _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
      darwin*)
