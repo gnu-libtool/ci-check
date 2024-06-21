@@ -33,7 +33,6 @@ name: Produce tarball and make check
 
 on:
   push:
-    if: ${{ startsWith(github.event.head_commit.message, '[all]') }}
   schedule:
     # Doc: https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
     # POSIX cron syntax: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html#tag_20_25_07
@@ -47,6 +46,7 @@ env:
 
 jobs:
   build-tarball:
+    if: ${{ startsWith(github.event.head_commit.message, '[all]') }}
     runs-on: ubuntu-22.04
     steps:
       # This is needed because we run a script stored in this repository.

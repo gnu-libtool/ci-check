@@ -33,7 +33,6 @@ name: Produce tarball and make check
 
 on:
   push:
-    if: ${{ startsWith(github.event.head_commit.message, '[macos]') }}
   workflow_dispatch:
 
 # Variables.
@@ -43,6 +42,7 @@ env:
 
 jobs:
   build-tarball:
+    if: ${{ startsWith(github.event.head_commit.message, '[macos]') }}
     runs-on: ubuntu-22.04
     steps:
       # This is needed because we run a script stored in this repository.
