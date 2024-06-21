@@ -29,7 +29,7 @@
 #        exclude:
 #          - bitness: 64
 
-name: Produce tarball and make check
+name: macOS 11-14 make check
 
 on:
   push:

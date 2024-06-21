@@ -56,7 +56,7 @@ index 1187330a..7f8ac371 100644
 +          echo "\$xcode_version: $xcode_version"
 +          case $xcode_version in
 +            *version:\ 1[[3-5]]*)
-+              _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup -no_fixup_chains' ;;
++              _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup ${wl}-no_fixup_chains' ;;
 +            *)
 +            ;;
 +          esac
