@@ -1,0 +1,88 @@
+From 4c4b8ae968c8505c53161192ff162f45847408ad Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Tue, 25 Jun 2024 17:09:52 +0300
+Subject: [PATCH] m4: Update disabling chained fixups for macOS
+
+This is an update for commit 001d22d7d587e85a911c71c4d0c798ede8014b77.
+
+* m4/libtool.m4: Output debug linker version information and add
+  a feature test for the '-no_fixup_chains' flag.
+---
+ m4/libtool.m4 | 40 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 7 deletions(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index a1fcdf7a..e913d648 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -974,6 +974,29 @@ _lt_linker_boilerplate=`cat conftest.err`
+ $RM -r conftest*
+ ])# _LT_LINKER_BOILERPLATE
+ 
++
++# _LT_DARWIN_NO_FIXUP_CHAINS
++# --------------------
++# See whether we are using a linker version on darwin platforms which
++# supports -no_fixup_chains
++#
++# $1 = the linker flags variable
++AC_DEFUN([_LT_DARWIN_NO_FIXUP_CHAINS], [
++    AC_MSG_CHECKING([if Darwin linker supports the -no_fixup_chains flag])
++
++    save_LDFLAGS=$LDFLAGS
++    LDFLAGS+=" $wl-no_fixup_chains"
++    AC_LINK_IFELSE(
++      [AC_LANG_PROGRAM([],[])],
++      [$1+=" $wl-no_fixup_chains"]
++      support_no_fixup_chains=yes,
++      support_no_fixup_chains=no
++    )
++    LDFLAGS=$save_LDFLAGS
++    AC_MSG_RESULT([$support_no_fixup_chains])
++])
++
++
+ # _LT_REQUIRED_DARWIN_CHECKS
+ # -------------------------
+ m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
+@@ -1069,8 +1092,6 @@ _LT_EOF
+     darwin1.*)
+       _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
+     darwin*)
+-      # $MACOSX_DEPLOYMENT_TARGET seems to be deprecated as a darwin
+-      # environment variable
+       case $MACOSX_DEPLOYMENT_TARGET,$host in
+         10.[[012]],*|,*powerpc*-darwin[[5-8]]*)
+           _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
+@@ -1081,11 +1102,15 @@ _LT_EOF
+       # '-undefined dynamic_lookup'
+       macos_version=`sw_vers -productVersion`
+       case $macos_version in
+-        11.[[3-7]]*|1[[2-4]]*)
+-          xcode_version=`pkgutil --pkg-info=com.apple.pkg.CLTools_Executables`
+-          case $xcode_version in
+-            *version:\ 1[[3-5]]*)
+-              _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup $wl-no_fixup_chains' ;;
++        11.[[3-7]]*|1[[2-4]].*)
++          ld_version=`ld -v`
++          echo "DEBUG: ld_version: $ld_version"
++          ld_help=`ld --help`
++          echo "DEBUG: ld_help: $ld_help"
++          case $ld_version in
++            *-711*)
++              #_lt_dar_allow_undefined+=' $wl-no_fixup_chains' ;;
++              echo "DEBUG: ld_version should have '-no_fixup_chains'" ;;
+             *)
+             ;;
+           esac
+@@ -1093,6 +1118,7 @@ _LT_EOF
+         *)
+         ;;
+       esac
++      _LT_DARWIN_NO_FIXUP_CHAINS($_lt_dar_allow_undefined)
+     ;;
+   esac
+     if test yes = "$lt_cv_apple_cc_single_mod"; then
+-- 
+2.45.1
+
