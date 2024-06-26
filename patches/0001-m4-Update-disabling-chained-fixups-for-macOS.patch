@@ -1,4 +1,4 @@
-From bdba667c3923fe11e10978415cf2dc71929c1f4c Mon Sep 17 00:00:00 2001
+From 4b5ce322c7ac07ff72eea5e6099d749e9a900666 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 25 Jun 2024 17:09:52 +0300
 Subject: [PATCH] m4: Update disabling chained fixups for macOS
@@ -8,11 +8,11 @@ This is an update for commit 001d22d7d587e85a911c71c4d0c798ede8014b77.
 * m4/libtool.m4: Replace version testing with a feature test for
   the '-no_fixup_chains' flag.
 ---
- m4/libtool.m4 | 38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ m4/libtool.m4 | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index a1fcdf7a..fe89d3bd 100644
+index a1fcdf7a..dcc1e891 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
 @@ -974,6 +974,7 @@ _lt_linker_boilerplate=`cat conftest.err`
@@ -45,7 +45,7 @@ index a1fcdf7a..fe89d3bd 100644
      AC_CACHE_CHECK([for -exported_symbols_list linker flag],
        [lt_cv_ld_exported_symbols_list],
        [lt_cv_ld_exported_symbols_list=no
-@@ -1069,32 +1085,18 @@ _LT_EOF
+@@ -1069,28 +1085,15 @@ _LT_EOF
      darwin1.*)
        _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
      darwin*)
@@ -55,8 +55,8 @@ index a1fcdf7a..fe89d3bd 100644
          10.[[012]],*|,*powerpc*-darwin[[5-8]]*)
            _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
          *)
-           _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup' ;;
-       esac
+-          _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup' ;;
+-      esac
 -      # Disable chained fixups since it is not compatible with
 -      # '-undefined dynamic_lookup'
 -      macos_version=`sw_vers -productVersion`
@@ -71,17 +71,14 @@ index a1fcdf7a..fe89d3bd 100644
 -          esac
 -        ;;
 -        *)
--        ;;
--      esac
++          _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup'
++          if test yes = "$lt_cv_support_no_fixup_chains"; then
++            _lt_dar_allow_undefined+=' $wl-no_fixup_chains'
++          fi
++          echo -e "DEBUG: _lt_dar_allow_undefined: $_lt_dar_allow_undefined"
+         ;;
+       esac
      ;;
-   esac
-+    if test yes = "$lt_cv_support_no_fixup_chains"; then
-+      _lt_dar_allow_undefined+=" $wl-no_fixup_chains"
-+    fi
-+    echo -e "DEBUG: _lt_dar_allow_undefined post-ac_cache_check: $_lt_dar_allow_undefined"
-     if test yes = "$lt_cv_apple_cc_single_mod"; then
-       _lt_dar_single_mod='$single_module'
-     fi
 -- 
 2.45.1
 
