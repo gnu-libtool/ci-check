@@ -1,4 +1,4 @@
-From 4b5ce322c7ac07ff72eea5e6099d749e9a900666 Mon Sep 17 00:00:00 2001
+From 21a7ef5f5babbf28369c46341fd1189468a8f674 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 25 Jun 2024 17:09:52 +0300
 Subject: [PATCH] m4: Update disabling chained fixups for macOS
@@ -7,9 +7,11 @@ This is an update for commit 001d22d7d587e85a911c71c4d0c798ede8014b77.
 
 * m4/libtool.m4: Replace version testing with a feature test for
   the '-no_fixup_chains' flag.
+* tests/no-executables.at: Set cache variable for link test.
 ---
- m4/libtool.m4 | 39 +++++++++++++++++++++------------------
- 1 file changed, 21 insertions(+), 18 deletions(-)
+ m4/libtool.m4           | 39 +++++++++++++++++++++------------------
+ tests/no-executables.at |  1 +
+ 2 files changed, 22 insertions(+), 18 deletions(-)
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
 index a1fcdf7a..dcc1e891 100644
@@ -79,6 +81,18 @@ index a1fcdf7a..dcc1e891 100644
          ;;
        esac
      ;;
+diff --git a/tests/no-executables.at b/tests/no-executables.at
+index 46225a6f..7530fe36 100644
+--- a/tests/no-executables.at
++++ b/tests/no-executables.at
+@@ -50,6 +50,7 @@ AM_PROG_GCJ
+ lt_cv_shlibpath_overrides_runpath=no
+ lt_cv_archive_cmds_need_lc=no
+ lt_cv_cc_needs_belf=no
++lt_cv_support_no_fixup_chains=no
+ lt_cv_ld_exported_symbols_list=no
+ lt_cv_prog_compiler_static_works=no
+ lt_cv_aix_libpath=/usr/lib:/lib
 -- 
 2.45.1
 
