@@ -1,55 +1,51 @@
-From 6e31f5177ea40e0dffc1af4312eba3977e34c244 Mon Sep 17 00:00:00 2001
+From bdba667c3923fe11e10978415cf2dc71929c1f4c Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 25 Jun 2024 17:09:52 +0300
 Subject: [PATCH] m4: Update disabling chained fixups for macOS
 
 This is an update for commit 001d22d7d587e85a911c71c4d0c798ede8014b77.
 
-* m4/libtool.m4: Output debug linker version information and add
-  a feature test for the '-no_fixup_chains' flag.
+* m4/libtool.m4: Replace version testing with a feature test for
+  the '-no_fixup_chains' flag.
 ---
- m4/libtool.m4 | 81 ++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 74 insertions(+), 7 deletions(-)
+ m4/libtool.m4 | 38 ++++++++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index a1fcdf7a..33cbb14d 100644
+index a1fcdf7a..fe89d3bd 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -974,6 +974,33 @@ _lt_linker_boilerplate=`cat conftest.err`
+@@ -974,6 +974,7 @@ _lt_linker_boilerplate=`cat conftest.err`
  $RM -r conftest*
  ])# _LT_LINKER_BOILERPLATE
  
 +
-+# _LT_DARWIN_NO_FIXUP_CHAINS
-+# --------------------
-+# See whether we are using a linker version on darwin platforms which
-+# supports -no_fixup_chains
-+#
-+# $1 = the linker flags variable
-+AC_DEFUN([_LT_DARWIN_NO_FIXUP_CHAINS], [
-+    echo -e "DEBUG: LDFLAGS pre-_DARWIN_NO_FIXUP_CHAINS: $LDFLAGS"
-+    AC_MSG_CHECKING([if Darwin linker supports the -no_fixup_chains flag])
-+
-+    save_LDFLAGS=$LDFLAGS
-+    LDFLAGS+=" $wl-no_fixup_chains"
-+    AC_LINK_IFELSE(
-+      [AC_LANG_PROGRAM([],[])],
-+      [$1+=" $wl-no_fixup_chains"]
-+      output_conftest=`cat conftest.$ac_ext`
-+      echo -e "DEBUG: cat conftest.$ac_ext: $output_conftest"
-+      support_no_fixup_chains=yes,
-+      support_no_fixup_chains=no
-+    )
-+    LDFLAGS=$save_LDFLAGS
-+    AC_MSG_RESULT([$support_no_fixup_chains])
-+    echo -e "DEBUG: LDFLAGS post-_DARWIN_NO_FIXUP_CHAINS: $LDFLAGS"
-+])
-+
-+
  # _LT_REQUIRED_DARWIN_CHECKS
  # -------------------------
  m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
-@@ -1069,8 +1096,6 @@ _LT_EOF
+@@ -1024,6 +1025,21 @@ m4_defun_once([_LT_REQUIRED_DARWIN_CHECKS],[
+ 	rm -f conftest.*
+       fi])
+ 
++    # Feature test to disable chained fixups since it is not
++    # compatible with '-undefined dynamic_lookup'
++    AC_CACHE_CHECK([for -no_fixup_chains linker flag],
++      [lt_cv_support_no_fixup_chains],
++      [ save_LDFLAGS=$LDFLAGS
++        LDFLAGS+=" -Wl,-no_fixup_chains"
++        AC_LINK_IFELSE(
++          [AC_LANG_PROGRAM([],[])],
++          lt_cv_support_no_fixup_chains=yes,
++          lt_cv_support_no_fixup_chains=no
++        )
++        LDFLAGS=$save_LDFLAGS
++      ]
++    )
++
+     AC_CACHE_CHECK([for -exported_symbols_list linker flag],
+       [lt_cv_ld_exported_symbols_list],
+       [lt_cv_ld_exported_symbols_list=no
+@@ -1069,32 +1085,18 @@ _LT_EOF
      darwin1.*)
        _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
      darwin*)
@@ -58,69 +54,28 @@ index a1fcdf7a..33cbb14d 100644
        case $MACOSX_DEPLOYMENT_TARGET,$host in
          10.[[012]],*|,*powerpc*-darwin[[5-8]]*)
            _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
-@@ -1080,12 +1105,13 @@ _LT_EOF
-       # Disable chained fixups since it is not compatible with
-       # '-undefined dynamic_lookup'
-       macos_version=`sw_vers -productVersion`
-+      echo -e "DEBUG: macos_version: $macos_version"
-       case $macos_version in
+         *)
+           _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup' ;;
+       esac
+-      # Disable chained fixups since it is not compatible with
+-      # '-undefined dynamic_lookup'
+-      macos_version=`sw_vers -productVersion`
+-      case $macos_version in
 -        11.[[3-7]]*|1[[2-4]]*)
 -          xcode_version=`pkgutil --pkg-info=com.apple.pkg.CLTools_Executables`
 -          case $xcode_version in
 -            *version:\ 1[[3-5]]*)
 -              _lt_dar_allow_undefined='$wl-undefined ${wl}dynamic_lookup $wl-no_fixup_chains' ;;
-+        11.[[3-7]]*|1[[2-4]].*)
-+          case $ld_version in
-+            *-711*)
-+              #_lt_dar_allow_undefined+=' $wl-no_fixup_chains' ;;
-+              echo "DEBUG: ld_version should have '-no_fixup_chains'" ;;
-             *)
-             ;;
-           esac
-@@ -1093,8 +1119,49 @@ _LT_EOF
-         *)
-         ;;
-       esac
-+      ld_man=`man ld`
-+      echo -e "DEBUG: ld_man: $ld_man"
-+      which_ld=`which ld`
-+      echo -e "DEBUG: which_ld: $which_ld"
-+      readlink_ld=`readlink -f ld`
-+      echo -e "DEBUG: readlink_ld: $readlink_ld"
-+      which_ld64=`which ld64`
-+      echo -e "DEBUG: which_ld64: $which_ld64"
-+      readlink_ld64=`readlink -f ld64`
-+      echo -e "DEBUG: readlink_ld64: $readlink_ld64"
-+      which_dyld=`which dyld`
-+      echo -e "DEBUG: which_dyld: $which_dyld"
-+      readlink_dyld=`readlink -f dyld`
-+      echo -e "DEBUG: readlink_dyld: $readlink_dyld"
-+
-+      echo -e "DEBUG: _lt_dar_allow_undefined pre-_DARWIN_NO_FIXUP_CHAINS: $_lt_dar_allow_undefined"
-+      _LT_DARWIN_NO_FIXUP_CHAINS($_lt_dar_allow_undefined)
-+      echo -e "DEBUG: _lt_dar_allow_undefined post-_DARWIN_NO_FIXUP_CHAINS: $_lt_dar_allow_undefined"
-+
-+      echo -e "DEBUG: Try again with ac_cache_check"
-+      echo -e "DEBUG: _lt_dar_allow_undefined pre-ac_cache_check: $_lt_dar_allow_undefined"
-+      echo -e "DEBUG: LDFLAGS pre-ac_cache_check: $LDFLAGS"
-+      AC_CACHE_CHECK([for -no_fixup_chains linker flag],
-+        [lt_cv_support_no_fixup_chains],
-+        [ save_LDFLAGS=$LDFLAGS
-+          LDFLAGS+=" -Wl,-no_fixup_chains"
-+          AC_LINK_IFELSE(
-+            [AC_LANG_PROGRAM([],[])],
-+            output_conftest=`cat conftest.$ac_ext`
-+            echo -e "DEBUG: cat conftest.$ac_ext: $output_conftest"
-+            lt_cv_support_no_fixup_chains=yes,
-+            lt_cv_support_no_fixup_chains=no
-+          )
-+          LDFLAGS=$save_LDFLAGS
-+        ]
-+      )
-+      echo -e "DEBUG: LDFLAGS post-ac_cache_check: $LDFLAGS"
+-            *)
+-            ;;
+-          esac
+-        ;;
+-        *)
+-        ;;
+-      esac
      ;;
    esac
-+    if test yes = "$_lt_dar_allow_undefined"; then
++    if test yes = "$lt_cv_support_no_fixup_chains"; then
 +      _lt_dar_allow_undefined+=" $wl-no_fixup_chains"
 +    fi
 +    echo -e "DEBUG: _lt_dar_allow_undefined post-ac_cache_check: $_lt_dar_allow_undefined"
