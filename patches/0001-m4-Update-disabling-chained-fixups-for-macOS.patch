@@ -1,4 +1,4 @@
-From 21a7ef5f5babbf28369c46341fd1189468a8f674 Mon Sep 17 00:00:00 2001
+From 3d1baeeef90a6b9e16c545babe833f28dca155a7 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 25 Jun 2024 17:09:52 +0300
 Subject: [PATCH] m4: Update disabling chained fixups for macOS
@@ -9,12 +9,12 @@ This is an update for commit 001d22d7d587e85a911c71c4d0c798ede8014b77.
   the '-no_fixup_chains' flag.
 * tests/no-executables.at: Set cache variable for link test.
 ---
- m4/libtool.m4           | 39 +++++++++++++++++++++------------------
+ m4/libtool.m4           | 38 ++++++++++++++++++++------------------
  tests/no-executables.at |  1 +
- 2 files changed, 22 insertions(+), 18 deletions(-)
+ 2 files changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index a1fcdf7a..dcc1e891 100644
+index a1fcdf7a..381d4cb3 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
 @@ -974,6 +974,7 @@ _lt_linker_boilerplate=`cat conftest.err`
@@ -47,7 +47,7 @@ index a1fcdf7a..dcc1e891 100644
      AC_CACHE_CHECK([for -exported_symbols_list linker flag],
        [lt_cv_ld_exported_symbols_list],
        [lt_cv_ld_exported_symbols_list=no
-@@ -1069,28 +1085,15 @@ _LT_EOF
+@@ -1069,28 +1085,14 @@ _LT_EOF
      darwin1.*)
        _lt_dar_allow_undefined='$wl-flat_namespace $wl-undefined ${wl}suppress' ;;
      darwin*)
@@ -77,7 +77,6 @@ index a1fcdf7a..dcc1e891 100644
 +          if test yes = "$lt_cv_support_no_fixup_chains"; then
 +            _lt_dar_allow_undefined+=' $wl-no_fixup_chains'
 +          fi
-+          echo -e "DEBUG: _lt_dar_allow_undefined: $_lt_dar_allow_undefined"
          ;;
        esac
      ;;
