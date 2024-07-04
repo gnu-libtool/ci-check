@@ -168,6 +168,53 @@ jobs:
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
           overwrite: true
+  check-linux-gnu-alma:
+    name: make check on AlmaLinux GNU/Linux
+    needs: build-tarball
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: almalinux:9
+          options: -v ${{ github.workspace }}:/work
+          run: |
+            uname -a
+            id
+            env | LC_ALL=C sort
+            pwd
+            : "Install AlmaLinux packages"
+            : "List of packages: https://repo.almalinux.org/almalinux/9/BaseOS/x86_64/os/Packages/"
+            : "                  https://repo.almalinux.org/almalinux/9/AppStream/x86_64/os/Packages/"
+            : "                  https://repo.almalinux.org/almalinux/9/CRB/x86_64/os/Packages/"
+            : "                  https://repo.almalinux.org/almalinux/9/devel/x86_64/os/Packages/"
+            : "Explanation: https://wiki.almalinux.org/repos/AlmaLinux.html"
+            yum -y install m4 automake make gcc gcc-c++ gcc-gfortran
+            cd /work
+            ls -l
+            export CPPFLAGS="-Wall"
+            ./build-on.sh '${{ env.package }}' '' 'make'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-linux-gnu-alma
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 7
+          overwrite: true
   check-linux-alpine:
     name: make check on Alpine Linux
     needs: build-tarball
