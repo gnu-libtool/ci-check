@@ -195,7 +195,7 @@ jobs:
             : "                  https://repo.almalinux.org/almalinux/9/CRB/x86_64/os/Packages/"
             : "                  https://repo.almalinux.org/almalinux/9/devel/x86_64/os/Packages/"
             : "Explanation: https://wiki.almalinux.org/repos/AlmaLinux.html"
-            yum -y install m4 automake make gcc gcc-c++ gcc-gfortran
+            yum -y install m4 automake make gcc gcc-c++ gcc-gfortran diffutils
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
