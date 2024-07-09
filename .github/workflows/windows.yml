@@ -194,10 +194,11 @@ jobs:
           export CPPFLAGS="-Wall"
           export CC=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32-gcc
           ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make'
+      - if: ${{ always() }}
+        run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
-        run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
         uses: actions/upload-artifact@v4
         with:
           name: logs-mingw${{ matrix.bitness }}
