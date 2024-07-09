@@ -1,0 +1,213 @@
+# A GitHub Actions workflow that builds a package on many platforms.
+
+# Copyright (C) 2024 Free Software Foundation, Inc.
+#
+# This file is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Reference documentation for this file:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# Syntax of multiline strings in YAML: https://yaml-multiline.info/
+#
+# Customization:
+# - Review and adapt the part of this file before the 'jobs:' line.
+# - You can disable a particular job by adding a line
+#     if: ${{ false }}
+# - You can disable a particular matrix value for a particular job by adding an
+#   'exclude' element to the 'matrix' element, such as:
+#        exclude:
+#          - bitness: 64
+
+name: Cygwin and mingw make check
+
+on:
+  push:
+
+# Variables.
+env:
+  package: libtool
+  branch: development
+
+jobs:
+  build-tarball:
+    if: ${{ startsWith(github.event.head_commit.message, '[windows]') }}
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      - run: uname -a
+      - run: id
+      - run: env | LC_ALL=C sort
+      - run: pwd
+      # Install Ubuntu packages.
+      # List of packages: https://packages.ubuntu.com/
+      - run: sudo apt update; sudo apt install help2man texlive-base texlive-latex-base
+      - run: |
+          ./build-dev-tarball.sh '${{ env.package }}' '${{ env.branch }}'
+      # Doc: https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-build-tarball-failed
+          path: |
+            ${{ env.package }}/config.cache
+            ${{ env.package }}/config.log
+            ${{ env.package }}/config.status
+            ${{ env.package }}/log[1234]
+            ${{ env.package }}/tests/testsuite.dir/*/testsuite.log
+          retention-days: 3
+          overwrite: true
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarball
+          path: ${{ env.package }}/${{ env.package }}-*.tar.gz
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+          overwrite: true
+  check-cygwin:
+    name: make check on Cygwin
+    needs: build-tarball
+    # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
+    strategy:
+      fail-fast: false
+      matrix:
+        bitness: [32, 64]
+        # On 32-bit Cygwin, the test "static linking flags for programs" would
+        # hang indefinitely.
+        exclude:
+          - bitness: 32
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: C:\cygwin\bin\bash.exe -eo pipefail -o igncr '{0}'
+    env:
+      CYGWIN_NOWINPATH: 1
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - run: git config --global core.autocrlf input
+        shell: cmd
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/cygwin/cygwin-install-action
+      - uses: cygwin/cygwin-install-action@v4
+        with:
+          platform: ${{ matrix.bitness == 32 && 'x86' || 'x86_64' }}
+          # Install Cygwin packages.
+          # List of packages: https://cygwin.com/packages/package_list.html
+          packages: m4 automake gcc-core make
+      - name: cygcheck
+        run: cygcheck -V
+      - name: cygcheck
+        run: cygcheck -s -r
+      - name: Windows version
+        run: cmd /c ver
+      - run: uname -a
+      - run: id
+      - run: env | LC_ALL=C sort
+      - run: pwd
+      - run: ls -l
+      - run: echo "$PATH"
+      - run: ls -l /usr/bin
+      - name: Build in Cygwin
+        run: |.github/workflows/windows.yml
+          export CPPFLAGS="-Wall"
+          ./build-on.sh '${{ env.package }}' '' 'make'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-cygwin${{ matrix.bitness }}
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/tests/testsuite.dir/
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 3
+          overwrite: true
+  check-mingw:
+    name: make check on mingw
+    needs: build-tarball
+    # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
+    strategy:
+      fail-fast: false
+      matrix:
+        bitness: [32, 64]
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: C:\cygwin\bin\bash.exe -eo pipefail -o igncr '{0}'
+    env:
+      CYGWIN_NOWINPATH: 1
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - run: git config --global core.autocrlf input
+        shell: cmd
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/cygwin/cygwin-install-action
+      - uses: cygwin/cygwin-install-action@v4
+        with:
+          platform: x86_64
+          # Install Cygwin packages.
+          # List of packages: https://cygwin.com/packages/package_list.html
+          packages: m4 automake ${{ matrix.bitness == 32 && 'mingw64-i686-gcc-core mingw64-i686-headers mingw64-i686-runtime' || 'mingw64-x86_64-gcc-core mingw64-x86_64-headers mingw64-x86_64-runtime' }} make
+      - name: cygcheck
+        run: cygcheck -V
+      - name: cygcheck
+        run: cygcheck -s -r
+      - name: Windows version
+        run: cmd /c ver
+      - run: uname -a
+      - run: id
+      - run: env | LC_ALL=C sort
+      - run: pwd
+      - run: ls -l
+      - run: echo "$PATH"
+      - run: ls -l /usr/bin
+      - name: Build in Cygwin
+        run: |
+          set -x
+          PATH=/usr/${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32/sys-root/mingw/bin:$PATH
+          export CPPFLAGS="-Wall"
+          export CC=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32-gcc
+          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32 ${{ env.args }}' 'make'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-mingw${{ matrix.bitness }}
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/tests/testsuite.dir/
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 3
+          overwrite: true
