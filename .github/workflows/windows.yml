@@ -197,8 +197,6 @@ jobs:
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
-        run: pwd
-        run: ls -l
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
         uses: actions/upload-artifact@v4
         with:
