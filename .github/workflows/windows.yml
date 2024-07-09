@@ -127,7 +127,7 @@ jobs:
       - run: echo "$PATH"
       - run: ls -l /usr/bin
       - name: Build in Cygwin
-        run: |.github/workflows/windows.yml
+        run: |
           export CPPFLAGS="-Wall"
           ./build-on.sh '${{ env.package }}' '' 'make'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
