@@ -192,12 +192,10 @@ jobs:
           export CPPFLAGS="-Wall"
           export CC=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32-gcc
           ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make'
+      - name: 'Tar files'
+        run: date=`date +%Y-%m-%d` && tar -cvf ${{ env.package }}-$date.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - name: 'Tar files'
-        run: |
-          date=`date +%Y-%m-%d`
-          tar -cvf ${{ env.package }}-$date.tar.gz ${{ env.package }}-*/
       - if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
