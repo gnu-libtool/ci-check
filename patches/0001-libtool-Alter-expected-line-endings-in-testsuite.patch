@@ -11,30 +11,23 @@ the LF character for line endings.
 * tests/testsuite.at: Removed '\r' from awk's printf command to support
   Cygwin in testsuite.
 ---
- tests/testsuite.at | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tests/testsuite.at | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tests/testsuite.at b/tests/testsuite.at
-index 093cf03c..1008102b 100644
+index 093cf03c..406a2500 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
-@@ -273,8 +273,14 @@ AT_CHECK([test -z "$leftovers"])
- # Ensure correct line ending for expected output of host executables.
+@@ -274,7 +274,9 @@ AT_CHECK([test -z "$leftovers"])
  m4_define([LT_AT_HOST_DATA],
  [AT_DATA([$1], [$2])
--case $host_os in mingw* | windows*)
+ case $host_os in mingw* | windows*)
 -  awk '{printf ("%s\r\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1 ;;
-+case $host_os in
-+mingw* | windows*)
-+  awk '{printf ("%s\r\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1
-+  ;;
-+
++   awk '{printf ("%s\r\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1;;
 +cygwin*)
-+  awk '{printf ("%s\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1
-+  ;;
++   awk '{printf ("%s\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1;;
  esac])
  
  
 -- 
 2.45.1
-
