@@ -1,0 +1,232 @@
+# A GitHub Actions workflow that builds a package on many platforms.
+
+# Copyright (C) 2024 Free Software Foundation, Inc.
+#
+# This file is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# Reference documentation for this file:
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# Syntax of multiline strings in YAML: https://yaml-multiline.info/
+#
+# Customization:
+# - Review and adapt the part of this file before the 'jobs:' line.
+# - You can disable a particular job by adding a line
+#     if: ${{ false }}
+# - You can disable a particular matrix value for a particular job by adding an
+#   'exclude' element to the 'matrix' element, such as:
+#        exclude:
+#          - bitness: 64
+
+name: BSD make check
+
+on:
+  push:
+
+# Variables.
+env:
+  package: libtool
+  branch: development
+
+jobs:
+  build-tarball:
+    if: ${{ startsWith(github.event.head_commit.message, '[bsd]') }}
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      - run: uname -a
+      - run: id
+      - run: env | LC_ALL=C sort
+      - run: pwd
+      # Install Ubuntu packages.
+      # List of packages: https://packages.ubuntu.com/
+      - run: sudo apt update; sudo apt install help2man texlive-base texlive-latex-base
+      - run: |
+          ./build-dev-tarball.sh '${{ env.package }}' '${{ env.branch }}'
+      # Doc: https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-build-tarball-failed
+          path: |
+            ${{ env.package }}/config.cache
+            ${{ env.package }}/config.log
+            ${{ env.package }}/config.status
+            ${{ env.package }}/log[1234]
+            ${{ env.package }}/tests/testsuite.dir/*/testsuite.log
+          retention-days: 3
+          overwrite: true
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarball
+          path: ${{ env.package }}/${{ env.package }}-*.tar.gz
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+          overwrite: true
+  check-freebsd:
+    name: make check on FreeBSD
+    needs: build-tarball
+    # The FreeBSD runners sometimes get stuck.
+    timeout-minutes: 15
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/vmactions/freebsd-vm
+      - uses: vmactions/freebsd-vm@v1
+        with:
+          release: '14.0'
+          mem: 1024
+          usesh: true
+          run: |
+            set -x
+            uname -a
+            id
+            env | LC_ALL=C sort
+            pwd
+            : "Install FreeBSD packages"
+            : "List of packages: https://ports.freebsd.org/cgi/ports.cgi"
+            pkg install -y m4 automake gcc
+            ls -l
+            export CPPFLAGS="-I/usr/local/include -Wall"
+            export LDFLAGS="-L/usr/local/lib"
+            ./build-on.sh '${{ env.package }}' '' 'make'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-freebsd
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 7
+          overwrite: true
+  check-netbsd:
+    name: make check on NetBSD
+    needs: build-tarball
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/vmactions/netbsd-vm
+      - uses: vmactions/netbsd-vm@v1
+        with:
+          release: '10.0'
+          mem: 1024
+          usesh: true
+          run: |
+            set -x
+            uname -a
+            id
+            env | LC_ALL=C sort
+            pwd
+            : "Install NetBSD packages"
+            : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
+            : "The only Fortran compiler available here is flang, not easy to use."
+            /usr/sbin/pkg_add m4 automake autoconf
+            ls -l
+            export CPPFLAGS="-I/usr/pkg/include -Wall"
+            export LDFLAGS="-L/usr/pkg/lib"
+            ./build-on.sh '${{ env.package }}' '' 'make'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-netbsd
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 7
+          overwrite: true
+  check-openbsd:
+    name: make check on OpenBSD
+    needs: build-tarball
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/vmactions/openbsd-vm
+      - uses: vmactions/openbsd-vm@v1
+        with:
+          release: '7.5'
+          mem: 1024
+          usesh: true
+          # Avoid 'sync: sshfs' since it causes trouble with file timestamps
+          # and errors from chown() calls:
+          # - BSD tar error messages for r--r--r-- files: "tar: Unable to create ...: Permission denied"
+          # - GNU tar warnings "Cannot change ownership to uid 0, gid 0: Permission denied"
+          #sync: sshfs
+          run: |
+            set -x
+            uname -a
+            id
+            env | LC_ALL=C sort
+            pwd
+            : "Install OpenBSD packages"
+            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
+            pkg_add m4 automake-1.16.5 autoconf-2.71 gmake gcc-11.2.0p11 g++-11.2.0p12
+            ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
+            export PATH=/usr/local/bin:$PATH
+            : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
+            export AUTOCONF_VERSION=2.71
+            : "The OpenBSD port of automake needs this, if more than one version is installed."
+            export AUTOMAKE_VERSION=1.16
+            ls -l
+            export CPPFLAGS="-I/usr/local/include -Wall"
+            export LDFLAGS="-L/usr/local/lib"
+            ./build-on.sh '${{ env.package }}' '' 'gmake'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-openbsd
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 7
+          overwrite: true
