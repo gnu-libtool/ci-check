@@ -67,7 +67,7 @@ jobs:
             ${{ env.package }}/config.status
             ${{ env.package }}/log[1234]
             ${{ env.package }}/tests/testsuite.dir/*/testsuite.log
-          retention-days: 7
+          retention-days: 3
           overwrite: true
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
@@ -76,7 +76,7 @@ jobs:
           name: tarball
           path: ${{ env.package }}/${{ env.package }}-*.tar.gz
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 3
           compression-level: 0
           overwrite: true
   # We can run max. 20 "make check" jobs in parallel, max. 5 of them being on macOS.
@@ -116,18 +116,16 @@ jobs:
           pwd
           export CPPFLAGS="-Wall"
           ./build-on.sh '${{ env.package }}' '' 'make'
+      - if: ${{ always() }}
+        run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-${{ matrix.os }}
-          path: |
-            ${{ env.package }}-*/build/config.cache
-            ${{ env.package }}-*/build/config.log
-            ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
-            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
-            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
-          retention-days: 7
+          path: ${{ env.package }}-build.tar.gz
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
           overwrite: true
