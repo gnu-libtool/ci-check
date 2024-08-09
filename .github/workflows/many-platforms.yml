@@ -658,7 +658,7 @@ jobs:
           platform: x86_64
           # Install Cygwin packages.
           # List of packages: https://cygwin.com/packages/package_list.html
-          packages: m4 automake ${{ matrix.bitness == 32 && 'mingw64-i686-gcc-core mingw64-i686-headers mingw64-i686-runtime' || 'mingw64-x86_64-gcc-core mingw64-x86_64-headers mingw64-x86_64-runtime' }} make
+          packages: m4 automake ${{ matrix.bitness == 32 && 'mingw64-i686-gcc-core mingw64-i686-gcc-g++ mingw64-i686-gcc-fortran mingw64-i686-headers mingw64-i686-runtime' || 'mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++ mingw64-x86_64-gcc-fortran mingw64-x86_64-headers mingw64-x86_64-runtime' }} make
       - name: cygcheck
         run: cygcheck -V
       - name: cygcheck

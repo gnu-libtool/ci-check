@@ -38,8 +38,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-ltmain-Use-shared-objects-built-in-source-tree.patch \
-&& patch -p1 < ../patches/0001-libtool-Fix-test-170-in-Cygwin-Mingw32.patch)
+#(cd "$package" && patch -p1 < ../patches/<patch>)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
