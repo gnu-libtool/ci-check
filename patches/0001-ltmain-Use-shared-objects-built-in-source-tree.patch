@@ -1,4 +1,4 @@
-From 4beda6b3496b5d636122b5e46e2c31806759c71d Mon Sep 17 00:00:00 2001
+From 998a3347622014a0ecb58bdf57388b3f545e5934 Mon Sep 17 00:00:00 2001
 From: Sergey Poznyakoff <gray@gnu.org.ua>
 Date: Tue, 11 Jun 2024 13:20:15 +0200
 Subject: [PATCH] ltmain: Use shared objects built in source tree
@@ -15,8 +15,8 @@ source tree produce unreliable results.
 ---
  Makefile.am         |   1 +
  build-aux/ltmain.in |  33 +++-
- tests/bug_71489.at  | 373 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 402 insertions(+), 5 deletions(-)
+ tests/bug_71489.at  | 391 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 420 insertions(+), 5 deletions(-)
  create mode 100644 tests/bug_71489.at
 
 diff --git a/Makefile.am b/Makefile.am
@@ -116,10 +116,10 @@ index 63377541..fb43fef0 100644
  	  compile_deplibs="$new_inherited_linker_flags $compile_deplibs"
 diff --git a/tests/bug_71489.at b/tests/bug_71489.at
 new file mode 100644
-index 00000000..4fb29e20
+index 00000000..adb5db75
 --- /dev/null
 +++ b/tests/bug_71489.at
-@@ -0,0 +1,373 @@
+@@ -0,0 +1,391 @@
 +# bug_71489.at test local version of installed program is used
 +
 +## --------------------- ##
@@ -202,7 +202,7 @@ index 00000000..4fb29e20
 +AC_CONFIG_AUX_DIR([build-aux])
 +AC_CONFIG_MACRO_DIR([m4])
 +
-+AM_INIT_AUTOMAKE([1.15 foreign])
++AM_INIT_AUTOMAKE([foreign])
 +
 +# Checks for programs.
 +AC_PROG_CC
@@ -264,6 +264,15 @@ index 00000000..4fb29e20
 +ltbug: local
 +EOF
 +
++case $host_os in
++mingw* | windows*)
++  awk '{printf ("%s\r\n", [$]0);}' < expout > expout.t && mv -f expout.t expout
++  ;;
++cygwin*)
++  awk '{printf ("%s\n", [$]0);}' < expout > expout.t && mv -f expout.t expout
++  ;;
++esac
++
 +build_local/src/ltb1 > stdout
 +
 +echo "Comparing expout to the build binary"
@@ -298,7 +307,7 @@ index 00000000..4fb29e20
 +AC_CONFIG_AUX_DIR([build-aux])
 +AC_CONFIG_MACRO_DIR([m4])
 +
-+AM_INIT_AUTOMAKE([1.15 foreign])
++AM_INIT_AUTOMAKE([foreign])
 +
 +AC_PROG_CC
 +LT_PREREQ([2.4.6])
@@ -418,7 +427,7 @@ index 00000000..4fb29e20
 +AC_CONFIG_AUX_DIR([build-aux])
 +AC_CONFIG_MACRO_DIR([m4])
 +
-+AM_INIT_AUTOMAKE([1.15 foreign])
++AM_INIT_AUTOMAKE([foreign])
 +
 +AC_PROG_CC
 +LT_PREREQ([2.4.6])
@@ -486,6 +495,15 @@ index 00000000..4fb29e20
 +ltb2a: local
 +ltb2b: local
 +EOF
++
++case $host_os in
++mingw* | windows*)
++  awk '{printf ("%s\r\n", [$]0);}' < expout > expout.t && mv -f expout.t expout
++  ;;
++cygwin*)
++  awk '{printf ("%s\n", [$]0);}' < expout > expout.t && mv -f expout.t expout
++  ;;
++esac
 +
 +build_local/src/ltb2 > stdout
 +
