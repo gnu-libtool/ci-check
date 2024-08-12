@@ -40,6 +40,6 @@ cd build
 $make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
 # Run the tests.
-$make check TESTSUITEFLAGS="--debug 34,81,171" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+$make check TESTSUITEFLAGS="--debug 34 81 171" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
 
 cd ..
