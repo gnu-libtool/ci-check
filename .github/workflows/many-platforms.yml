@@ -595,7 +595,7 @@ jobs:
           platform: ${{ matrix.bitness == 32 && 'x86' || 'x86_64' }}
           # Install Cygwin packages.
           # List of packages: https://cygwin.com/packages/package_list.html
-          packages: m4 automake gcc-core make
+          packages: m4 automake gcc-core gcc-g++ gcc-fortran make
       - name: cygcheck
         run: cygcheck -V
       - name: cygcheck
