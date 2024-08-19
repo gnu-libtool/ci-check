@@ -40,9 +40,6 @@ cd build
 $make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
 # Run the tests.
-$make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
-
-# Run the tests verbosely.
-$make check LIBTOOLFLAGS=--verbose TESTSUITEFLAGS="--debug" > log5 2>&1; rc=$?; cat log5; test $rc = 0 || exit 1
+$make check LIBTOOLFLAGS="--verbose" TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
 
 cd ..
