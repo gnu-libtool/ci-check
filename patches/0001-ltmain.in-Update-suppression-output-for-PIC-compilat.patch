@@ -1,0 +1,140 @@
+From 4801e3ac05f46b6caa6258aa03c1aecb34437040 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Mon, 19 Aug 2024 17:58:35 +0300
+Subject: [PATCH] ltmain.in: Update suppression output for PIC compilations
+
+libtool is assuming that the second PIC compilation will be identical to
+the first, but this is not always true. Instead of discarding the output
+of the second compilation, a diff of the first and second compilation
+will be output by default. To see the output of both compilations, just
+add '--verbose' to LIBTOOLFLAGS instead.
+
+* build-aux/ltmain.in: Remove '-no-suppress' option from libtool's
+  compile mode options and rely on verbose libtool builds for removing
+  output suppression.
+* doc/libtool.texi: Update documentation for option removal.
+---
+ build-aux/ltmain.in | 23 ++++++++++++-----------
+ doc/libtool.texi    | 29 +++++++++--------------------
+ 2 files changed, 21 insertions(+), 31 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index b69bf91f..6d741555 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -1373,8 +1373,8 @@ func_mode_compile ()
+     # Get the compilation command and the source file.
+     base_compile=
+     srcfile=$nonopt  #  always keep a non-empty value in "srcfile"
+-    suppress_opt=yes
+     suppress_output=
++    save_compile_output=
+     arg_mode=normal
+     libobj=
+     later=
+@@ -1415,11 +1415,6 @@ func_mode_compile ()
+ 	  continue
+ 	  ;;
+ 
+-	-no-suppress)
+-	  suppress_opt=no
+-	  continue
+-	  ;;
+-
+ 	-Xcompiler)
+ 	  arg_mode=arg  #  the next one goes into the "base_compile" arg list
+ 	  continue      #  The current "srcfile" will either be retained or
+@@ -1618,6 +1613,12 @@ compiler."
+ 	func_append command " -o $lobj"
+       fi
+ 
++      # Save and print output from the first compilation, if not verbose.
++      if $opt_quiet; then
++        save_compile_output=' >first_compile.log 2>&1; cat first_compile.log'
++      fi
++
++      func_append command "$save_compile_output"
+       func_show_eval_locale "$command"	\
+           'test -n "$output_obj" && $RM $removelist; exit $EXIT_FAILURE'
+ 
+@@ -1647,9 +1648,10 @@ compiler."
+ 	  'error=$?; $opt_dry_run || $RM $removelist; exit $error'
+       fi
+ 
+-      # Allow error messages only from the first compilation.
+-      if test yes = "$suppress_opt"; then
+-	suppress_output=' >/dev/null 2>&1'
++      # Show output diff for first and second compilations, if not verbose.
++      if $opt_quiet; then
++        suppress_output=' >second_compile.log 2>&1; diff first_compile.log second_compile.log;
++        $RM first_compile.log second_compile.log'
+       fi
+     fi
+ 
+@@ -1665,7 +1667,7 @@ compiler."
+ 	func_append command " -o $obj"
+       fi
+ 
+-      # Suppress compiler output if we already did a PIC compilation.
++      # Suppress output from second compilation, if not verbose.
+       func_append command "$suppress_output"
+       func_show_eval_locale "$command" \
+         '$opt_dry_run || $RM $removelist; exit $EXIT_FAILURE'
+@@ -1747,7 +1749,6 @@ Compile a source file into a libtool library object.
+ This mode accepts the following additional options:
+ 
+   -o OUTPUT-FILE    set the output file name to OUTPUT-FILE
+-  -no-suppress      do not suppress compiler output for multiple passes
+   -prefer-pic       try to build PIC objects only
+   -prefer-non-pic   try to build non-PIC objects only
+   -shared           do not build a '.o' file suitable for static linking
+diff --git a/doc/libtool.texi b/doc/libtool.texi
+index 04ab34f1..a51a02ea 100644
+--- a/doc/libtool.texi
++++ b/doc/libtool.texi
+@@ -581,19 +581,15 @@ pic_object='@value{objdir}/foo.o'
+ non_pic_object='foo.o'
+ @end example
+ 
+-@cindex @option{-no-suppress}, libtool compile mode option
+-Notice the second run of GCC has its output discarded.  This is
+-done so the compiler warnings aren't annoyingly duplicated.  If you
+-need to see both sets of warnings (you might have conditional code
+-inside @samp{#ifdef PIC} for example), you can turn off suppression by
+-passing the @option{-no-suppress} option to libtool's compile mode:
+-
+-@example
+-burger$ @kbd{libtool --mode=compile gcc -no-suppress -I. -g -O -c hello.c}
+-gcc -I. -g -O -c hello.c  -fPIC -DPIC -o @value{objdir}/hello.o
+-gcc -I. -g -O -c hello.c -o hello.o
+-burger$
+-@end example
++Notice the second run of GCC has previously been discarded.  The code
++has been revised to diff the output of the first and second compilation.
++This is done so the compiler warnings aren't annoyingly duplicated, while
++allowing for easier debugging.  If you need to see both sets of warnings
++(you might have conditional code inside @samp{#ifdef PIC} for example),
++you can turn off suppression by using libtool's @option{--verbose} option
++like so: @samp{make LIBTOOLFLAGS=--verbose} (@pxref{Libtool Flags, ,
++@code{_LIBADD}@comma{} @code{_LDFLAGS}@comma{} and @code{_LIBTOOLFLAGS},
++automake, The Automake Manual}).
+ 
+ 
+ @node Linking libraries
+@@ -1397,13 +1393,6 @@ This will also ensure that make won't try to use a temporarily corrupted
+ recompilation on platforms that support @option{-c} and @option{-o}
+ together, but it's the only way to make it safe for those that don't.
+ 
+-@item -no-suppress
+-If both PIC and non-PIC objects are being built, libtool will normally
+-suppress the compiler output for the PIC object compilation to save
+-showing very similar, if not identical duplicate output for each
+-object.  If the @option{-no-suppress} option is given in compile mode,
+-libtool will show the compiler output for both objects.
+-
+ @item -prefer-pic
+ Libtool will try to build only PIC objects.
+ 
+-- 
+2.45.2
+
