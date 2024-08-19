@@ -21,6 +21,7 @@
 package="$1"
 configure_options="$2"
 make="$3"
+commit_message="$4"
 
 set -x
 
@@ -41,5 +42,15 @@ $make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
 # Run the tests.
 $make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+
+# Run pre-release testing
+if [[ $commit_message == *"[pre-release]"* ]]; then
+  c=check ve=check-very-expensive; git grep -q "^$ve:\$" && c=$ve
+  $make $c syntax-check distcheck > log5 2>&1; rc=$?; cat log5; test $rc = 0 || exit 1
+  $make distcheck DISTCHECK_CONFIGURE_FLAGS=--disable-ltdl-install > log6 2>&1; rc=$?; cat log6; test $rc = 0 || exit 1
+  $make distcheck DISTCHECK_CONFIGURE_FLAGS=--program-prefix=g > log7 2>&1; rc=$?; cat log7; test $rc = 0 || exit 1
+  $make distcheck DISTCHECK_CONFIGURE_FLAGS=--disable-shared > log8 2>&1; rc=$?; cat log8; test $rc = 0 || exit 1
+  $make distcheck CC=g++ > log9 2>&1; rc=$?; cat log9; test $rc = 0 || exit 1
+fi
 
 cd ..
