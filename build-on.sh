@@ -44,16 +44,22 @@ inc=3
 case "$commit_message" in
   *"[pre-release]"*)
     # Run pre-release testing.
-    $make check CC=g++ TESTSUITEFLAGS="1" >> log"$inc" 2>&1; rc=$?; cat log"$inc"; test $rc = 0 || echo "Failed: '$make check CC=g++'" >> log"$inc"
+    ret_code=0
+    $make check CC=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    test $ret_code = 0 || echo "Failed: '$make check CC=g++'" >> log"$inc"
+    cat log"$inc"
     for configure_flag in "--disable-ltdl-install" \
                 "--program-prefix=g" \
                 "--disable-shared"
     do
         inc=$(( $inc + 1 ))
-        ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
-        $make check TESTSUITEFLAGS="1" >> log"$inc" 2>&1; rc=$?; test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
+        ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+        test $ret_code = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
+        $make check >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+        test $ret_code = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
         cat log"$inc"
     done
+    test $ret_code = 0 || exit 1
     ;;
   *)
     # Run the tests.

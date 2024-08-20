@@ -55,6 +55,6 @@ date --utc --iso-8601 > .tarball-version
 # Build (uses packages make, gcc, ...).
 make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 # Run the tests.
-make check TESTSUITEFLAGS="--debug 1" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
 # Check that tarballs are correct.
-make distcheck TESTSUITEFLAGS="--debug 1" > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+make distcheck > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
