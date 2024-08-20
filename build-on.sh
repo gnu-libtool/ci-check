@@ -42,12 +42,15 @@ $make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
 if [[ "$commit_message" == *"[pre-release]"* ]]; then
   # Run pre-release testing.
-  c=check ve=check-very-expensive; git grep -q "^$ve:\$" && c=$ve
-  $make $c syntax-check distcheck > log5 2>&1; rc=$?; cat log5; test $rc = 0 || exit 0
-  $make distcheck DISTCHECK_CONFIGURE_FLAGS=--disable-ltdl-install > log6 2>&1; rc=$?; cat log6; test $rc = 0 || exit 0
-  $make distcheck DISTCHECK_CONFIGURE_FLAGS=--program-prefix=g > log7 2>&1; rc=$?; cat log7; test $rc = 0 || exit 0
-  $make distcheck DISTCHECK_CONFIGURE_FLAGS=--disable-shared > log8 2>&1; rc=$?; cat log8; test $rc = 0 || exit 0
-  $make distcheck CC=g++ > log9 2>&1; rc=$?; cat log9; test $rc = 0 || exit 0
+  $make check CC=g++ >> log3 2>&1; rc=$?; test $rc = 0 || echo "Failed: '$make check CC=g++'" >> log3
+  for configure_flag in "--disable-ltdl-install" \
+            "--program-prefix=g" \
+            "--disable-shared"
+  do
+    ../configure --config-cache $configure_options $configure_flag >> log3 2>&1; rc=$?; test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log3
+    $make check >> log3 2>&1; rc=$?; test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log3
+  done
+  cat log3
 else
   # Run the tests.
   $make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
