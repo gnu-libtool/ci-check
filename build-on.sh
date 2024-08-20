@@ -53,7 +53,7 @@ if [[ "$commit_message" == *"[pre-release]"* ]]; then
   cat log3
 else
   # Run the tests.
-  $make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+  $make check TESTSUITEFLAGS="--debug 1" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
 fi
 
 cd ..
