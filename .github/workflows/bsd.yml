@@ -110,7 +110,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            SHELL=/bin/bash ./build-on.sh '${{ env.package }}' '' 'make'
+            ./build-on.sh '${{ env.package }}' '' 'make'
       - if: ${{ always() }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -155,7 +155,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
-            SHELL=/bin/bash ./build-on.sh '${{ env.package }}' '' 'make'
+            ./build-on.sh '${{ env.package }}' '' 'make'
       - if: ${{ always() }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -210,7 +210,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            SHELL=/bin/bash ./build-on.sh '${{ env.package }}' '' 'gmake'
+            ./build-on.sh '${{ env.package }}' '' 'gmake'
       - if: ${{ always() }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts

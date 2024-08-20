@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Copyright (C) 2024 Free Software Foundation, Inc.
 #
@@ -40,20 +40,25 @@ cd build
 # Build.
 $make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
-if [[ "$commit_message" == *"[pre-release]"* ]]; then
-  # Run pre-release testing.
-  $make check CC=g++ >> log3 2>&1; rc=$?; test $rc = 0 || echo "Failed: '$make check CC=g++'" >> log3
-  for configure_flag in "--disable-ltdl-install" \
-            "--program-prefix=g" \
-            "--disable-shared"
-  do
-    ../configure --config-cache $configure_options $configure_flag >> log3 2>&1; rc=$?; test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log3
-    $make check >> log3 2>&1; rc=$?; test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log3
-  done
-  cat log3
-else
-  # Run the tests.
-  $make check TESTSUITEFLAGS="--debug 1" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
-fi
+inc=3
+case "$commit_message" in
+  *"[pre-release]"*)
+    # Run pre-release testing.
+    $make check CC=g++ TESTSUITEFLAGS="1" >> log"$inc" 2>&1; rc=$?; cat log"$inc"; test $rc = 0 || echo "Failed: '$make check CC=g++'" >> log"$inc"
+    for configure_flag in "--disable-ltdl-install" \
+                "--program-prefix=g" \
+                "--disable-shared"
+    do
+        inc=$(( $inc + 1 ))
+        ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
+        $make check TESTSUITEFLAGS="1" >> log"$inc" 2>&1; rc=$?; test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
+        cat log"$inc"
+    done
+    ;;
+  *)
+    # Run the tests.
+    $make check TESTSUITEFLAGS="--debug" > log"$inc" 2>&1; rc=$?; cat log"$inc"; test $rc = 0 || exit 1
+    ;;
+esac
 
 cd ..

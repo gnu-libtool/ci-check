@@ -238,7 +238,7 @@ jobs:
             pwd
             : "Install Alpine Linux packages"
             : "List of packages: https://pkgs.alpinelinux.org/packages"
-            apk add m4 automake autoconf make gcc musl-dev g++ gfortran bash
+            apk add m4 automake autoconf make gcc musl-dev g++ gfortran
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
@@ -336,7 +336,7 @@ jobs:
             pwd
             : "Install FreeBSD packages"
             : "List of packages: https://ports.freebsd.org/cgi/ports.cgi"
-            pkg install -y m4 automake gcc bash
+            pkg install -y m4 automake gcc
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -383,7 +383,7 @@ jobs:
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
             : "The only Fortran compiler available here is flang, not easy to use."
-            /usr/sbin/pkg_add m4 automake autoconf bash
+            /usr/sbin/pkg_add m4 automake autoconf
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
@@ -434,7 +434,7 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            pkg_add m4 automake-1.16.5 autoconf-2.71 gmake gcc-11.2.0p11 g++-11.2.0p12 bash
+            pkg_add m4 automake-1.16.5 autoconf-2.71 gmake gcc-11.2.0p11 g++-11.2.0p12
             ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
