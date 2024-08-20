@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Copyright (C) 2024 Free Software Foundation, Inc.
 #
@@ -58,9 +58,7 @@ make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 # Check that tarballs are correct.
 make distcheck TESTSUITEFLAGS="-d 1" > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
 
-echo "\"$commit_message\"" == *"\"[pre-release]\""*
-
-if [[ "\"$commit_message\"" == *"\"[pre-release]\""* ]]; then
+if [[ "$commit_message" == *"[pre-release]"* ]]; then
   echo "SUCCESS"
 else
   echo "FAIL"
