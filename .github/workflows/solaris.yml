@@ -115,7 +115,7 @@ jobs:
             export CPPFLAGS="-Wall"
             export CC="gcc -m64"
             export CXX="g++ -m64"
-            ./build-on.sh '${{ env.package }}' '' 'make'
+            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
       - if: ${{ always() }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -161,7 +161,7 @@ jobs:
             pwd
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'gmake'
+            ./build-on.sh '${{ env.package }}' '' 'gmake' '${{ github.event.head_commit.message }}'
       - if: ${{ always() }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
