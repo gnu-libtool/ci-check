@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This script builds a tarball of the package on a single platform.
-# Usage: build-on.sh PACKAGE CONFIGURE_OPTIONS MAKE
+# Usage: build-on.sh PACKAGE CONFIGURE_OPTIONS MAKE COMMIT_MESSAGE
 
 package="$1"
 configure_options="$2"
@@ -45,8 +45,8 @@ case "$commit_message" in
   *"[pre-release]"*)
     # Run pre-release testing.
     ret_code=0
-    $make check CC=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    test $ret_code = 0 || echo "Failed: '$make check CC=g++'" >> log"$inc"
+    $make check CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    test $rc = 0 || echo "Failed: '$make check CXX=g++'" >> log"$inc"
     cat log"$inc"
     for configure_flag in "--disable-ltdl-install" \
                 "--program-prefix=g" \
@@ -54,9 +54,9 @@ case "$commit_message" in
     do
         inc=$(( $inc + 1 ))
         ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-        test $ret_code = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
+        test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
         $make check >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-        test $ret_code = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
+        test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
         cat log"$inc"
     done
     test $ret_code = 0 || exit 1

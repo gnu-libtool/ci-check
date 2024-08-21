@@ -59,7 +59,7 @@ jobs:
       # List of packages: https://packages.ubuntu.com/
       - run: sudo apt update; sudo apt install help2man texlive-base texlive-latex-base
       - run: |
-          ./build-tarball.sh '${{ env.package }}' '${{ env.branch }}'
+          ./build-dev-tarball.sh '${{ env.package }}' '${{ env.branch }}'
       # Doc: https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -118,7 +118,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -163,7 +163,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -210,7 +210,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -253,7 +253,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -303,7 +303,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -351,7 +351,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -398,7 +398,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -455,7 +455,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -508,7 +508,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -556,7 +556,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -623,7 +623,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -689,7 +689,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -792,7 +792,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -835,7 +835,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
@@ -882,7 +882,7 @@ jobs:
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
             ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[123]
+            ${{ env.package }}-*/build/log[1-6]
             ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
             ${{ env.package }}-*/build/gnulib-tests/test-suite.log
           retention-days: 7
