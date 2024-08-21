@@ -40,25 +40,26 @@ cd build
 # Build.
 $make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
-inc=3
 case "$commit_message" in
   *"[pre-release]"*)
     # Run pre-release testing.
     ret_code=0
-    $make check CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    test $rc = 0 || echo "Failed: '$make check CXX=g++'" >> log"$inc"
-    cat log"$inc"
+    inc=3
     for configure_flag in "--disable-ltdl-install" \
                 "--program-prefix=g" \
                 "--disable-shared"
     do
-        inc=$(( $inc + 1 ))
         ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
         $make check >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
         cat log"$inc"
+        inc=$(( $inc + 1 ))
     done
+    ../configure $configure_options >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    $make check CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    test $rc = 0 || echo "Failed: '$make check CXX=g++'" >> log"$inc"
+    cat log"$inc"
     test $ret_code = 0 || exit 1
     ;;
   *)
