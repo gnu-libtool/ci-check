@@ -56,8 +56,8 @@ case "$commit_message" in
         cat log"$inc"
         inc=$(( $inc + 1 ))
     done
-    ../configure $configure_options >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    $make check CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    ../configure $configure_options CC=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    $make check CC=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
     test $rc = 0 || echo "Failed: '$make check CXX=g++'" >> log"$inc"
     cat log"$inc"
     test $ret_code = 0 || exit 1
