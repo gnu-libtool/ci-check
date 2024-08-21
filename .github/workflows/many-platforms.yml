@@ -312,7 +312,7 @@ jobs:
     name: make check on FreeBSD
     needs: build-tarball
     # The FreeBSD runners sometimes get stuck.
-    timeout-minutes: 15
+    timeout-minutes: 60
     runs-on: ubuntu-22.04
     steps:
       # This is needed because we run a script stored in this repository.
