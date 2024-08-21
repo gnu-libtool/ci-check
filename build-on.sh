@@ -51,13 +51,13 @@ case "$commit_message" in
     do
         ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
-        $make check >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+        $make check TESTSUITEFLAGS="152" >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
         cat log"$inc"
         inc=$(( $inc + 1 ))
     done
-    ../configure $configure_options CC=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    $make check CC=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    ../configure $configure_options CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    $make check CXX=g++ TESTSUITEFLAGS="152" >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
     test $rc = 0 || echo "Failed: '$make check CXX=g++'" >> log"$inc"
     cat log"$inc"
     test $ret_code = 0 || exit 1

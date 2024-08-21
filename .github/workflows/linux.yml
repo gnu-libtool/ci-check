@@ -38,7 +38,7 @@ on:
 env:
   package: libtool
   branch: development
-  save_logs: false
+  save_logs: ${{ false }}
 
 jobs:
   build-tarball:
