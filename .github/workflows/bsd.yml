@@ -111,11 +111,11 @@ jobs:
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
             ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ always() }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ always() }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-freebsd
@@ -156,11 +156,11 @@ jobs:
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
             ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ always() }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ always() }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-netbsd
@@ -211,11 +211,11 @@ jobs:
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
             ./build-on.sh '${{ env.package }}' '' 'gmake' '${{ github.event.head_commit.message }}'
-      - if: ${{ always() }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ always() }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-openbsd
