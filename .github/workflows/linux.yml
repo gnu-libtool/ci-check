@@ -38,7 +38,6 @@ on:
 env:
   package: libtool
   branch: development
-  save_logs: ${{ false }}
 
 jobs:
   build-tarball:
@@ -102,11 +101,11 @@ jobs:
           pwd
           export CPPFLAGS="-Wall"
           ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-linux-gnu-ubuntu
@@ -145,11 +144,11 @@ jobs:
             ls -l
             export CPPFLAGS="-Wall"
             ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-linux-gnu-centos
@@ -190,11 +189,11 @@ jobs:
             ls -l
             export CPPFLAGS="-Wall"
             ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-linux-gnu-alma
@@ -231,11 +230,11 @@ jobs:
             ls -l
             export CPPFLAGS="-Wall"
             ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ env.save_logs }}
+      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-linux-alpine
