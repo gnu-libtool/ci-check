@@ -59,7 +59,7 @@ make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 case "$commit_message" in
   *"[pre-release]"*)
     # Run pre-release testing.
-    make distcheck CC=g++ > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+    make distcheck CXX=g++ > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
     ;;
   *)
     # Check that tarballs are correct.
