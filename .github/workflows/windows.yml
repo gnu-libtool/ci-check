@@ -20,6 +20,10 @@
 #
 # Syntax of multiline strings in YAML: https://yaml-multiline.info/
 #
+# To execute this workflow, specify "[windows]" at the start of the head
+# commit message that is pushed. For example:
+#   git commit -m "[windows] Test patch"
+#
 # Customization:
 # - Review and adapt the part of this file before the 'jobs:' line.
 # - You can disable a particular job by adding a line
@@ -28,6 +32,14 @@
 #   'exclude' element to the 'matrix' element, such as:
 #        exclude:
 #          - bitness: 64
+# - You can execute pre-release testing by specifying "[pre-release]" anywhere
+#   in the head commit message that is pushed. For example:
+#     git commit -m "[windows] [pre-release] Test patch"
+#     - NOTE: By default, all OS-specific logs are not uploaded for download
+#       when executing pre-release testing. To enable, update the following:
+#         if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
+#       To this:
+#         if: ${{ always() }}
 
 name: Cygwin and mingw make check
 

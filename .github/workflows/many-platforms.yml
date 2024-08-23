@@ -20,6 +20,10 @@
 #
 # Syntax of multiline strings in YAML: https://yaml-multiline.info/
 #
+# To execute this workflow, specify "[all]" at the start of the head
+# commit message that is pushed. For example:
+#   git commit -m "[all] Test patch"
+#
 # Customization:
 # - Review and adapt the part of this file before the 'jobs:' line.
 # - You can disable a particular job by adding a line
@@ -28,6 +32,9 @@
 #   'exclude' element to the 'matrix' element, such as:
 #        exclude:
 #          - bitness: 64
+# - You can execute pre-release testing by specifying "[pre-release]" anywhere
+#   in the head commit message that is pushed. For example:
+#     git commit -m "[all] [pre-release] Test patch"
 
 name: Produce tarball and make check
 
