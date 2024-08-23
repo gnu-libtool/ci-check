@@ -59,7 +59,7 @@ jobs:
       # List of packages: https://packages.ubuntu.com/
       - run: sudo apt update; sudo apt install help2man texlive-base texlive-latex-base
       - run: |
-          ./build-dev-tarball.sh '${{ env.package }}' '${{ env.branch }}'
+          ./build-tarball.sh '${{ env.package }}' '${{ env.branch }}' '${{ github.event.head_commit.message }}'
       # Doc: https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ failure() }}
         uses: actions/upload-artifact@v4

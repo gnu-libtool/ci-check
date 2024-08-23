@@ -21,6 +21,7 @@
 
 package="$1"
 branch="$2"
+commit_message="$3"
 
 if test -z $branch; then
     branch="master"
@@ -56,5 +57,14 @@ date --utc --iso-8601 > .tarball-version
 make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 # Run the tests.
 make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
-# Check that tarballs are correct.
-make distcheck > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+
+case "$commit_message" in
+  *"[pre-release]"*)
+    # Run pre-release testing.
+    make distcheck CC=g++ > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+    ;;
+  *)
+    # Check that tarballs are correct.
+    make distcheck > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+    ;;
+esac

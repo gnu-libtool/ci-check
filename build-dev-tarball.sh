@@ -54,5 +54,14 @@ date --utc --iso-8601 > .tarball-version
 ./configure --config-cache CPPFLAGS="-Wall" > log1 2>&1; rc=$?; cat log1; test $rc = 0 || exit 1
 # Build (uses packages make, gcc, ...).
 make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
-# Check that tarballs are correct.
-make distcheck TESTSUITEFLAGS="-d 1" > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+
+case "$commit_message" in
+  *"[pre-release]"*)
+    # Run pre-release testing.
+    make distcheck CC=g++ > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+    ;;
+  *)
+    # Check that tarballs are correct.
+    make distcheck TESTSUITEFLAGS="-d 1" > log4 2>&1; rc=$?; cat log4; test $rc = 0 || exit 1
+    ;;
+esac
