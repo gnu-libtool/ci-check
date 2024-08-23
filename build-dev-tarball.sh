@@ -21,6 +21,7 @@
 
 package="$1"
 branch="$2"
+commit_message="$3"
 
 if test -z $branch; then
     branch="master"
