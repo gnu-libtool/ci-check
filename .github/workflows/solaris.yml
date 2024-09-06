@@ -37,7 +37,7 @@
 #     git commit -m "[solaris] [pre-release] Test patch"
 #     - NOTE: By default, all OS-specific logs are not uploaded for download
 #       when executing pre-release testing. To enable, update the following:
-#         if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
+#         if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
 #       To this:
 #         if: ${{ always() }}
 
@@ -128,11 +128,11 @@ jobs:
             export CC="gcc -m64"
             export CXX="g++ -m64"
             ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
-      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-solaris11
@@ -174,11 +174,11 @@ jobs:
             ls -l
             export CPPFLAGS="-Wall"
             ./build-on.sh '${{ env.package }}' '' 'gmake' '${{ github.event.head_commit.message }}'
-      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ !contains(github.event.head_commit.message, '[pre-release]') }}
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-solaris11-omnios
