@@ -1,0 +1,46 @@
+From 1638a6407573b74517b57a0f6e596918344a4394 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 11 Sep 2024 20:22:09 +0300
+Subject: [PATCH] Add 'aarch64' support to the file magic test
+
+The file magic test fails to determine the file type of libraries when
+cross-compiling with an aarch64 compiler without additional strings to
+search for in an objdump.
+
+* build-aux/ltmain.in: Append 'pe-aarch64' to file_magic in the
+lt_cv_deplibs_check_method.
+* m4/libtool.m4: Append 'pe-aarch64' to file format check.
+---
+ build-aux/ltmain.in | 2 +-
+ m4/libtool.m4       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index fb43fef0..68aca605 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -3046,7 +3046,7 @@ func_win32_libid ()
+   *ar\ archive*) # could be an import, or static
+     # Keep the egrep pattern in sync with the one in _LT_CHECK_MAGIC_METHOD.
+     if eval $OBJDUMP -f $1 | $SED -e '10q' 2>/dev/null |
+-       $EGREP 'file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64)' >/dev/null; then
++       $EGREP 'file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64|pe-aarch64)' >/dev/null; then
+       case $nm_interface in
+       "MS dumpbin")
+ 	if func_cygming_ms_implib_p "$1" ||
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 99ebf60f..522601f4 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -3535,7 +3535,7 @@ mingw* | windows* | pw32*)
+     lt_cv_file_magic_cmd='func_win32_libid'
+   else
+     # Keep this pattern in sync with the one in func_win32_libid.
+-    lt_cv_deplibs_check_method='file_magic file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64)'
++    lt_cv_deplibs_check_method='file_magic file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64|pe-aarch64)'
+     lt_cv_file_magic_cmd='$OBJDUMP -f'
+   fi
+   ;;
+-- 
+2.45.2
+
