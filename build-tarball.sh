@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This script builds the package.
-# Usage: build-tarball.sh PACKAGE
+# Usage: build-tarball.sh PACKAGE BRANCH COMMIT_MESSAGE
 # Its output is a tarball: $package/$package-*.tar.gz
 
 package="$1"
