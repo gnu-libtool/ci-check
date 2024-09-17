@@ -1,0 +1,67 @@
+From c8f9ea7adc3c57cd7a454342bb43dc10b7727e21 Mon Sep 17 00:00:00 2001
+From: Joshua Root <jmr@macports.org>
+Date: Fri, 12 Apr 2019 19:32:02 +0300
+Subject: [PATCH] libtool.m4: Update '-single_module' detection
+
+'-single_module' detection is broken with Xcode 15, where a message to
+stderr indicates the flag is deprecated, not unsupported.
+
+* m4/libtool.m4: Check macOS versions to see if '-single_module' flag is
+  unnecessary.
+---
+ NEWS          |  3 +++
+ m4/libtool.m4 | 17 ++++++++++++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/NEWS b/NEWS
+index 4e110883..40089e75 100644
+--- a/NEWS
++++ b/NEWS
+@@ -19,6 +19,9 @@ NEWS - list of user-visible changes between releases of GNU Libtool
+ 
+   - Update FSF office address with URL in each file's license block.
+ 
++  - Fix incorrect use of workarounds designed for Darwin versions that
++    don't have -single_module support.
++
+ 
+ * Noteworthy changes in release 2.5.2 (2024-08-29) [beta]
+ 
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 548e0ac7..9630c380 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -1100,6 +1100,21 @@ _LT_EOF
+     if test yes = "$lt_cv_apple_cc_single_mod"; then
+       _lt_dar_single_mod='$single_module'
+     fi
++    _lt_dar_needs_single_mod=no
++    case $host_os in
++    rhapsody* | darwin1.*)
++      _lt_dar_needs_single_mod=yes ;;
++    darwin*)
++      # When targeting Mac OS X 10.4 (darwin 8) or later,
++      # -single_module is the default and -multi_module is unsupported.
++      # The toolchain on macOS 10.14 (darwin 18) and later cannot
++      # target any OS version that needs -single_module.
++      case ${MACOSX_DEPLOYMENT_TARGET-10.0},$host in
++      10.0,*-darwin[[567]].*|10.[[0-3]],*-darwin[[5-9]].*|10.[[0-3]],*-darwin1[[0-7]].*)
++        _lt_dar_needs_single_mod=yes ;;
++      esac
++    ;;
++    esac
+     if test yes = "$lt_cv_ld_exported_symbols_list"; then
+       _lt_dar_export_syms=' $wl-exported_symbols_list,$output_objdir/$libname-symbols.expsym'
+     else
+@@ -1188,7 +1203,7 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
+     _LT_TAGVAR(archive_expsym_cmds, $1)="$SED 's|^|_|' < \$export_symbols > \$output_objdir/\$libname-symbols.expsym~\$CC -dynamiclib \$allow_undefined_flag -o \$lib \$libobjs \$deplibs \$compiler_flags -install_name $_lt_install_name \$verstring $_lt_dar_export_syms$_lt_dsymutil"
+     _LT_TAGVAR(module_expsym_cmds, $1)="$SED -e 's|^|_|' < \$export_symbols > \$output_objdir/\$libname-symbols.expsym~\$CC \$allow_undefined_flag -o \$lib -bundle \$libobjs \$deplibs \$compiler_flags$_lt_dar_export_syms$_lt_dsymutil"
+     m4_if([$1], [CXX],
+-[   if test yes != "$lt_cv_apple_cc_single_mod"; then
++[   if test yes = "$_lt_dar_needs_single_mod" -a yes != "$lt_cv_apple_cc_single_mod"; then
+       _lt_install_name='\$rpath/\$soname'
+       if test yes = "$enable_darwin_at_rpath"; then
+         _lt_install_name='@rpath/\$soname'
+-- 
+2.45.2
+
