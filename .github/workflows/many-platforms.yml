@@ -262,7 +262,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-12, macos-13, macos-14]
+        os: [macos-12, macos-13, macos-14, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       # This is needed because we run a script stored in this repository.
@@ -480,7 +480,7 @@ jobs:
           prepare: |
             : "Install Solaris packages"
             : "List of packages: http://pkg.oracle.com/solaris/release/en/index.shtml"
-            pkg install gnu-m4 automake autoconf gcc gcc-c++ gcc-gfortran
+            pkg install gnu-m4 automake autoconf gcc gcc-c++ gcc-gfortran; ret=$?; test $ret = 0 || test $ret = 4
           run: |
             set -x
             uname -a
