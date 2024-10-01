@@ -122,7 +122,7 @@ jobs:
       # gfortran is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/gfortran/bin/gfortran = ${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin/gfortran.
       # (HOMEBREW_PREFIX is currently /opt/homebrew on the macOS 14/arm64 machines, and undefined on the older machines.)
       - run: |
-          PATH=${HOMEBREW_PREFIX-/usr/local}/opt/m4/bin:${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin:/usr/local/bin:$PATH
+          PATH=${HOMEBREW_PREFIX-/usr/local}/opt/m4/bin:${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin:/usr/local/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:$PATH
           : "Set M4 environment variable, in order to ignore the broken 'gm4' that is also found in PATH."
           export M4=m4
           pwd
