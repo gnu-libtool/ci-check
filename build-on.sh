@@ -64,7 +64,6 @@ case "$commit_message" in
     ;;
   *)
     # Run the tests.
-    export PATH="$PATH:/Library/Frameworks/Mono.framework/Versions/Current/Commands"
     $make check TESTSUITEFLAGS="--debug 47 48 64 92 153-158" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
     ;;
 esac
