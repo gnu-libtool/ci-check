@@ -36,9 +36,7 @@ set -e
 #   libtoolize.at: "14: verbatim aclocal.m4 w/o AC_CONFIG_MACRO_DIRS"
 # fails.
 git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
-git clone --depth 5 https://git.savannah.gnu.org/git/gnulib.git
-
-(cd gnulib && git checkout 035e164bb016481ffe5e9f6b8be189bcdc41b0dd)
+git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
 # (cd "$package" && patch -p1 < ../patches/)
