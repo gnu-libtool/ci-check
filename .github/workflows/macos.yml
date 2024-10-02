@@ -117,6 +117,7 @@ jobs:
       # Install Homebrew packages.
       # List of packages: https://formulae.brew.sh/
       - run: brew install m4 automake gfortran
+      - run: find / -name libSystem.dylib 2>/dev/null
       # m4 is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/m4/bin/m4.
       # automake is now installed in /usr/local/bin/automake = ${HOMEBREW_PREFIX-/usr/local}/opt/automake/bin/automake.
       # gfortran is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/gfortran/bin/gfortran = ${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin/gfortran.
@@ -126,10 +127,6 @@ jobs:
           : "Set M4 environment variable, in order to ignore the broken 'gm4' that is also found in PATH."
           export M4=m4
           pwd
-          find / -iname libSystem.dylib 2>/dev/null
-          ls -l /lib
-          ls -l /usr/lib
-          ls -l /opt/homebrew/lib/
           export CPPFLAGS="-Wall"
           ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
