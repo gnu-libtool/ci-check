@@ -117,7 +117,8 @@ jobs:
       # Install Homebrew packages.
       # List of packages: https://formulae.brew.sh/
       - run: brew install m4 automake gfortran
-      - run: find / -name libSystem*
+      - run: cat /Library/Developer/CommandLineTools/SDKs/MacOSX*.sdk/usr/lib/libSystem.tbd
+      - run: ls /usr/lib
       # m4 is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/m4/bin/m4.
       # automake is now installed in /usr/local/bin/automake = ${HOMEBREW_PREFIX-/usr/local}/opt/automake/bin/automake.
       # gfortran is now installed in ${HOMEBREW_PREFIX-/usr/local}/opt/gfortran/bin/gfortran = ${HOMEBREW_PREFIX-/usr/local}/opt/gcc/bin/gfortran.
