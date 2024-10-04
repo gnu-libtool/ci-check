@@ -39,7 +39,8 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-libtool.m4-Add-a-darwin-specific-rpath-flag.patch)
+(cd "$package" && patch -p1 < ../patches/0001-libtool.m4-Add-a-darwin-specific-rpath-flag.patch &&
+patch -p1 < ../patches/0001-link-order2.at-Specify-rpath-for-program-link-to-dep.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
