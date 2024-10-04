@@ -1,4 +1,4 @@
-From de3517e39923a534e763e193ae29d54b0601e2b6 Mon Sep 17 00:00:00 2001
+From 63a83f6673d44199d6e52af8a0f28981f08399c7 Mon Sep 17 00:00:00 2001
 From: FX Coudert <fxcoudert@gcc.gnu.org>
 Date: Tue, 15 Aug 2023 19:55:23 +0300
 Subject: [PATCH] libtool.m4: Add a darwin-specific rpath flag
@@ -9,8 +9,8 @@ of libraries, both on native compilation and cross-compilation.
 * m4/libtool.m4: Add '--enable-darwin-at-rpath' option.
 ---
  NEWS          |  5 +++++
- m4/libtool.m4 | 51 ++++++++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 53 insertions(+), 3 deletions(-)
+ m4/libtool.m4 | 42 +++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 44 insertions(+), 3 deletions(-)
 
 diff --git a/NEWS b/NEWS
 index 4c76075f..d0474f2d 100644
@@ -29,10 +29,10 @@ index 4c76075f..d0474f2d 100644
  
    - Fix incorrect use of workarounds designed for Darwin versions that
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index 66b33f59..f53d478d 100644
+index 66b33f59..283a532e 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -1136,6 +1136,43 @@ _LT_EOF
+@@ -1136,6 +1136,34 @@ _LT_EOF
  m4_defun([_LT_DARWIN_LINKER_FEATURES],
  [
    m4_require([_LT_REQUIRED_DARWIN_CHECKS])
@@ -61,22 +61,13 @@ index 66b33f59..f53d478d 100644
 +     UNSET,darwin[[4-8]]*|UNSET,rhapsody*|10.[[0-4]][[,.]]*)
 +       enable_darwin_at_rpath=no
 +       ;;
-+    # We cannot build and test reliably on macOS 10.11+ (Darwin15+) without use
-+    # of rpaths, since runpaths set via DYLD_LIBRARY_PATH are elided by key
-+    # system executables (e.g. /bin/sh).  Force rpaths on for these systems.
-+      UNSET,darwin1[[5-9]]*|UNSET,darwin2*|10.1[[1-9]][[,.]]*|1[[1-9]].*[[,.]]* )
-+      AC_MSG_NOTICE([@rpath library names are needed on macOS versions later than 10.11 (rpaths have been enabled)])
-+      enable_darwin_at_rpath=yes
-+      ;;
-+    # NOTE: we are not (yet) doing anything for 10.5 .. 10.10, since they can
-+    # work with either DYLD_LIBRARY_PATH or embedded rpaths.
 +    esac
 +  ])
 +
    _LT_TAGVAR(archive_cmds_need_lc, $1)=no
    _LT_TAGVAR(hardcode_direct, $1)=no
    _LT_TAGVAR(hardcode_automatic, $1)=yes
-@@ -1155,13 +1192,21 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
+@@ -1155,13 +1183,21 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
    esac
    if test yes = "$_lt_dar_can_shared"; then
      output_verbose_link_cmd=func_echo_all
