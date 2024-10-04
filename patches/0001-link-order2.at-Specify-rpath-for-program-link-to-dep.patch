@@ -17,12 +17,12 @@ index af22af3e..8433ba2d 100644
      $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o liba1.la a1.lo -rpath $libdir
      $LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o libb.la b.lo liba1.la -rpath $libdir
 -    AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o main$EXEEXT main.$OBJEXT libb.la -la0],
-+    AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o main$EXEEXT main.$OBJEXT libb.la -la0 -rpath $libdir],
++    AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o main$EXEEXT main.$OBJEXT libb.la -la0 -rpath $deflibdir],
  	     [], [ignore], [ignore])
      LT_AT_EXEC_CHECK([./main])
      # Now test that if we reverse the link order, the program fails.
 -    AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o wrong$EXEEXT main.$OBJEXT -la0 libb.la],
-+    AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o wrong$EXEEXT main.$OBJEXT -la0 libb.la -rpath $libdir],
++    AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS $static -o wrong$EXEEXT main.$OBJEXT -la0 libb.la -rpath $deflibdir],
  	     [], [ignore], [ignore])
      if test yes, != "$shared_fails,$static"; then
        LT_AT_EXEC_CHECK([./wrong], [1], [], [ignore], [|| (exit 1)])
