@@ -39,7 +39,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-Replace-LT_ARGZ_H_PATH-usage-with-bool-for-LTARGZH_E.patch)
+# (cd "$package" && patch -p1 < ../patches/<patch>)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
