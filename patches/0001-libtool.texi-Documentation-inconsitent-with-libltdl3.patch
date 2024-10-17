@@ -1,0 +1,32 @@
+From 4c2930702f05a5c195c19281c461946cef352ab7 Mon Sep 17 00:00:00 2001
+From: Jonathan Nieder <jrnieder@gmail.com>
+Date: Sun, 13 May 2012 21:52:18 -0500
+Subject: [PATCH 1/9] libtool.texi: Documentation inconsitent with libltdl3
+
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=253904
+---
+ doc/libtool.texi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/doc/libtool.texi b/doc/libtool.texi
+index 25d99094..1bbdf21f 100644
+--- a/doc/libtool.texi
++++ b/doc/libtool.texi
+@@ -4021,10 +4021,10 @@ portability you should try to ensure that you only pass
+ @option{-module} flag.}.
+ 
+ Unresolved symbols in the module are resolved using its dependency
+-libraries and previously dlopened modules.  If the executable using
+-this module was linked with the @option{-export-dynamic} flag, then the
+-global symbols in the executable will also be used to resolve
+-references in the module.
++libraries and, on some platforms, previously dlopened modules.  If
++the executable using this module was linked with the
++@option{-export-dynamic} flag, then the global symbols in the executable
++will also be used to resolve references in the module.
+ 
+ If @var{filename} is @code{NULL} and the program was linked with
+ @option{-export-dynamic} or @option{-dlopen self}, @code{lt_dlopen} will
+-- 
+2.45.2
+

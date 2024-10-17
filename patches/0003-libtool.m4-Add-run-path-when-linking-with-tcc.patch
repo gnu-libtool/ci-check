@@ -1,0 +1,34 @@
+From 13d2a63ab61fcdc34e2c40f7b5946396183012a6 Mon Sep 17 00:00:00 2001
+From: Vincent Lefevre <vincent@vinc17.net>
+Date: Fri, 22 May 2015 11:27:13 +0200
+Subject: [PATCH 3/9] libtool.m4: Add run path when linking with tcc
+
+https://debbugs.gnu.org/cgi/bugreport.cgi?bug=20622
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=814091
+---
+ m4/libtool.m4 | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index dcd6adae..87ca4672 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -5316,6 +5316,7 @@ _LT_EOF
+ 
+ 	case $cc_basename in
+ 	tcc*)
++	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
+ 	  _LT_TAGVAR(export_dynamic_flag_spec, $1)='-rdynamic'
+ 	  ;;
+ 	xlf* | bgf* | bgxlf* | mpixlf*)
+@@ -5874,6 +5875,7 @@ _LT_EOF
+ 	# Fabrice Bellard et al's Tiny C Compiler
+ 	_LT_TAGVAR(ld_shlibs, $1)=yes
+ 	_LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags'
++	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
+ 	;;
+       esac
+       ;;
+-- 
+2.45.2
+

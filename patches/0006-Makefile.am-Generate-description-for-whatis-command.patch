@@ -1,0 +1,30 @@
+From f8531e3209c4ed4cb849ea33edb150045d5acdb9 Mon Sep 17 00:00:00 2001
+From: Alastair McKinstry <mckinstry@debian.org>
+Date: Sat, 12 Jan 2019 13:06:29 +0200
+Subject: [PATCH 6/9] Makefile.am: Generate description for 'whatis' command
+
+Add '-n' to 'help2man' for documentation and manpage.
+---
+ Makefile.am | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index be00b969..51c1fbdb 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -419,9 +419,10 @@ update_mans = \
+ # manual pages if the sources for the build-tree files we want to
+ # run have changed.
+ $(libtool_1): $(ltmain_sh)
+-	$(AM_V_GEN)$(update_mans) --help-option=--help-all libtool
++	$(AM_V_GEN)$(update_mans) -n 'Provide generalized library-building support services' --help-option=--help-all libtool
+ $(libtoolize_1): $(libtoolize_in)
+-	$(AM_V_GEN)$(update_mans) libtoolize
++	$(AM_V_GEN)$(update_mans) -n 'Prepare a package to use libtool' libtoolize
++
+ 
+ 
+ ## ------------- ##
+-- 
+2.45.2
+

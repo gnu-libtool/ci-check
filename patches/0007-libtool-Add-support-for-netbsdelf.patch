@@ -1,0 +1,88 @@
+From 5dd1073cb0de5c224a2c56a219e32cf4ae24233f Mon Sep 17 00:00:00 2001
+From: Alastair McKinstry <mckinstry@debian.org>
+Date: Sat, 12 Jan 2019 13:05:00 +0200
+Subject: [PATCH 7/9] libtool: Add support for netbsdelf
+
+* m4/libtool.m4: Add support for netbsdelf*-gnu.
+* m4/ltdl.m4: Append netbsdelf*-gnu to netbsd* occurrences in case
+  statements.
+---
+ m4/libtool.m4 | 20 ++++++++++++++++----
+ m4/ltdl.m4    |  2 +-
+ 2 files changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 17b7d56c..70b23300 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -2965,6 +2965,18 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+   dynamic_linker='GNU/Linux ld.so'
+   ;;
+ 
++netbsdelf*-gnu)
++  version_type=linux
++  need_lib_prefix=no
++  need_version=no
++  library_names_spec='$libname$release$shared_ext$versuffix $libname$release$shared_ext$major $libname$shared_ext'
++  soname_spec='$libname$release$shared_ext$major'
++  shlibpath_var=LD_LIBRARY_PATH
++  shlibpath_overrides_runpath=no
++  hardcode_into_libs=yes
++  dynamic_linker='NetBSD ld.elf_so'
++  ;;
++
+ netbsd*)
+   version_type=sunos
+   need_lib_prefix=no
+@@ -3623,7 +3635,7 @@ linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
+   lt_cv_deplibs_check_method=pass_all
+   ;;
+ 
+-netbsd*)
++netbsd* | netbsdelf*-gnu)
+   if echo __ELF__ | $CC -E - | $GREP __ELF__ > /dev/null; then
+     lt_cv_deplibs_check_method='match_pattern /lib[[^/]]+(\.so\.[[0-9]]+\.[[0-9]]+|_pic\.a)$'
+   else
+@@ -4502,7 +4514,7 @@ m4_if([$1], [CXX], [
+ 	    ;;
+ 	esac
+ 	;;
+-      netbsd*)
++      netbsd* | netbsdelf*-gnu)
+ 	;;
+       *qnx* | *nto*)
+         # QNX uses GNU C++, but need to define -shared option too, otherwise
+@@ -5338,7 +5350,7 @@ _LT_EOF
+       fi
+       ;;
+ 
+-    netbsd*)
++    netbsd* | netbsdelf*-gnu)
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	_LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable $libobjs $deplibs $linker_flags -o $lib'
+ 	wlarc=
+@@ -5881,7 +5893,7 @@ _LT_EOF
+       esac
+       ;;
+ 
+-    netbsd*)
++    netbsd* | netbsdelf*-gnu)
+       if echo __ELF__ | $CC -E - | $GREP __ELF__ >/dev/null; then
+ 	_LT_TAGVAR(archive_cmds, $1)='$LD -Bshareable -o $lib $libobjs $deplibs $linker_flags'  # a.out
+       else
+diff --git a/m4/ltdl.m4 b/m4/ltdl.m4
+index af244089..8ed76ab7 100644
+--- a/m4/ltdl.m4
++++ b/m4/ltdl.m4
+@@ -495,7 +495,7 @@ AC_CACHE_CHECK([whether deplibs are loaded by dlopen],
+     # at 6.2 and later dlopen does load deplibs.
+     lt_cv_sys_dlopen_deplibs=yes
+     ;;
+-  netbsd*)
++  netbsd* | netbsdelf*-gnu)
+     lt_cv_sys_dlopen_deplibs=yes
+     ;;
+   openbsd*)
+-- 
+2.45.2
+
