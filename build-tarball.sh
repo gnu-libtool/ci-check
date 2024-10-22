@@ -39,15 +39,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-libtool.texi-Documentation-inconsitent-with-libltdl3.patch && \
-                  patch -p1 < ../patches/0002-libtool.texi-Wrong-names-for-structure-members.patch && \
-                  patch -p1 < ../patches/0003-libtool.m4-Add-run-path-when-linking-with-tcc.patch && \
-                  patch -p1 < ../patches/0004-libtool.m4-Avoid-a-broken-AC_TRY_EVAL-macro.patch && \
-                  patch -p1 < ../patches/0005-libtool.m4-Add-spaces-before-L-in-grep-searches.patch && \
-                  patch -p1 < ../patches/0006-Makefile.am-Generate-description-for-whatis-command.patch && \
-                  patch -p1 < ../patches/0007-libtool-Add-support-for-netbsdelf.patch && \
-                  patch -p1 < ../patches/0008-libtool-Change-how-version-is-derived.patch && \
-                  patch -p1 < ../patches/0009-ltmain.in-Add-error-message-for-unknown-version-type.patch)
+# (cd "$package" && patch -p1 < ../patches/<patch>)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
