@@ -39,7 +39,8 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-# (cd "$package" && patch -p1 < ../patches/<patch>)
+(cd "$package" && patch -p1 < ../patches/0001-ltmain.in-Handle-trailing-slashes-on-install-command.patch && \
+                  patch -p1 < ../patches/0002-libtool-Test-trailing-slash-in-destination.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"

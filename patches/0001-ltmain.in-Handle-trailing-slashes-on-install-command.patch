@@ -1,0 +1,44 @@
+From 05f0f2faf4cb3184dcf0ea14ed63f9f8d73accf6 Mon Sep 17 00:00:00 2001
+From: Richard Purdie <richard.purdie@linuxfoundation.org>
+Date: Sat, 16 Apr 2022 18:58:15 +0100
+Subject: [PATCH 1/2] ltmain.in: Handle trailing slashes on install commands
+
+A command like:
+
+libtool --mode=install /usr/bin/install -c gck-roots-store-standalone.la
+'/image/usr/lib/gnome-keyring/standalone/'
+
+where the path ends with a trailing slash currently fails. This occurs in
+software like gnome-keyring or pulseaudio and is because the comparision
+code doesn't see the paths as equal. Strip both paths to ensure this works
+reliably.
+
+* build-aux/ltmain.in: Strip trailing slashes on install commands.
+---
+ build-aux/ltmain.in | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 4e2a63fd..be94b032 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -2405,8 +2405,15 @@ func_mode_install ()
+ 	func_append dir "$objdir"
+ 
+ 	if test -n "$relink_command"; then
++	  # Strip any trailing slash from the destination.
++	  func_stripname '' '/' "$libdir"
++	  destlibdir=$func_stripname_result
++
++	  func_stripname '' '/' "$destdir"
++	  s_destdir=$func_stripname_result
++
+ 	  # Determine the prefix the user has applied to our future dir.
+-	  inst_prefix_dir=`$ECHO "$destdir" | $SED -e "s%$libdir\$%%"`
++	  inst_prefix_dir=`$ECHO "X$s_destdir" | $Xsed -e "s%$destlibdir\$%%"`
+ 
+ 	  # Don't allow the user to place us outside of our expected
+ 	  # location b/c this prevents finding dependent libraries that
+-- 
+2.45.2
+
