@@ -1,0 +1,19 @@
+From 1eb64a1469f33a144e3e18f9691dcefda4da0b4a Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 30 Oct 2024 21:04:48 +0200
+Subject: [PATCH 2/2] gnulib: Revert submodule to older commit
+
+---
+ gnulib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gnulib b/gnulib
+index b3791b2b..30417e7f 160000
+--- a/gnulib
++++ b/gnulib
+@@ -1 +1 @@
+-Subproject commit b3791b2bb9bdf03b2f99be5629d017a40382e1ee
++Subproject commit 30417e7f918e95c368ef56a650fa5b5fa45cb130
+-- 
+2.45.2
+

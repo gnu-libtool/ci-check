@@ -39,12 +39,13 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-libtool.m4-Update-hardcode_shlibpath_var-for-OpenBSD.patch)
+(cd "$package" && patch -p1 < ../patches/0001-libtool.m4-Update-hardcode_shlibpath_var-for-OpenBSD.patch \
+               && patch -p1 < ../patches/0002-gnulib-Revert-submodule-to-older-commit.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
 # Force use of the newest gnulib.
-rm -f .gitmodules
+# rm -f .gitmodules
 
 # Fetch extra files and generate files (uses packages wget, python3, automake, autoconf, m4,
 # texinfo, xz-utils).
