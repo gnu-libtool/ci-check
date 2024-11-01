@@ -1,0 +1,34 @@
+From 01b1b0bcfbf020ec8fa737c9c032d28706e60ba1 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Fri, 1 Nov 2024 19:34:41 +0200
+Subject: [PATCH] Makefile.am: Reorder testsuite
+
+---
+ Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 51c1fbdb..fb93a136 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -652,6 +652,7 @@ testsuite	= $(tests_dir)/testsuite
+ # that it can check for previous failures and skip if necessary.
+ TESTSUITE	= tests/testsuite
+ TESTSUITE_AT	= tests/testsuite.at \
++		  tests/bug_71489.at \
+ 		  tests/configure-funcs.at \
+ 		  tests/libtoolize.at \
+ 		  tests/libtool.at \
+@@ -725,8 +726,7 @@ TESTSUITE_AT	= tests/testsuite.at \
+ 		  tests/sysroot.at \
+ 		  tests/stresstest.at \
+ 		  tests/cmdline_wrap.at \
+-		  tests/bug_62343.at	\
+-		  tests/bug_71489.at \
++		  tests/bug_62343.at \
+ 		  tests/bug_42313.at \
+ 		  $(NOTHING_ELSE)
+ 
+-- 
+2.45.2
+
