@@ -1,0 +1,41 @@
+From f7f9437c67f64aa51890c08b71a9a611d8e335a4 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 30 Oct 2024 20:32:25 +0200
+Subject: [PATCH 1/2] libtool.m4: Update hardcode_shlibpath_var for OpenBSD
+
+When generating an executable in OpenBSD, the executable fails to
+generate when shlibpath_var, LD_LIBRARY_PATH, is used solely to
+locate dependent libraries.
+
+For hardcoding library paths in OpenBSD, see documentation for
+hardcode_direct and hardcode_libdir_flag_spec.
+
+* m4/libtool.m4: Update hardcode_shlibpath_var from 'no' to 'unsupported'
+  for OpenBSD.
+---
+ m4/libtool.m4 | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 5092b0e3..ca95f0cf 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -5919,7 +5919,6 @@ _LT_EOF
+     openbsd*)
+       if test -f /usr/libexec/ld.so; then
+ 	_LT_TAGVAR(hardcode_direct, $1)=yes
+-	_LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+ 	_LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+ 	if test -z "`echo __ELF__ | $CC -E - | $GREP __ELF__`"; then
+ 	  _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags'
+@@ -7213,7 +7212,6 @@ if test yes != "$_lt_caught_CXX_error"; then
+       openbsd*)
+ 	if test -f /usr/libexec/ld.so; then
+ 	  _LT_TAGVAR(hardcode_direct, $1)=yes
+-	  _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
+ 	  _LT_TAGVAR(hardcode_direct_absolute, $1)=yes
+ 	  _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -o $lib'
+ 	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath,$libdir'
+-- 
+2.45.2
+
