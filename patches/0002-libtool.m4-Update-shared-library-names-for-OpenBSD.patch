@@ -1,4 +1,4 @@
-From 3e622cf131303efdb91f80197c2e18a71f7536b0 Mon Sep 17 00:00:00 2001
+From 5da7b2569292bd72094c3b2cbc51b4995fc13da3 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Fri, 1 Nov 2024 20:12:38 +0200
 Subject: [PATCH 2/2] libtool.m4: Update shared library names for OpenBSD
@@ -6,22 +6,23 @@ Subject: [PATCH 2/2] libtool.m4: Update shared library names for OpenBSD
 The test for 'Use local version' in tests/bug_71489.at fails in OpenBSD,
 since the linker is unable to locate the local dependent libraries.
 
-* m4/libtool.m4: Append '$libname$shared_ext' to library_names_spec for
-  OpenBSD to locate dependent libraries.
+* m4/libtool.m4: Append '$libname$shared_ext' to library_names_spec and
+  add soname_spec for OpenBSD to locate dependent libraries.
 ---
- m4/libtool.m4 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ m4/libtool.m4 | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index ca95f0cf..c19446b1 100644
+index 857e9c11..9e2d0d5c 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -3023,7 +3023,7 @@ openbsd*)
+@@ -3023,7 +3023,8 @@ openbsd*)
    else
      need_version=yes
    fi
 -  library_names_spec='$libname$release$shared_ext$versuffix $libname$shared_ext$versuffix'
 +  library_names_spec='$libname$release$shared_ext$versuffix $libname$shared_ext$versuffix $libname$shared_ext'
++  soname_spec='$libname$release$shared_ext$versuffix'
    finish_cmds='PATH="\$PATH:/sbin" ldconfig -m $libdir'
    shlibpath_var=LD_LIBRARY_PATH
    shlibpath_overrides_runpath=yes
