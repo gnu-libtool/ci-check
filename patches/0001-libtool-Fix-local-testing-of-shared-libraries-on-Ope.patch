@@ -1,0 +1,114 @@
+From 3996b1fddcaa543c8bf349314cac3ab4b07b4d1d Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Thu, 7 Nov 2024 16:29:19 +0200
+Subject: [PATCH] libtool: Fix local testing of shared libraries on OpenBSD
+
+On OpenBSD 7.5, the shared library cache is updated with finish_cmds,
+which causes the test for 'Use local version' to fail. Simply, installed
+versions of shared libraries take precedence over those locally built.
+
+To ensure local versions of shared libraries can be tested properly and
+more easily, additional options have been added to libtool to skip
+executing finish_cmds, like 'ldconfig -m $libdir' in OpenBSD.
+
+* build-aux/ltmain.in: Add libtool options, '--test' and '--check'.
+* doc/libtool.texi: Document new options in libtool.
+* NEWS: Update for bug fix.
+---
+ NEWS                |  5 +++++
+ build-aux/ltmain.in | 14 +++++++++++++-
+ doc/libtool.texi    |  9 ++++++++-
+ 3 files changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/NEWS b/NEWS
+index 96b79902..28e4ecbc 100644
+--- a/NEWS
++++ b/NEWS
+@@ -2,6 +2,11 @@ NEWS - list of user-visible changes between releases of GNU Libtool
+ 
+ * Noteworthy changes in release ?.? (????-??-??) [?]
+ 
++** New features:
++
++  - New libtool command line flags, --test and --check, to skip executing
++    finish_cmds that would alter the shared library cache during testing.
++
+ ** Bug fixes:
+ 
+   - Fix incorrect use of workarounds designed for Darwin versions that
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 83aaaf92..83f1ad4f 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -377,6 +377,7 @@ libtool_options_prep ()
+     opt_mode=
+     opt_preserve_dup_deps=false
+     opt_quiet=false
++    opt_testing=true
+ 
+     nonopt=
+     preserve_args=
+@@ -507,6 +508,11 @@ libtool_parse_options ()
+                         func_append preserve_args " $_G_opt"
+                         ;;
+ 
++        --test|--check)
++                        opt_testing=false
++                        func_append preserve_args " $_G_opt"
++                        ;;
++
+         # An option not handled by this hook function:
+         *)              set dummy "$_G_opt" ${1+"$@"} ; shift
+                         _G_match_lt_parse_options=false
+@@ -2144,7 +2150,7 @@ func_mode_finish ()
+       fi
+     fi
+ 
+-    if test -n "$finish_cmds$finish_eval" && test -n "$libdirs"; then
++    if test -n "$finish_cmds$finish_eval" && test -n "$libdirs" && $opt_testing; then
+       for libdir in $libdirs; do
+ 	if test -n "$finish_cmds"; then
+ 	  # Do each command in the finish commands.
+@@ -2169,6 +2175,12 @@ func_mode_finish ()
+       for libdir in $libdirs; do
+ 	$ECHO "   $libdir"
+       done
++      if test "false" = "$opt_testing"; then
++        echo
++        echo "NOTE: finish_cmds were not executed during testing, so you must"
++        echo "manually run ldconfig to add a given test directory, LIBDIR, to"
++        echo "the search path for generated executables."
++      fi
+       echo
+       echo "If you ever happen to want to link against installed libraries"
+       echo "in a given directory, LIBDIR, you must either use libtool, and"
+diff --git a/doc/libtool.texi b/doc/libtool.texi
+index 803c90aa..484077ff 100644
+--- a/doc/libtool.texi
++++ b/doc/libtool.texi
+@@ -1272,6 +1272,12 @@ stripped or the link will fail.  In cases where these duplications are
+ required, this option will preserve them, only stripping the libraries
+ that libtool knows it can safely.
+ 
++@item --test
++@itemx --check
++Do not execute finish_cmds (disabled by default). This option is for
++specifying that the testsuite is executing so that ldconfig will not alter
++the shared library cache, which is an issue observed on OpenBSD 7.5.
++
+ @item --quiet
+ @itemx --silent
+ Do not print out any progress or informational messages.
+@@ -6855,7 +6861,8 @@ shell does not support the shell option @code{nocaseglob}, making
+ 
+ @defvar finish_cmds
+ Commands to tell the dynamic linker how to find shared libraries in a
+-specific directory.
++specific directory. These commands can be disabled during testing local
++changes with @option{--test} or @option{--check}.
+ @end defvar
+ 
+ @defvar finish_eval
+-- 
+2.45.2
+

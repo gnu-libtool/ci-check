@@ -112,7 +112,7 @@ jobs:
       - run: |
           pwd
           export CPPFLAGS="-Wall"
-          ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -155,7 +155,7 @@ jobs:
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -200,7 +200,7 @@ jobs:
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -241,7 +241,7 @@ jobs:
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts

@@ -16,12 +16,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This script builds a tarball of the package on a single platform.
-# Usage: build-on.sh PACKAGE CONFIGURE_OPTIONS MAKE COMMIT_MESSAGE
+# Usage: build-on.sh PACKAGE CONFIGURE_OPTIONS MAKE MAKE_OPTIONS COMMIT_MESSAGE
 
 package="$1"
 configure_options="$2"
 make="$3"
-commit_message="$4"
+make_options="$4"
+commit_message="$5"
 
 set -x
 
@@ -64,7 +65,7 @@ case "$commit_message" in
     ;;
   *)
     # Run the tests.
-    $make check TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+    $make check $make_options TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
     ;;
 esac
 

@@ -141,7 +141,7 @@ jobs:
       - name: Build in Cygwin
         run: |
           export CPPFLAGS="-Wall"
-          ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -205,7 +205,7 @@ jobs:
           PATH=/usr/${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32/sys-root/mingw/bin:$PATH
           export CPPFLAGS="-Wall"
           export CC=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32-gcc
-          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts

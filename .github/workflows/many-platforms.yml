@@ -114,7 +114,7 @@ jobs:
       - run: |
           pwd
           export CPPFLAGS="-Wall"
-          ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -159,7 +159,7 @@ jobs:
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -206,7 +206,7 @@ jobs:
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -249,7 +249,7 @@ jobs:
             cd /work
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -299,7 +299,7 @@ jobs:
           export M4=m4
           pwd
           export CPPFLAGS="-Wall"
-          ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -347,7 +347,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -394,7 +394,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -451,7 +451,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            ./build-on.sh '${{ env.package }}' '' 'gmake' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'gmake' 'LIBTOOLFLAGS=--test' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -504,7 +504,7 @@ jobs:
             export CPPFLAGS="-Wall"
             export CC="gcc -m64"
             export CXX="g++ -m64"
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -552,7 +552,7 @@ jobs:
             pwd
             ls -l
             export CPPFLAGS="-Wall"
-            ./build-on.sh '${{ env.package }}' '' 'gmake' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'gmake' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -619,7 +619,7 @@ jobs:
       - name: Build in Cygwin
         run: |
           export CPPFLAGS="-Wall"
-          ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -685,7 +685,7 @@ jobs:
           PATH=/usr/${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32/sys-root/mingw/bin:$PATH
           export CPPFLAGS="-Wall"
           export CC=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32-gcc
-          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -788,7 +788,7 @@ jobs:
           export STRIP=":"
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
-          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -831,7 +831,7 @@ jobs:
           export LDFLAGS="-fsanitize=address,undefined,signed-integer-overflow,shift,integer-divide-by-zero"
           export CFLAGS="-O0 -fno-omit-frame-pointer -ggdb"
           export ASAN_OPTIONS="detect_leaks=0 abort_on_error=1 allocator_may_return_null=1"
-          ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
@@ -878,7 +878,7 @@ jobs:
             export CPPFLAGS="-Wall"
             export CC=clang
             export CXX=clang++
-            ./build-on.sh '${{ env.package }}' '' 'make' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
