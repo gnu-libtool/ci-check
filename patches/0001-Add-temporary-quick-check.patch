@@ -1,0 +1,25 @@
+From b070ab1b63777bf90afb6ce1daac85eda6cf065c Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Mon, 11 Nov 2024 22:36:21 +0200
+Subject: [PATCH] Add temporary quick check
+
+---
+ tests/bug_71489.at | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/bug_71489.at b/tests/bug_71489.at
+index ef4f51f7..43fdec2e 100644
+--- a/tests/bug_71489.at
++++ b/tests/bug_71489.at
+@@ -381,6 +381,8 @@ echo "Building local copy of the project"
+ (
+     cd build_local
+     LT_AT_CONFIGURE([--prefix=$prefix], [$ltb2/configure])
++    build_local_dir=$(pwd)
++    AT_CHECK([$LIBTOOL --reorder-cache="$build_local_dir/libb/.libs:$build_local_dir/libb/.libs"])
+     LT_AT_MAKE([])
+ )
+ 
+-- 
+2.45.2
+

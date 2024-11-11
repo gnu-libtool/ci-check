@@ -1,0 +1,150 @@
+From 8f544053d0cbfc5aa920b0515c0ed4a81f74d02b Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Mon, 11 Nov 2024 21:24:08 +0200
+Subject: [PATCH] libtool: Add option to reorder the shared library cache
+
+Add option to reorder the shared library cache in OpenBSD so that user
+preferred directories for shared libraries can be used when linking
+before directories previously listed in the shared library cache.
+
+This allows for users in OpenBSD to easily switch between versions of
+libraries with the same name during testing.
+
+* build-aux/ltmain.in: Add option --reorder-cache=DIRS.
+---
+ build-aux/ltmain.in | 84 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 1801dd56..56df1655 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -141,6 +141,7 @@ usage_message="Options:
+        --mode=MODE          use operation mode MODE
+        --no-warnings        equivalent to '-Wnone'
+        --preserve-dup-deps  don't remove duplicate dependency libraries
++       --reorder-cache=DIRS reorder shared library cache for preferred DIRS
+        --test, --check      don't update shared library cache during testing
+        --quiet, --silent    don't print informational messages
+        --tag=TAG            use configuration variables from tag TAG
+@@ -376,6 +377,7 @@ libtool_options_prep ()
+     opt_dry_run=false
+     opt_help=false
+     opt_mode=
++    opt_reorder_cache=
+     opt_preserve_dup_deps=false
+     opt_quiet=false
+     opt_testing=true
+@@ -491,6 +493,21 @@ libtool_parse_options ()
+                         func_append preserve_args " $_G_opt"
+                         ;;
+ 
++        --reorder-cache)
++                        test $# = 0 && func_missing_arg $_G_opt && break
++                        opt_reorder_cache=$1
++                        case $1 in
++                          # Must begin with /:
++                          /*) ;;
++
++                          # Catch anything else as an error (relative paths)
++                          *) func_error "invalid argument for $_G_opt"
++                             exit_cmd=exit
++                             break
++                             ;;
++                        esac
++                        ;;
++
+         --silent|--quiet)
+                         opt_quiet=:
+                         opt_verbose=false
+@@ -1061,6 +1078,15 @@ func_convert_path_front_back_pathsep ()
+ # end func_convert_path_front_back_pathsep
+ 
+ 
++# func_convert_delimited_path PATH ORIG_DELIMITER NEW_DELIMITER
++# Replaces a delimiter for a given path.
++func_convert_delimited_path ()
++{
++	converted_path=`$ECHO "$1" | $SED "s#$2#$3#g"`
++}
++# end func_convert_delimited_path
++
++
+ ##################################################
+ # $build to $host FILE NAME CONVERSION FUNCTIONS #
+ ##################################################
+@@ -1395,6 +1421,58 @@ func_dll_def_p ()
+ }
+ 
+ 
++# func_reorder_shared_lib_cache DIRS
++# Reorder the shared library cache by unconfiguring previous shared library cache
++# and configuring preferred search directories before previous search directories.
++# Previous shared library cache: /usr/lib /usr/local/lib
++# Preferred search directories: /tmp/testing
++# Reordered shared library cache: /tmp/testing /usr/lib /usr/local/lib
++func_reorder_shared_lib_cache ()
++{
++	$debug_cmd
++
++	case $host_os in
++	  openbsd*)
++	    get_search_directories=`ldconfig -r | $GREP "search directories" | $SED "s#.*search directories:\ ##g"`
++	    func_convert_delimited_path "$get_search_directories" ':' '\ '
++	    save_search_directories="$converted_path"
++	    func_convert_delimited_path "$1" ':' '\ '
++
++	    # Ensure directories exist
++	    for dir in $converted_path; do
++	      func_stripname '' '/' "$dir"
++	      dir=$func_stripname_result
++	      if test -d $dir; then
++	        if test -n "$preferred_search_directories"; then
++	          preferred_search_directories="$preferred_search_directories $dir"
++	        else
++	          preferred_search_directories="$dir"
++	        fi
++	      else
++	        func_warning "Directory '$dir' does not exist"
++	        exit $EXIT_FAILURE
++	      fi
++	    done
++
++	    eval "`ldconfig -U $save_search_directories`"
++	    eval "`ldconfig -m $preferred_search_directories $save_search_directories`"
++	    get_search_directories=`ldconfig -r | $GREP "search directories" | $SED "s#.*search directories:\ ##g"`
++	    func_convert_delimited_path "$get_search_directories" ':' '\ '
++	    reordered_search_directories="$converted_path"
++
++	    func_echo "Original shared library cache: $save_search_directories"
++	    func_echo "Reordered shared library cache: $reordered_search_directories"
++	    exit $EXIT_SUCCESS
++	  ;;
++	  *)
++	    func_warning "--reorder-cache is not supported for host_os=$host_os."
++	    exit $EXIT_FAILURE
++	  ;;
++	esac
++}
++# end func_reorder_shared_lib_cache
++
++
+ # func_mode_compile arg...
+ func_mode_compile ()
+ {
+@@ -1967,6 +2045,12 @@ if $opt_help; then
+ fi
+ 
+ 
++# If preferred search directories supplied, reorder the shared library cache and exit.
++if test -n $opt_reorder_cache; then
++    func_reorder_shared_lib_cache $opt_reorder_cache
++fi
++
++
+ # func_mode_execute arg...
+ func_mode_execute ()
+ {
+-- 
+2.45.2
+
