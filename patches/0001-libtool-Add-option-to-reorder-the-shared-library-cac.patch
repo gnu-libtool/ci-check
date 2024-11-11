@@ -1,4 +1,4 @@
-From 8f544053d0cbfc5aa920b0515c0ed4a81f74d02b Mon Sep 17 00:00:00 2001
+From 3aaed02060d83461776e66ad7a356f9862d0eb51 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 11 Nov 2024 21:24:08 +0200
 Subject: [PATCH] libtool: Add option to reorder the shared library cache
@@ -16,7 +16,7 @@ libraries with the same name during testing.
  1 file changed, 84 insertions(+)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index 1801dd56..56df1655 100644
+index 1801dd56..57101d89 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
 @@ -141,6 +141,7 @@ usage_message="Options:
@@ -91,18 +91,18 @@ index 1801dd56..56df1655 100644
 +	  openbsd*)
 +	    get_search_directories=`ldconfig -r | $GREP "search directories" | $SED "s#.*search directories:\ ##g"`
 +	    func_convert_delimited_path "$get_search_directories" ':' '\ '
-+	    save_search_directories="$converted_path"
++	    save_search_directories=$converted_path
 +	    func_convert_delimited_path "$1" ':' '\ '
 +
 +	    # Ensure directories exist
 +	    for dir in $converted_path; do
 +	      func_stripname '' '/' "$dir"
 +	      dir=$func_stripname_result
-+	      if test -d $dir; then
++	      if test -d "$dir"; then
 +	        if test -n "$preferred_search_directories"; then
 +	          preferred_search_directories="$preferred_search_directories $dir"
 +	        else
-+	          preferred_search_directories="$dir"
++	          preferred_search_directories=$dir
 +	        fi
 +	      else
 +	        func_warning "Directory '$dir' does not exist"
@@ -114,7 +114,7 @@ index 1801dd56..56df1655 100644
 +	    eval "`ldconfig -m $preferred_search_directories $save_search_directories`"
 +	    get_search_directories=`ldconfig -r | $GREP "search directories" | $SED "s#.*search directories:\ ##g"`
 +	    func_convert_delimited_path "$get_search_directories" ':' '\ '
-+	    reordered_search_directories="$converted_path"
++	    reordered_search_directories=$converted_path
 +
 +	    func_echo "Original shared library cache: $save_search_directories"
 +	    func_echo "Reordered shared library cache: $reordered_search_directories"
@@ -137,7 +137,7 @@ index 1801dd56..56df1655 100644
  
  
 +# If preferred search directories supplied, reorder the shared library cache and exit.
-+if test -n $opt_reorder_cache; then
++if test -n "$opt_reorder_cache"; then
 +    func_reorder_shared_lib_cache $opt_reorder_cache
 +fi
 +
