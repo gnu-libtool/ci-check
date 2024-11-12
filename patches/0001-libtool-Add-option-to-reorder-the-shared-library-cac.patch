@@ -1,4 +1,4 @@
-From add1a4dac78b2a4aae5426442810b116f65eb8bc Mon Sep 17 00:00:00 2001
+From 0a1e894220521e5955371eea5408fd6f7a5149c1 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 11 Nov 2024 21:24:08 +0200
 Subject: [PATCH] libtool: Add option to reorder the shared library cache
@@ -36,7 +36,7 @@ index 28e4ecbc..4694cab7 100644
  
    - Fix incorrect use of workarounds designed for Darwin versions that
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index 1801dd56..d92e03c6 100644
+index 1801dd56..b571c442 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
 @@ -141,6 +141,7 @@ usage_message="Options:
@@ -168,7 +168,7 @@ index 1801dd56..d92e03c6 100644
  
 +# If option '--reorder-cache', reorder the shared library cache and exit.
 +if $opt_reorder_cache; then
-+    func_reorder_shared_lib_cache $opt_reorder_cache
++    func_reorder_shared_lib_cache $shared_lib_dirs
 +fi
 +
 +
