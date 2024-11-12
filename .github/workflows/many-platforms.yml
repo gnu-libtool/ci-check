@@ -451,7 +451,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            ./build-on.sh '${{ env.package }}' '' 'gmake' 'LIBTOOLFLAGS=--test' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'gmake' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
