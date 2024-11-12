@@ -1,4 +1,4 @@
-From 3aaed02060d83461776e66ad7a356f9862d0eb51 Mon Sep 17 00:00:00 2001
+From a4ab701670f7d4a046448f45b12ec5eb535b7c20 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 11 Nov 2024 21:24:08 +0200
 Subject: [PATCH] libtool: Add option to reorder the shared library cache
@@ -16,7 +16,7 @@ libraries with the same name during testing.
  1 file changed, 84 insertions(+)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index 1801dd56..57101d89 100644
+index 1801dd56..7e0f36c2 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
 @@ -141,6 +141,7 @@ usage_message="Options:
@@ -116,8 +116,8 @@ index 1801dd56..57101d89 100644
 +	    func_convert_delimited_path "$get_search_directories" ':' '\ '
 +	    reordered_search_directories=$converted_path
 +
-+	    func_echo "Original shared library cache: $save_search_directories"
-+	    func_echo "Reordered shared library cache: $reordered_search_directories"
++	    $ECHO "Original: $save_search_directories"
++	    $ECHO "Reordered: $reordered_search_directories"
 +	    exit $EXIT_SUCCESS
 +	  ;;
 +	  *)
