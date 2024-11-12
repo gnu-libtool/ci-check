@@ -39,8 +39,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-libtool-Add-option-to-reorder-the-shared-library-cac.patch \
-               && patch -p1 < ../patches/0001-Add-temporary-quick-check.patch)
+(cd "$package" && patch -p1 < ../patches/0001-libtool-Add-option-to-reorder-the-shared-library-cac.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
