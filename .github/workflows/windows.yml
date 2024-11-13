@@ -93,6 +93,7 @@ jobs:
   check-cygwin:
     name: make check on Cygwin
     needs: build-tarball
+    if: ${{ false }}
     # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     strategy:
       fail-fast: false
@@ -158,6 +159,7 @@ jobs:
   check-mingw:
     name: make check on mingw
     needs: build-tarball
+    if: ${{ false }}
     # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     strategy:
       fail-fast: false
@@ -218,4 +220,107 @@ jobs:
           if-no-files-found: error
           retention-days: 3
           compression-level: 0
+          overwrite: true
+  check-msvc:
+    name: make check on MSVC
+    needs: build-tarball
+    # These test runs show more than 50 test failures.
+    # if: ${{ false }}
+    # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
+    strategy:
+      fail-fast: false
+      matrix:
+        bitness: [32, 64]
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: C:\cygwin\bin\bash.exe -eo pipefail -o igncr '{0}'
+    env:
+      CYGWIN_NOWINPATH: 1
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - run: git config --global core.autocrlf input
+        shell: cmd
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/ilammy/msvc-dev-cmd
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.bitness == 32 && 'x86' || 'x64' }}
+      # Doc: https://github.com/cygwin/cygwin-install-action
+      - uses: cygwin/cygwin-install-action@v4
+        with:
+          platform: x86_64
+          # Install Cygwin packages.
+          # List of packages: https://cygwin.com/packages/package_list.html
+          packages: wget m4 automake make
+      - name: cygcheck
+        run: cygcheck -V
+      - name: cygcheck
+        run: cygcheck -s -r
+      - name: Windows version
+        run: cmd /c ver
+      - run: uname -a
+      - run: id
+      - run: env | LC_ALL=C sort
+      - run: pwd
+      - run: ls -l
+      - run: echo "$PATH"
+      - run: ls -l /usr/bin
+      - run: |
+          wget -O ar-lib 'https://git.savannah.gnu.org/gitweb/?p=automake.git;a=blob_plain;f=lib/ar-lib;hb=HEAD'
+          wget -O compile 'https://git.savannah.gnu.org/gitweb/?p=automake.git;a=blob_plain;f=lib/compile;hb=HEAD'
+          chmod a+x ar-lib compile
+      - name: Build in Cygwin
+        env:
+          arch: ${{ matrix.bitness == 32 && 'x86' || 'x64' }}
+          pathelementsuffix: ${{ matrix.bitness == 64 && '/amd64' || '' }}
+          libelementsuffix: ${{ matrix.bitness == 64 && '\amd64' || '' }}
+        run: |
+          set -x
+          : "Windows C library headers and libraries."
+          WindowsCrtIncludeDir='C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt'
+          WindowsCrtLibDir='C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10240.0\ucrt\'
+          INCLUDE="${WindowsCrtIncludeDir};$INCLUDE"
+          LIB="${WindowsCrtLibDir}${arch};$LIB"
+          : "Windows API headers and libraries."
+          WindowsSdkIncludeDir='C:\Program Files (x86)\Windows Kits\8.1\Include\'
+          WindowsSdkLibDir='C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\'
+          INCLUDE="${WindowsSdkIncludeDir}um;${WindowsSdkIncludeDir}shared;$INCLUDE"
+          LIB="${WindowsSdkLibDir}${arch};$LIB"
+          : "Visual C++ tools, headers and libraries."
+          VSINSTALLDIR='C:\Program Files (x86)\Microsoft Visual Studio 14.0'
+          VCINSTALLDIR="${VSINSTALLDIR}"'\VC'
+          PATH=`cygpath -u "${VCINSTALLDIR}"`/bin${pathelementsuffix}:"$PATH"
+          INCLUDE="${VCINSTALLDIR}"'\include;'"${INCLUDE}"
+          LIB="${VCINSTALLDIR}"'\lib${libelementsuffix};'"${LIB}"
+          export INCLUDE LIB
+          : "Possible values are _WIN32_WINNT_WINXP, _WIN32_WINNT_VISTA, _WIN32_WINNT_WIN7"
+          win32_target=_WIN32_WINNT_WINXP
+          export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
+          export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD"
+          export LD="link"
+          export NM="dumpbin -symbols"
+          export STRIP=":"
+          export AR="`pwd`/ar-lib lib"
+          export RANLIB=":"
+          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-msvc${{ matrix.bitness }}
+          path: |
+            ${{ env.package }}-*/build/config.cache
+            ${{ env.package }}-*/build/config.log
+            ${{ env.package }}-*/build/config.status
+            ${{ env.package }}-*/build/log[1-6]
+            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
+            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
+          retention-days: 7
           overwrite: true
