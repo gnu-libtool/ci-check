@@ -1,0 +1,29 @@
+From 8751200cd533a443b7948a52ad549a989d460dc5 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Thu, 14 Nov 2024 17:09:05 +0200
+Subject: [PATCH] libtool.m4: Tag option '-Wl' for cl compiler
+
+---
+ m4/libtool.m4 | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index a5d3df40..ce6d593e 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -4743,6 +4743,12 @@ m4_if([$1], [CXX], [
+     mingw* | windows* | cygwin* | pw32* | os2* | cegcc*)
+       # This hack is so that the source file can tell whether it is being
+       # built for inclusion in a dll (and should export symbols for example).
++      case $cc_basename in
++      cl*|clang-cl*)
++        _LT_TAGVAR(lt_prog_compiler_wl, $1)='-Wl,'
++        ;;
++      *) ;;
++      esac
+       m4_if([$1], [GCJ], [],
+ 	[_LT_TAGVAR(lt_prog_compiler_pic, $1)='-DDLL_EXPORT'])
+       case $host_os in
+-- 
+2.45.2
+

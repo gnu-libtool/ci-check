@@ -41,7 +41,7 @@
 #       To this:
 #         if: ${{ always() }}
 
-name: Cygwin and mingw make check
+name: Cygwin, mingw, and MSVC make check
 
 on:
   push:
