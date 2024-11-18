@@ -403,6 +403,10 @@ jobs:
   check-openbsd:
     name: make check on OpenBSD
     needs: build-tarball
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ['7.5', '7.6']
     runs-on: ubuntu-22.04
     steps:
       # This is needed because we run a script stored in this repository.
@@ -415,7 +419,7 @@ jobs:
       # Doc: https://github.com/vmactions/openbsd-vm
       - uses: vmactions/openbsd-vm@v1
         with:
-          release: '7.5'
+          release: ${{ matrix.version }}
           mem: 1024
           usesh: true
           # Avoid 'sync: sshfs' since it causes trouble with file timestamps
@@ -431,11 +435,11 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            pkg_add m4 automake-1.16.5 autoconf-2.71 gmake gcc-11.2.0p11 g++-11.2.0p12
+            pkg_add m4 automake-1.16.5 ${{ matrix.version == '7.5' && 'autoconf-2.71 gcc-11.2.0p11 g++-11.2.0p12' || 'autoconf-2.72p0 gcc-11.2.0p14 g++-11.2.0p15' }} gmake
             ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
-            export AUTOCONF_VERSION=2.71
+            export AUTOCONF_VERSION=${{ matrix.version == '7.5' && '2.71' || '2.72' }}
             : "The OpenBSD port of automake needs this, if more than one version is installed."
             export AUTOMAKE_VERSION=1.16
             ls -l
@@ -447,7 +451,7 @@ jobs:
       - if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs-openbsd
+          name: logs-openbsd-${{ matrix.version }}
           path: |
             ${{ env.package }}-*/build/config.cache
             ${{ env.package }}-*/build/config.log
