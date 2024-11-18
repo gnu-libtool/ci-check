@@ -230,7 +230,7 @@ jobs:
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs-openbsd
+          name: logs-openbsd-75
           path: ${{ env.package }}-build.tar.gz
           if-no-files-found: error
           retention-days: 3
@@ -266,7 +266,7 @@ jobs:
             env | LC_ALL=C sort
             pwd
             : "Install OpenBSD packages"
-            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
+            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.6/packages/amd64/"
             pkg_add m4 automake-1.16.5 autoconf-2.72p0 gmake gcc-11.2.0p14 g++-11.2.0p15
             ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
@@ -285,7 +285,7 @@ jobs:
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
-          name: logs-openbsd
+          name: logs-openbsd-76
           path: ${{ env.package }}-build.tar.gz
           if-no-files-found: error
           retention-days: 3
