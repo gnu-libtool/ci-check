@@ -181,8 +181,8 @@ jobs:
           retention-days: 3
           compression-level: 0
           overwrite: true
-  check-openbsd:
-    name: make check on OpenBSD
+  check-openbsd-75:
+    name: make check on OpenBSD 7.5
     needs: build-tarball
     runs-on: ubuntu-22.04
     steps:
@@ -217,6 +217,61 @@ jobs:
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
             export AUTOCONF_VERSION=2.71
+            : "The OpenBSD port of automake needs this, if more than one version is installed."
+            export AUTOMAKE_VERSION=1.16
+            ls -l
+            export CPPFLAGS="-I/usr/local/include -Wall"
+            export LDFLAGS="-L/usr/local/lib"
+            ./build-on.sh '${{ env.package }}' '' 'gmake' '' '${{ github.event.head_commit.message }}'
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
+        run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
+      # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+      #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-openbsd
+          path: ${{ env.package }}-build.tar.gz
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+          overwrite: true
+  check-openbsd-76:
+    name: make check on OpenBSD 7.6
+    needs: build-tarball
+    runs-on: ubuntu-22.04
+    steps:
+      # This is needed because we run a script stored in this repository.
+      - uses: actions/checkout@v4
+      # Download the artifact to $GITHUB_WORKSPACE.
+      # Doc: https://github.com/actions/download-artifact?tab=readme-ov-file#usage
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+      # Doc: https://github.com/vmactions/openbsd-vm
+      - uses: vmactions/openbsd-vm@v1
+        with:
+          release: '7.6'
+          mem: 1024
+          usesh: true
+          # Avoid 'sync: sshfs' since it causes trouble with file timestamps
+          # and errors from chown() calls:
+          # - BSD tar error messages for r--r--r-- files: "tar: Unable to create ...: Permission denied"
+          # - GNU tar warnings "Cannot change ownership to uid 0, gid 0: Permission denied"
+          #sync: sshfs
+          run: |
+            set -x
+            uname -a
+            id
+            env | LC_ALL=C sort
+            pwd
+            : "Install OpenBSD packages"
+            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
+            pkg_add m4 automake-1.16.5 autoconf-2.72p0 gmake gcc-11.2.0p14 g++-11.2.0p15
+            ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
+            export PATH=/usr/local/bin:$PATH
+            : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
+            export AUTOCONF_VERSION=2.72
             : "The OpenBSD port of automake needs this, if more than one version is installed."
             export AUTOMAKE_VERSION=1.16
             ls -l
