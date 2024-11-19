@@ -1,14 +1,15 @@
-From 7320d100a5abb73e8c237f051a652c5a929a13b9 Mon Sep 17 00:00:00 2001
+From f447fe0722215b8942124cc1a1e715142c781c4f Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 18 Nov 2024 22:20:05 +0200
 Subject: [PATCH] libtool.at: Replace 'g++' with variable '$CXX'
 
+Also, add version number for -version-info.
 ---
  tests/libtool.at | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tests/libtool.at b/tests/libtool.at
-index 7143a508..807a46e9 100755
+index 7143a508..770a57af 100755
 --- a/tests/libtool.at
 +++ b/tests/libtool.at
 @@ -251,9 +251,9 @@ AT_DATA([x.cpp],
@@ -19,7 +20,7 @@ index 7143a508..807a46e9 100755
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CXX $CXX -c x.cpp], [0], [stdout], [stderr])
  
 -AT_CHECK([$LIBTOOL --no-warnings --mode=link --tag=CXX g++ -o libx.la -no-canonical-prefixes -R /usr/lib64/ -version-info x.lo], [0], [stdout], [stderr])
-+AT_CHECK([$LIBTOOL --no-warnings --mode=link --tag=CXX $CXX -o libx.la -no-canonical-prefixes -R /usr/lib64/ -version-info x.lo], [0], [stdout], [stderr])
++AT_CHECK([$LIBTOOL --no-warnings --mode=link --tag=CXX $CXX -o libx.la -no-canonical-prefixes -R /usr/lib64/ -version-info 0:0:0 x.lo], [0], [stdout], [stderr])
  
  AT_CHECK([$GREP -- 'warning' stderr], [1], [ignore])
  
