@@ -248,12 +248,9 @@ jobs:
         with:
           name: tarball
       # Doc: https://github.com/ilammy/msvc-dev-cmd
-      - uses: TheMrMilchmann/setup-msvc-dev@v3
+      - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: ${{ matrix.bitness == 32 && 'x86' || 'x64' }}
-          vs-path: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise'
-          sdk: 8.1
-          toolset: 14.0
       # Doc: https://github.com/cygwin/cygwin-install-action
       - uses: cygwin/cygwin-install-action@v4
         with:
