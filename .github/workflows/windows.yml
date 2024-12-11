@@ -309,18 +309,16 @@ jobs:
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
           ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
+        run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
-      - if: ${{ always() }}
+      - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         uses: actions/upload-artifact@v4
         with:
           name: logs-msvc${{ matrix.bitness }}
-          path: |
-            ${{ env.package }}-*/build/config.cache
-            ${{ env.package }}-*/build/config.log
-            ${{ env.package }}-*/build/config.status
-            ${{ env.package }}-*/build/log[1-6]
-            ${{ env.package }}-*/build/tests/testsuite.dir/*/testsuite.log
-            ${{ env.package }}-*/build/gnulib-tests/test-suite.log
-          retention-days: 7
+          path: ${{ env.package }}-build.tar.gz
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
           overwrite: true
