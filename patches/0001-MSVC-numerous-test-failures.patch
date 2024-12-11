@@ -1,0 +1,103 @@
+From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 11 Dec 2024 18:43:47 +0200
+Subject: [PATCH] MSVC: numerous test failures
+
+---
+ build-aux/ltmain.in | 8 --------
+ tests/f77demo.at    | 9 +++++++++
+ tests/fcdemo.at     | 9 +++++++++
+ 3 files changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 9139086b..fa37c32c 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -2952,16 +2952,8 @@ extern \"C\" {
+ 	            eval '$ECHO ": $name " >> "$nlist"'
+ 	          fi
+ 	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+-	          case $host in
+-	            i[3456]86-*-mingw32*)
+ 	              eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
+ 	                $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/_nm__//' >> '$nlist'"
+-	            ;;
+-	            *)
+-	              eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
+-	                $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/__nm_//' >> '$nlist'"
+-	            ;;
+-	          esac
+ 	        }
+ 	      else # not an import lib
+ 	        $opt_dry_run || {
+diff --git a/tests/f77demo.at b/tests/f77demo.at
+index 6b96920a..07a619e6 100644
+--- a/tests/f77demo.at
++++ b/tests/f77demo.at
+@@ -300,6 +300,9 @@ then
+   AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
+ fi
+ 
++# Skip Fortran tests for MSVC toolchain
++AT_CHECK([$LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' && (exit 77)], 1)
++
+ # Executing the static fprogram might be interactive on MSYS.
+ AT_KEYWORDS([interactive])
+ 
+@@ -326,6 +329,9 @@ then
+   AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
+ fi
+ 
++# Skip Fortran tests for MSVC toolchain
++AT_CHECK([$LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' && (exit 77)], 1)
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([--disable-static],
+@@ -349,6 +355,9 @@ then
+   AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
+ fi
+ 
++# Skip Fortran tests for MSVC toolchain
++AT_CHECK([$LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' && (exit 77)], 1)
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([],
+diff --git a/tests/fcdemo.at b/tests/fcdemo.at
+index 80fe2482..9d934045 100644
+--- a/tests/fcdemo.at
++++ b/tests/fcdemo.at
+@@ -314,6 +314,9 @@ then
+   AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
+ fi
+ 
++# Skip Fortran tests for MSVC toolchain
++AT_CHECK([$LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' && (exit 77)], 1)
++
+ # Executing the static fprogram might be interactive on MSYS.
+ AT_KEYWORDS([interactive])
+ 
+@@ -340,6 +343,9 @@ then
+   AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
+ fi
+ 
++# Skip Fortran tests for MSVC toolchain
++AT_CHECK([$LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' && (exit 77)], 1)
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([--disable-static],
+@@ -363,6 +369,9 @@ then
+   AT_CHECK([echo "$LDFLAGS" | $EGREP 'fsanitize=' && (exit 77)], 1)
+ fi
+ 
++# Skip Fortran tests for MSVC toolchain
++AT_CHECK([$LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' && (exit 77)], 1)
++
+ _LT_SETUP
+ 
+ LT_AT_CHECK_CONFIG([],
+-- 
+2.45.2
+
