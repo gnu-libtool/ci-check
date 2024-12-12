@@ -87,7 +87,7 @@ index 2a81a250..d92c511f 100644
  AT_SETUP([compiling softlinked libltdl])
  
 +# Symlinks are not created properly for MSVC
-+AT_CHECK([mklink -? | (exit 77)], 1)
++AT_CHECK([cmd /c "mklink -?" | (exit 77)], 1)
 +
  LT_AT_CHECK_LIBTOOLIZE([--ltdl=.], [], [ignore])
  LT_AT_CONFIGURE
@@ -101,7 +101,7 @@ index a2f1b261..d32e14fa 100644
  AT_SETUP([compiling softlinked libltdl])
  
 +# Symlinks are not created properly for MSVC
-+AT_CHECK([mklink | (exit 77)], 1)
++AT_CHECK([cmd /c "mklink" | (exit 77)], 1)
 +
  _LT_AT_LTDL_SETUP
  
