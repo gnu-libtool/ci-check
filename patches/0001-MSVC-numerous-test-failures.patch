@@ -6,7 +6,9 @@ Subject: [PATCH] MSVC: numerous test failures
 ---
  tests/f77demo.at    | 9 +++++++++
  tests/fcdemo.at     | 9 +++++++++
- 2 files changed, 18 insertions(+)
+ tests/standalone.at | 3 +++
+ tests/subproject.at | 3 +++
+ 4 files changed, 24 insertions(+)
 
 diff --git a/tests/f77demo.at b/tests/f77demo.at
 index 6b96920a..07a619e6 100644
@@ -76,6 +78,34 @@ index 80fe2482..9d934045 100644
  _LT_SETUP
  
  LT_AT_CHECK_CONFIG([],
+diff --git a/tests/standalone.at b/tests/standalone.at
+index 2a81a250..d92c511f 100644
+--- a/tests/standalone.at
++++ b/tests/standalone.at
+@@ -28,6 +28,9 @@ AT_BANNER([Standalone Libltdl.])
+ 
+ AT_SETUP([compiling softlinked libltdl])
+ 
++# Symlinks are not created properly for MSVC
++AT_CHECK([mklink -? | (exit 77)], 1)
++
+ LT_AT_CHECK_LIBTOOLIZE([--ltdl=.], [], [ignore])
+ LT_AT_CONFIGURE
+ AT_XFAIL_IF([test no = "$ACLOCAL"])
+diff --git a/tests/subproject.at b/tests/subproject.at
+index a2f1b261..d32e14fa 100644
+--- a/tests/subproject.at
++++ b/tests/subproject.at
+@@ -54,6 +54,9 @@ echo 'int dummy = 0;' > foo.c
+ 
+ AT_SETUP([compiling softlinked libltdl])
+ 
++# Symlinks are not created properly for MSVC
++AT_CHECK([mklink | (exit 77)], 1)
++
+ _LT_AT_LTDL_SETUP
+ 
+ LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
 -- 
 2.45.2
 
