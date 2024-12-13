@@ -4,13 +4,6 @@ Date: Wed, 11 Dec 2024 18:43:47 +0200
 Subject: [PATCH] MSVC: numerous test failures
 
 ---
- tests/f77demo.at    | 9 +++++++++
- tests/fcdemo.at     | 9 +++++++++
- tests/standalone.at | 5 +++++
- tests/subproject.at | 5 +++++
- libtoolize.in       | 9 +++++++++
- 5 files changed, 37 insertions(+)
-
 diff --git a/tests/f77demo.at b/tests/f77demo.at
 index 6b96920a..07a619e6 100644
 --- a/tests/f77demo.at
@@ -113,6 +106,8 @@ index a2f1b261..be8bf077 100644
  LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
  diff --git a/libtoolize.in b/libtoolize.in
 index 6c15aa57..c5d9298b 100644
+diff --git a/libtoolize.in b/libtoolize.in
+index 6c15aa57..3361439f 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
 @@ -439,6 +439,15 @@ func_copy ()
@@ -131,6 +126,16 @@ index 6c15aa57..c5d9298b 100644
      $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
  
      if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
+@@ -446,7 +455,8 @@ func_copy ()
+       func_notquiet_hdr "$my_msg_var" "$my_copy_msg"
+     else
+       func_notquiet_error_hdr "$my_msg_var" \
+-        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed"
++        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed" \
++        "Using: $my_copy_msg"
+       return 1
+     fi
+ }
 -- 
 2.45.2
 
