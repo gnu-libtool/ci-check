@@ -8,7 +8,8 @@ Subject: [PATCH] MSVC: numerous test failures
  tests/fcdemo.at     | 9 +++++++++
  tests/standalone.at | 5 +++++
  tests/subproject.at | 5 +++++
- 4 files changed, 28 insertions(+)
+ libtoolize.in       | 9 +++++++++
+ 5 files changed, 37 insertions(+)
 
 diff --git a/tests/f77demo.at b/tests/f77demo.at
 index 6b96920a..07a619e6 100644
@@ -110,6 +111,26 @@ index a2f1b261..be8bf077 100644
  _LT_AT_LTDL_SETUP
  
  LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
+ diff --git a/libtoolize.in b/libtoolize.in
+index 6c15aa57..c5d9298b 100644
+--- a/libtoolize.in
++++ b/libtoolize.in
+@@ -439,6 +439,15 @@ func_copy ()
+       my_copy_type=linking
+     fi
+     my_copy_msg="$my_copy_type file '$my_destfile'"
++
++    case $my_copycmd in
++    *mklink*)
++      my_temp=$my_destfile
++      my_destfile=$my_srcfile
++      my_srcfile=$my_temp
++    ;;
++    *) ;;
++    esac
+     $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
+ 
+     if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
 -- 
 2.45.2
 
