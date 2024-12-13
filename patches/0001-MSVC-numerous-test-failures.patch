@@ -72,38 +72,6 @@ index 80fe2482..9d934045 100644
  _LT_SETUP
  
  LT_AT_CHECK_CONFIG([],
-diff --git a/tests/standalone.at b/tests/standalone.at
-index 2a81a250..4a9355d1 100644
---- a/tests/standalone.at
-+++ b/tests/standalone.at
-@@ -28,6 +28,11 @@ AT_BANNER([Standalone Libltdl.])
- 
- AT_SETUP([compiling softlinked libltdl])
- 
-+# Symlinks are not created properly for MSVC
-+if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"'; then
-+LN_S="cmd /c mklink"
-+fi
-+
- LT_AT_CHECK_LIBTOOLIZE([--ltdl=.], [], [ignore])
- LT_AT_CONFIGURE
- AT_XFAIL_IF([test no = "$ACLOCAL"])
-diff --git a/tests/subproject.at b/tests/subproject.at
-index a2f1b261..be8bf077 100644
---- a/tests/subproject.at
-+++ b/tests/subproject.at
-@@ -54,6 +54,11 @@ echo 'int dummy = 0;' > foo.c
- 
- AT_SETUP([compiling softlinked libltdl])
- 
-+# Symlinks are not created properly for MSVC
-+if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"'; then
-+LN_S="cmd /c mklink"
-+fi
-+
- _LT_AT_LTDL_SETUP
- 
- LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
 diff --git a/libtoolize.in b/libtoolize.in
 index 6c15aa57..46be8c1b 100644
 --- a/libtoolize.in
@@ -133,6 +101,54 @@ index 6c15aa57..46be8c1b 100644
      $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
  
      if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
+diff --git a/tests/demo.at b/tests/demo.at
+index a506a93e..eb97fc24 100644
+--- a/tests/demo.at
++++ b/tests/demo.at
+@@ -152,7 +152,7 @@ AT_DATA([foo.h],
+ #  endif
+ #endif
+ 
+-#if (defined _WIN32 || defined _WIN32_WCE) && !defined __GNUC__
++#if (defined _WIN32 || defined _WIN32_WCE || __CYGWIN__) && !defined __GNUC__
+ # ifdef BUILDING_LIBHELLO
+ #  ifdef DLL_EXPORT
+ #   define LIBHELLO_SCOPE extern __declspec (dllexport)
+diff --git a/tests/lt_dlexit.at b/tests/lt_dlexit.at
+index f2b4e2f7..1bbb73db 100644
+--- a/tests/lt_dlexit.at
++++ b/tests/lt_dlexit.at
+@@ -115,8 +115,12 @@ AT_DATA([b1.c],
+ [[#ifdef __cplusplus
+ extern "C" {
+ #endif
+-#if defined DLL_EXPORT && defined _WIN32 && defined _MSC_VER
+-#  define LIBA1_SCOPE extern __declspec (dllimport)
++#if defined DLL_EXPORT
++#  if defined __CYGWIN__ || defined _WIN32 || defined WIN32
++#    if defined _MSC_VER
++#      define LIBA1_SCOPE extern __declspec (dllimport)
++#    endif
++#  endif
+ #endif
+ #if !defined LIBA1_SCOPE
+ #  define LIBA1_SCOPE extern
+diff --git a/tests/testsuite.at b/tests/testsuite.at
+index bacc72ce..5a3e4372 100644
+--- a/tests/testsuite.at
++++ b/tests/testsuite.at
+@@ -72,6 +72,11 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
+ case $host_os in
+ aix*) umask o-rwx ;;
+ esac
++
++# Use mklink when symlinking for MSVC
++if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"'; then
++LN_S="cmd /c mklink"
++fi
+ m4_divert_pop([PREPARE_TESTS])dnl
+ 
+ 
 -- 
 2.45.2
 
