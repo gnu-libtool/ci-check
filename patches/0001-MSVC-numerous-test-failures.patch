@@ -105,16 +105,15 @@ index a2f1b261..be8bf077 100644
  
  LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
 diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..38a37638 100644
+index 6c15aa57..46be8c1b 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
-@@ -439,14 +439,30 @@ func_copy ()
+@@ -439,6 +439,24 @@ func_copy ()
        my_copy_type=linking
      fi
      my_copy_msg="$my_copy_type file '$my_destfile'"
--    $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
- 
--    if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
++
++    # The Windows linker, mklink, swaps link_name and target.
 +    case $my_copycmd in
 +    *mklink*)
 +      my_temp=$my_destfile
@@ -130,18 +129,10 @@ index 6c15aa57..38a37638 100644
 +    ;;
 +    *) ;;
 +    esac
-+    my_copy_msg="$my_copycmd $my_srcfile $my_destfile"
 +
-+    if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile"
-     then
-       func_notquiet_hdr "$my_msg_var" "$my_copy_msg"
-     else
-       func_notquiet_error_hdr "$my_msg_var" \
--        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed"
-+        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed with $my_copy_msg"
-       return 1
-     fi
- }
+     $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
+ 
+     if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
 -- 
 2.45.2
 
