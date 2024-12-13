@@ -105,7 +105,7 @@ index a2f1b261..be8bf077 100644
  
  LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
 diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..65a80a02 100644
+index 6c15aa57..e4c54721 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
 @@ -439,14 +439,27 @@ func_copy ()
@@ -121,7 +121,7 @@ index 6c15aa57..65a80a02 100644
 +      my_destfile=$my_srcfile
 +      my_srcfile=$my_temp
 +
-+      if  [ -d "$my_destfile" ]; then
++      if test -d "$my_destfile"; then
 +        my_copycmd="$my_copycmd /d"
 +      fi
 +    ;;
