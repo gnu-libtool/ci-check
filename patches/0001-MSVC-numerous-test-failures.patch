@@ -146,10 +146,10 @@ index 404ca5e8..7f9d6977 100644
 -AC_MSG_CHECKING([whether the compiler implements namespaces])
 -AC_COMPILE_IFELSE(
 -    [AC_LANG_PROGRAM([[namespace A { namespace B { int i = 0; }}]],
--                    [[using namespace A::B; return i;]])],
+-		     [[using namespace A::B; return i;]])],
 -    [AC_MSG_RESULT([yes])
 -     AC_DEFINE([HAVE_NAMESPACES],[1],
--              [define if the compiler implements namespaces])],
+-	       [define if the compiler implements namespaces])],
 -    [AC_MSG_RESULT([no])])
  
  AC_MSG_CHECKING([whether the compiler has ISO C++ iostream])
@@ -161,7 +161,7 @@ index 404ca5e8..7f9d6977 100644
 + ]], [[std::cout << "bingo\n"; return 0;]])],
      [AC_MSG_RESULT([yes])
       AC_DEFINE([HAVE_IOSTREAM],[1],
-               [define if the compiler has ISO C++ iostream])],
+ 	       [define if the compiler has ISO C++ iostream])],
 @@ -117,14 +106,9 @@ AT_DATA([main.cpp],
  #include "baz.h"
  #include "conv.h"
