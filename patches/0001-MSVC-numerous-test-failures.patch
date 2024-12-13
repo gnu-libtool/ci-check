@@ -104,16 +104,15 @@ index a2f1b261..be8bf077 100644
  _LT_AT_LTDL_SETUP
  
  LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
- diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..c5d9298b 100644
 diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..3361439f 100644
+index 6c15aa57..a9bd2399 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
-@@ -439,6 +439,15 @@ func_copy ()
+@@ -439,14 +439,23 @@ func_copy ()
        my_copy_type=linking
      fi
      my_copy_msg="$my_copy_type file '$my_destfile'"
+-    $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
 +
 +    case $my_copycmd in
 +    *mklink*)
@@ -123,16 +122,15 @@ index 6c15aa57..3361439f 100644
 +    ;;
 +    *) ;;
 +    esac
-     $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
++    my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
  
      if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
-@@ -446,7 +455,8 @@ func_copy ()
+     then
        func_notquiet_hdr "$my_msg_var" "$my_copy_msg"
      else
        func_notquiet_error_hdr "$my_msg_var" \
 -        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed"
-+        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed" \
-+        "Using: $my_copy_msg"
++        "$my_copy_type '$my_srcdir/$my_filename' to '$my_destdir/' failed with $my_copy_msg"
        return 1
      fi
  }
