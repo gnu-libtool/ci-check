@@ -105,10 +105,10 @@ index a2f1b261..be8bf077 100644
  
  LT_AT_BOOTSTRAP([--ltdl], [-I sub/ltdl/m4], [ignore], [--add-missing --copy],
 diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..e4c54721 100644
+index 6c15aa57..38a37638 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
-@@ -439,14 +439,27 @@ func_copy ()
+@@ -439,14 +439,30 @@ func_copy ()
        my_copy_type=linking
      fi
      my_copy_msg="$my_copy_type file '$my_destfile'"
@@ -121,13 +121,16 @@ index 6c15aa57..e4c54721 100644
 +      my_destfile=$my_srcfile
 +      my_srcfile=$my_temp
 +
++      my_destfile=`cygpath -aw "$my_destfile"`
++      my_srcfile=`cygpath -aw "$my_srcfile"`
++
 +      if test -d "$my_destfile"; then
 +        my_copycmd="$my_copycmd /d"
 +      fi
 +    ;;
 +    *) ;;
 +    esac
-+    my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
++    my_copy_msg="$my_copycmd $my_srcfile $my_destfile"
 +
 +    if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile"
      then
