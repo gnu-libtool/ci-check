@@ -4,6 +4,48 @@ Date: Wed, 11 Dec 2024 18:43:47 +0200
 Subject: [PATCH] MSVC: numerous test failures
 
 ---
+diff --git a/libtoolize.in b/libtoolize.in
+index 6c15aa57..46be8c1b 100644
+--- a/libtoolize.in
++++ b/libtoolize.in
+@@ -439,6 +439,24 @@ func_copy ()
+       my_copy_type=linking
+     fi
+     my_copy_msg="$my_copy_type file '$my_destfile'"
++
++    # The Windows linker, mklink, swaps link_name and target.
++    case $my_copycmd in
++    *mklink*)
++      my_temp=$my_destfile
++      my_destfile=$my_srcfile
++      my_srcfile=$my_temp
++
++      my_destfile=`cygpath -aw "$my_destfile"`
++      my_srcfile=`cygpath -aw "$my_srcfile"`
++
++      if test -d "$my_destfile"; then
++        my_copycmd="$my_copycmd /d"
++      fi
++    ;;
++    *) ;;
++    esac
++
+     $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
+ 
+     if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
+diff --git a/tests/demo.at b/tests/demo.at
+index a506a93e..eb97fc24 100644
+--- a/tests/demo.at
++++ b/tests/demo.at
+@@ -152,7 +152,7 @@ AT_DATA([foo.h],
+ #  endif
+ #endif
+ 
+-#if (defined _WIN32 || defined _WIN32_WCE) && !defined __GNUC__
++#if (defined _WIN32 || defined _WIN32_WCE || __CYGWIN__) && !defined __GNUC__
+ # ifdef BUILDING_LIBHELLO
+ #  ifdef DLL_EXPORT
+ #   define LIBHELLO_SCOPE extern __declspec (dllexport)
 diff --git a/tests/f77demo.at b/tests/f77demo.at
 index 6b96920a..07a619e6 100644
 --- a/tests/f77demo.at
@@ -72,48 +114,6 @@ index 80fe2482..9d934045 100644
  _LT_SETUP
  
  LT_AT_CHECK_CONFIG([],
-diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..46be8c1b 100644
---- a/libtoolize.in
-+++ b/libtoolize.in
-@@ -439,6 +439,24 @@ func_copy ()
-       my_copy_type=linking
-     fi
-     my_copy_msg="$my_copy_type file '$my_destfile'"
-+
-+    # The Windows linker, mklink, swaps link_name and target.
-+    case $my_copycmd in
-+    *mklink*)
-+      my_temp=$my_destfile
-+      my_destfile=$my_srcfile
-+      my_srcfile=$my_temp
-+
-+      my_destfile=`cygpath -aw "$my_destfile"`
-+      my_srcfile=`cygpath -aw "$my_srcfile"`
-+
-+      if test -d "$my_destfile"; then
-+        my_copycmd="$my_copycmd /d"
-+      fi
-+    ;;
-+    *) ;;
-+    esac
-+
-     $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
- 
-     if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
-diff --git a/tests/demo.at b/tests/demo.at
-index a506a93e..eb97fc24 100644
---- a/tests/demo.at
-+++ b/tests/demo.at
-@@ -152,7 +152,7 @@ AT_DATA([foo.h],
- #  endif
- #endif
- 
--#if (defined _WIN32 || defined _WIN32_WCE) && !defined __GNUC__
-+#if (defined _WIN32 || defined _WIN32_WCE || __CYGWIN__) && !defined __GNUC__
- # ifdef BUILDING_LIBHELLO
- #  ifdef DLL_EXPORT
- #   define LIBHELLO_SCOPE extern __declspec (dllexport)
 diff --git a/tests/lt_dlexit.at b/tests/lt_dlexit.at
 index f2b4e2f7..1bbb73db 100644
 --- a/tests/lt_dlexit.at
@@ -133,6 +133,111 @@ index f2b4e2f7..1bbb73db 100644
  #endif
  #if !defined LIBA1_SCOPE
  #  define LIBA1_SCOPE extern
+diff --git a/tests/tagdemo.at b/tests/tagdemo.at
+index 404ca5e8..7f9d6977 100644
+--- a/tests/tagdemo.at
++++ b/tests/tagdemo.at
+@@ -42,23 +42,12 @@ AC_PROG_CC_C_O
+ AC_PROG_CXX
+ AC_PROG_CXXCPP
+ 
+-# Check for namespace support and new-style headers
+ AC_LANG_PUSH([C++])
+-AC_MSG_CHECKING([whether the compiler implements namespaces])
+-AC_COMPILE_IFELSE(
+-    [AC_LANG_PROGRAM([[namespace A { namespace B { int i = 0; }}]],
+-                    [[using namespace A::B; return i;]])],
+-    [AC_MSG_RESULT([yes])
+-     AC_DEFINE([HAVE_NAMESPACES],[1],
+-              [define if the compiler implements namespaces])],
+-    [AC_MSG_RESULT([no])])
+ 
+ AC_MSG_CHECKING([whether the compiler has ISO C++ iostream])
+ AC_COMPILE_IFELSE(
+     [AC_LANG_PROGRAM([[#include <iostream>
+-#ifdef HAVE_NAMESPACES
+-using namespace std;
+-#endif ]], [[cout << "bingo\n"; return 0;]])],
++ ]], [[std::cout << "bingo\n"; return 0;]])],
+     [AC_MSG_RESULT([yes])
+      AC_DEFINE([HAVE_IOSTREAM],[1],
+               [define if the compiler has ISO C++ iostream])],
+@@ -117,14 +106,9 @@ AT_DATA([main.cpp],
+ #include "baz.h"
+ #include "conv.h"
+ 
+-#if HAVE_NAMESPACES
+-namespace std { }
+-using namespace std;
+-#endif
+-
+ int main (int, char *[])
+ {
+-  cout << "Welcome to GNU libtool tagdemo C++!" << endl;
++  std::cout << "Welcome to GNU libtool tagdemo C++!" << std::endl;
+ 
+   foobar_derived FB;
+   // Instantiate the derived class.
+@@ -134,12 +118,12 @@ int main (int, char *[])
+ 
+   int value = fb->hello();
+ 
+-  cout << "foobar::hello returned: " << value << endl;
++  std::cout << "foobar::hello returned: " << value << std::endl;
+   if (value = HELLO_RET)
+-    cout << "foobar::hello is ok!" << endl;
++    std::cout << "foobar::hello is ok!" << std::endl;
+ 
+   if (fb->foo() == FOO_RET)
+-    cout << "foobar::foo is ok!" << endl;
++    std::cout << "foobar::foo is ok!" << std::endl;
+ 
+   // --------------
+ 
+@@ -152,12 +136,12 @@ int main (int, char *[])
+   // barbaz_derived::baz() should return FOO_RET since it calls
+   // foobar_derived::foo(), which in turn calls ::foo().
+   if (bb->baz() == FOO_RET)
+-    cout << "barbaz::baz is ok!" << endl;
++    std::cout << "barbaz::baz is ok!" << std::endl;
+ 
+   // --------------
+ 
+   if (convenience())
+-    cout << "convenience is ok!" << endl;
++    std::cout << "convenience is ok!" << std::endl;
+ 
+   return 0;
+ }
+@@ -207,11 +191,6 @@ AT_DATA([foo.cpp],
+ # include <iostream.h>
+ #endif
+ 
+-#ifdef HAVE_NAMESPACES
+-namespace std { }
+-using namespace std;
+-#endif
+-
+ #include <math.h>
+ 
+ #include "foo.h"
+@@ -220,14 +199,14 @@ using namespace std;
+ int
+ foo(void)
+ {
+-  cout << "cos (0.0) = " << (double) cos ((double) 0.0) << endl;
++  std::cout << "cos (0.0) = " << (double) cos ((double) 0.0) << std::endl;
+   return FOO_RET;
+ }
+ 
+ int
+ hello(void)
+ {
+-  cout << "** This is libfoo (tagdemo) **" << endl;
++  std::cout << "** This is libfoo (tagdemo) **" << std::endl;
+   return HELLO_RET;
+ }
+ 
 diff --git a/tests/testsuite.at b/tests/testsuite.at
 index bacc72ce..5a3e4372 100644
 --- a/tests/testsuite.at
