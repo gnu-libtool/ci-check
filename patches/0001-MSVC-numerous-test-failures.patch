@@ -288,16 +288,17 @@ index 404ca5e8..308a58b8 100644
  }
  
 diff --git a/tests/template.at b/tests/template.at
-index 38c44c72..9d859db7 100644
+index 38c44c72..e21adb8e 100644
 --- a/tests/template.at
 +++ b/tests/template.at
-@@ -74,6 +74,10 @@ int main()
+@@ -74,6 +74,11 @@ int main()
  }
  ]])
  
 +$ECHO "DEBUG: OBJEXT=$OBJEXT"
 +OBJEXT=obj
 +$ECHO "DEBUG: OBJEXT=$OBJEXT"
++CXX="$CC"
 +
  AT_CHECK([$LIBTOOL --tag=CXX --mode=compile $CXX -I. $CPPFLAGS $CXXFLAGS -c -o alib.lo alib.cpp],
  	 [0], [ignore], [ignore])
@@ -306,7 +307,7 @@ diff --git a/tests/testsuite.at b/tests/testsuite.at
 index bacc72ce..ea3b80e3 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
-@@ -72,6 +72,12 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
+@@ -72,6 +72,11 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
  case $host_os in
  aix*) umask o-rwx ;;
  esac
@@ -314,7 +315,6 @@ index bacc72ce..ea3b80e3 100644
 +# Use mklink when symlinking for MSVC
 +if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' >/dev/null; then
 +LN_S="cmd /c mklink"
-+CXX="$CC"
 +fi
  m4_divert_pop([PREPARE_TESTS])dnl
  
