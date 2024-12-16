@@ -5,34 +5,59 @@ Subject: [PATCH] MSVC: numerous test failures
 
 ---
 diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..46be8c1b 100644
+index 6c15aa57..86053e5d 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
-@@ -439,6 +439,24 @@ func_copy ()
+@@ -437,6 +437,28 @@ func_copy ()
+     else
+       my_copycmd=$LN_S
        my_copy_type=linking
++
++      # The Windows linker, mklink, swaps link_name and target.
++      case $my_copycmd in
++      *mklink*)
++        my_temp=$my_destfile
++        my_destfile=$my_srcfile
++        my_srcfile=$my_temp
++
++        case $build_os in
++        cygwin*)
++          my_destfile=`cygpath -aw "$my_destfile"`
++          my_srcfile=`cygpath -aw "$my_srcfile"`
++        ;;
++        *) ;;
++        esac
++
++        if test -d "$my_destfile"; then
++          my_copycmd="$my_copycmd /d"
++        fi
++      ;;
++      *) ;;
++      esac
      fi
      my_copy_msg="$my_copy_type file '$my_destfile'"
-+
-+    # The Windows linker, mklink, swaps link_name and target.
-+    case $my_copycmd in
-+    *mklink*)
-+      my_temp=$my_destfile
-+      my_destfile=$my_srcfile
-+      my_srcfile=$my_temp
-+
-+      my_destfile=`cygpath -aw "$my_destfile"`
-+      my_srcfile=`cygpath -aw "$my_srcfile"`
-+
-+      if test -d "$my_destfile"; then
-+        my_copycmd="$my_copycmd /d"
-+      fi
-+    ;;
-+    *) ;;
-+    esac
-+
      $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
- 
-     if $opt_dry_run || $my_copycmd "$my_srcfile" "$my_destfile" 2>/dev/null
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index f220c667..08de1616 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -6812,14 +6812,14 @@ if test yes != "$_lt_caught_CXX_error"; then
+ 	  # Tell ltmain to make .dll files, not .so files.
+ 	  shrext_cmds=.dll
+ 	  # FIXME: Setting linknames here is a bad hack.
+-	  _LT_TAGVAR(archive_cmds, $1)='$CC -o $output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
++	  _LT_TAGVAR(archive_cmds, $1)='$CC -Fe$output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
+ 	  _LT_TAGVAR(archive_expsym_cmds, $1)='if _LT_DLL_DEF_P([$export_symbols]); then
+               cp "$export_symbols" "$output_objdir/$soname.def";
+               echo "$tool_output_objdir$soname.def" > "$output_objdir/$soname.exp";
+             else
+               $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.exp;
+             fi~
+-            $CC -o $tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
++            $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
+             linknames='
+ 	  # The linker will not automatically build a static lib if we build a DLL.
+ 	  # _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
 diff --git a/tests/demo.at b/tests/demo.at
 index a506a93e..eb97fc24 100644
 --- a/tests/demo.at
@@ -134,10 +159,10 @@ index f2b4e2f7..1bbb73db 100644
  #if !defined LIBA1_SCOPE
  #  define LIBA1_SCOPE extern
 diff --git a/tests/tagdemo.at b/tests/tagdemo.at
-index 404ca5e8..7f9d6977 100644
+index 404ca5e8..c31ba61e 100644
 --- a/tests/tagdemo.at
 +++ b/tests/tagdemo.at
-@@ -42,23 +42,12 @@ AC_PROG_CC_C_O
+@@ -42,27 +42,25 @@ AC_PROG_CC_C_O
  AC_PROG_CXX
  AC_PROG_CXXCPP
  
@@ -162,7 +187,29 @@ index 404ca5e8..7f9d6977 100644
      [AC_MSG_RESULT([yes])
       AC_DEFINE([HAVE_IOSTREAM],[1],
  	       [define if the compiler has ISO C++ iostream])],
-@@ -117,14 +106,9 @@ AT_DATA([main.cpp],
+     [AC_MSG_RESULT([no])])
++
++AC_MSG_CHECKING([whether the compiler has iostream.h])
++AC_COMPILE_IFELSE(
++    [AC_LANG_PROGRAM([[#include <iostream.h>
++ ]], [[std::cout << "bingo\n"; return 0;]])],
++    [AC_MSG_RESULT([yes])
++     AC_DEFINE([HAVE_IOSTREAM_H],[1],
++	       [define if the compiler has iostream.h])],
++    [AC_MSG_RESULT([no])])
+ AC_LANG_POP([C++])
+ 
+ AC_LANG([C++])
+@@ -109,7 +107,7 @@ AT_DATA([main.cpp],
+ [[#include <config.h>
+ #if HAVE_IOSTREAM
+ # include <iostream>
+-#else
++#elif HAVE_IOSTREAM_H
+ # include <iostream.h>
+ #endif
+ 
+@@ -117,14 +115,9 @@ AT_DATA([main.cpp],
  #include "baz.h"
  #include "conv.h"
  
@@ -178,7 +225,7 @@ index 404ca5e8..7f9d6977 100644
  
    foobar_derived FB;
    // Instantiate the derived class.
-@@ -134,12 +118,12 @@ int main (int, char *[])
+@@ -134,12 +127,12 @@ int main (int, char *[])
  
    int value = fb->hello();
  
@@ -194,7 +241,7 @@ index 404ca5e8..7f9d6977 100644
  
    // --------------
  
-@@ -152,12 +136,12 @@ int main (int, char *[])
+@@ -152,12 +145,12 @@ int main (int, char *[])
    // barbaz_derived::baz() should return FOO_RET since it calls
    // foobar_derived::foo(), which in turn calls ::foo().
    if (bb->baz() == FOO_RET)
@@ -209,7 +256,12 @@ index 404ca5e8..7f9d6977 100644
  
    return 0;
  }
-@@ -207,11 +191,6 @@ AT_DATA([foo.cpp],
+@@ -203,15 +196,10 @@ AT_DATA([foo.cpp],
+ [[#include <config.h>
+ #ifdef HAVE_IOSTREAM
+ # include <iostream>
+-#else
++#elifdef HAVE_IOSTREAM_H
  # include <iostream.h>
  #endif
  
@@ -221,7 +273,7 @@ index 404ca5e8..7f9d6977 100644
  #include <math.h>
  
  #include "foo.h"
-@@ -220,14 +199,14 @@ using namespace std;
+@@ -220,14 +208,14 @@ using namespace std;
  int
  foo(void)
  {
@@ -238,8 +290,23 @@ index 404ca5e8..7f9d6977 100644
    return HELLO_RET;
  }
  
+diff --git a/tests/template.at b/tests/template.at
+index 38c44c72..9d859db7 100644
+--- a/tests/template.at
++++ b/tests/template.at
+@@ -74,6 +74,10 @@ int main()
+ }
+ ]])
+ 
++$ECHO "DEBUG: OBJEXT=$OBJEXT"
++OBJEXT=obj
++$ECHO "DEBUG: OBJEXT=$OBJEXT"
++
+ AT_CHECK([$LIBTOOL --tag=CXX --mode=compile $CXX -I. $CPPFLAGS $CXXFLAGS -c -o alib.lo alib.cpp],
+ 	 [0], [ignore], [ignore])
+ AT_CHECK([$LIBTOOL --tag=CXX --mode=compile $CXX -I. $CPPFLAGS $CXXFLAGS -c -o aclib.lo aclib.cpp],
 diff --git a/tests/testsuite.at b/tests/testsuite.at
-index bacc72ce..5a3e4372 100644
+index bacc72ce..defde75e 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
 @@ -72,6 +72,11 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
@@ -248,12 +315,11 @@ index bacc72ce..5a3e4372 100644
  esac
 +
 +# Use mklink when symlinking for MSVC
-+if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"'; then
++if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' >/dev/null; then
 +LN_S="cmd /c mklink"
 +fi
  m4_divert_pop([PREPARE_TESTS])dnl
  
  
--- 
 2.45.2
 

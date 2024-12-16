@@ -297,12 +297,14 @@ jobs:
           VCINSTALLDIR="${VSINSTALLDIR}"'\VC'
           PATH=`cygpath -u "${VCINSTALLDIR}"`/bin${pathelementsuffix}:"$PATH"
           INCLUDE="${VCINSTALLDIR}"'\include;'"${INCLUDE}"
+          ls "${VCINSTALLDIR}"'\include'
           LIB="${VCINSTALLDIR}"'\lib${libelementsuffix};'"${LIB}"
           export INCLUDE LIB
           : "Possible values are _WIN32_WINNT_WINXP, _WIN32_WINNT_VISTA, _WIN32_WINNT_WIN7"
           win32_target=_WIN32_WINNT_WINXP
           export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
           export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD"
+          export CXX="$CC"
           export LD="link"
           export NM="dumpbin -symbols"
           export STRIP=":"
