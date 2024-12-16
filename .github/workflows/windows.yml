@@ -297,7 +297,8 @@ jobs:
           VCINSTALLDIR="${VSINSTALLDIR}"'\VC'
           PATH=`cygpath -u "${VCINSTALLDIR}"`/bin${pathelementsuffix}:"$PATH"
           INCLUDE="${VCINSTALLDIR}"'\include;'"${INCLUDE}"
-          ls "${VCINSTALLDIR}"'\include'
+          cygwin_include_dir=`cygpath -u "${VCINSTALLDIR}"`/include
+          ls "$cygwin_include_dir"
           LIB="${VCINSTALLDIR}"'\lib${libelementsuffix};'"${LIB}"
           export INCLUDE LIB
           : "Possible values are _WIN32_WINNT_WINXP, _WIN32_WINNT_VISTA, _WIN32_WINNT_WIN7"
