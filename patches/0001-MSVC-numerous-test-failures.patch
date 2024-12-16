@@ -298,7 +298,7 @@ index 38c44c72..e21adb8e 100644
 +$ECHO "DEBUG: OBJEXT=$OBJEXT"
 +OBJEXT=obj
 +$ECHO "DEBUG: OBJEXT=$OBJEXT"
-+CXX="$CC"
++CXX=$CC
 +
  AT_CHECK([$LIBTOOL --tag=CXX --mode=compile $CXX -I. $CPPFLAGS $CXXFLAGS -c -o alib.lo alib.cpp],
  	 [0], [ignore], [ignore])
