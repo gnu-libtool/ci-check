@@ -154,7 +154,7 @@ index f2b4e2f7..1bbb73db 100644
  #if !defined LIBA1_SCOPE
  #  define LIBA1_SCOPE extern
 diff --git a/tests/tagdemo.at b/tests/tagdemo.at
-index 404ca5e8..c31ba61e 100644
+index 404ca5e8..308a58b8 100644
 --- a/tests/tagdemo.at
 +++ b/tests/tagdemo.at
 @@ -42,27 +42,25 @@ AC_PROG_CC_C_O
@@ -195,16 +195,18 @@ index 404ca5e8..c31ba61e 100644
  AC_LANG_POP([C++])
  
  AC_LANG([C++])
-@@ -109,7 +107,7 @@ AT_DATA([main.cpp],
+@@ -109,22 +107,19 @@ AT_DATA([main.cpp],
  [[#include <config.h>
  #if HAVE_IOSTREAM
  # include <iostream>
 -#else
 +#elif HAVE_IOSTREAM_H
  # include <iostream.h>
++#else
++# include <iostream>
  #endif
  
-@@ -117,14 +115,9 @@ AT_DATA([main.cpp],
+ #include "foo.h"
  #include "baz.h"
  #include "conv.h"
  
@@ -220,7 +222,7 @@ index 404ca5e8..c31ba61e 100644
  
    foobar_derived FB;
    // Instantiate the derived class.
-@@ -134,12 +127,12 @@ int main (int, char *[])
+@@ -134,12 +129,12 @@ int main (int, char *[])
  
    int value = fb->hello();
  
@@ -236,7 +238,7 @@ index 404ca5e8..c31ba61e 100644
  
    // --------------
  
-@@ -152,12 +145,12 @@ int main (int, char *[])
+@@ -152,12 +147,12 @@ int main (int, char *[])
    // barbaz_derived::baz() should return FOO_RET since it calls
    // foobar_derived::foo(), which in turn calls ::foo().
    if (bb->baz() == FOO_RET)
@@ -251,24 +253,24 @@ index 404ca5e8..c31ba61e 100644
  
    return 0;
  }
-@@ -203,15 +196,10 @@ AT_DATA([foo.cpp],
+@@ -203,13 +198,10 @@ AT_DATA([foo.cpp],
  [[#include <config.h>
  #ifdef HAVE_IOSTREAM
  # include <iostream>
 -#else
 +#elifdef HAVE_IOSTREAM_H
  # include <iostream.h>
- #endif
- 
+-#endif
+-
 -#ifdef HAVE_NAMESPACES
 -namespace std { }
 -using namespace std;
--#endif
--
- #include <math.h>
++#else
++# include <iostream>
+ #endif
  
- #include "foo.h"
-@@ -220,14 +208,14 @@ using namespace std;
+ #include <math.h>
+@@ -220,14 +212,14 @@ using namespace std;
  int
  foo(void)
  {
