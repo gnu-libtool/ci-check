@@ -5,10 +5,10 @@ Subject: [PATCH] MSVC: numerous test failures
 
 ---
 diff --git a/libtoolize.in b/libtoolize.in
-index 6c15aa57..86053e5d 100644
+index 6c15aa57..c70b0b8e 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
-@@ -437,6 +437,28 @@ func_copy ()
+@@ -437,6 +437,23 @@ func_copy ()
      else
        my_copycmd=$LN_S
        my_copy_type=linking
@@ -20,13 +20,8 @@ index 6c15aa57..86053e5d 100644
 +        my_destfile=$my_srcfile
 +        my_srcfile=$my_temp
 +
-+        case $build_os in
-+        cygwin*)
-+          my_destfile=`cygpath -aw "$my_destfile"`
-+          my_srcfile=`cygpath -aw "$my_srcfile"`
-+        ;;
-+        *) ;;
-+        esac
++        my_destfile=`cygpath -aw "$my_destfile"`
++        my_srcfile=`cygpath -aw "$my_srcfile"`
 +
 +        if test -d "$my_destfile"; then
 +          my_copycmd="$my_copycmd /d"
@@ -321,5 +316,6 @@ index bacc72ce..defde75e 100644
  m4_divert_pop([PREPARE_TESTS])dnl
  
  
+--
 2.45.2
 
