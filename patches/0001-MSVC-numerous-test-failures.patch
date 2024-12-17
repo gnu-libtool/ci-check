@@ -154,7 +154,7 @@ index f2b4e2f7..1bbb73db 100644
  #if !defined LIBA1_SCOPE
  #  define LIBA1_SCOPE extern
 diff --git a/tests/tagdemo.at b/tests/tagdemo.at
-index 404ca5e8..308a58b8 100644
+index 404ca5e8..9cb549dc 100644
 --- a/tests/tagdemo.at
 +++ b/tests/tagdemo.at
 @@ -42,27 +42,25 @@ AC_PROG_CC_C_O
@@ -253,12 +253,15 @@ index 404ca5e8..308a58b8 100644
  
    return 0;
  }
-@@ -203,13 +198,10 @@ AT_DATA([foo.cpp],
+@@ -201,15 +196,12 @@ public:
+ 
+ AT_DATA([foo.cpp],
  [[#include <config.h>
- #ifdef HAVE_IOSTREAM
+-#ifdef HAVE_IOSTREAM
++#if HAVE_IOSTREAM
  # include <iostream>
 -#else
-+#elifdef HAVE_IOSTREAM_H
++#elif HAVE_IOSTREAM_H
  # include <iostream.h>
 -#endif
 -
