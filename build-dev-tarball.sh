@@ -40,6 +40,7 @@ git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
 (cd "$package" && patch -p1 < ../patches/0001-MSVC-numerous-test-failures.patch \
+               && patch -p1 < ../patches/0001-libtool.m4-For-MS-dumpbin-drop-CR-first.patch \
                && patch -p1 < ../patches/0001-libtool.m4-preload-valid-C-symbol-names-only.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
