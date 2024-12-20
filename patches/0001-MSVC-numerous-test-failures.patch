@@ -32,10 +32,79 @@ index 6c15aa57..c70b0b8e 100644
      fi
      my_copy_msg="$my_copy_type file '$my_destfile'"
      $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 9139086b..b19066e6 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -2585,8 +2585,16 @@ func_mode_install ()
+ 	    # so we also need to try rm && ln -s.
+ 	    for linkname
+ 	    do
+-	      test "$linkname" != "$realname" \
+-		&& func_show_eval "(cd $destdir && { $LN_S -f $realname $linkname || { $RM $linkname && $LN_S $realname $linkname; }; })"
++	      if test "$linkname" != "$realname"; then
++	        case $LN_S in
++	          *mklink*)
++	            link_name_cygpath=`cygpath -aw "$linkname"`
++	            target_name_cygpath=`cygpath -aw "$realname"`
++	            func_show_eval "(cd $destdir && { $RM $linkname && $LN_S $link_name_cygpath $target_name_cygpath; })"
++	          ;;
++	          *) func_show_eval "(cd $destdir && { $LN_S -f $realname $linkname || { $RM $linkname && $LN_S $realname $linkname; }; })" ;;
++	        esac
++	      fi
+ 	    done
+ 	  fi
+ 
+@@ -8283,7 +8291,14 @@ func_mode_link ()
+ 	# Create links to the real library.
+ 	for linkname in $linknames; do
+ 	  if test "$realname" != "$linkname"; then
+-	    func_show_eval '(cd "$output_objdir" && $RM "$linkname" && $LN_S "$realname" "$linkname")' 'exit $?'
++	    case $LN_S in
++	      *mklink*)
++	        link_name_cygpath=`cygpath -aw "$linkname"`
++	        target_name_cygpath=`cygpath -aw "$realname"`
++	        func_show_eval '(cd "$output_objdir" && $RM "$linkname" && $LN_S "$link_name_cygpath" "$target_name_cygpath")' 'exit $?'
++	      ;;
++	      *) func_show_eval '(cd "$output_objdir" && $RM "$linkname" && $LN_S "$realname" "$linkname")' 'exit $?' ;;
++	    esac
+ 	  fi
+ 	done
+ 
+@@ -9146,8 +9161,14 @@ relink_command=\"$relink_command\""
+ 
+       # Do a symbolic link so that the libtool archive can be found in
+       # LD_LIBRARY_PATH before the program is installed.
+-      func_show_eval '( cd "$output_objdir" && $RM "$outputname" && $LN_S "../$outputname" "$outputname" )' 'exit $?'
+-      ;;
++	  case $LN_S in
++	    *mklink*)
++	      link_name_cygpath=`cygpath -aw "$outputname"`
++	      target_name_cygpath=`cygpath -aw "../$outputname"`
++	      func_show_eval '( cd "$output_objdir" && $RM "$outputname" && $LN_S "$link_name_cygpath" "$target_name_cygpath" )' 'exit $?'
++	    ;;
++	    *) func_show_eval '( cd "$output_objdir" && $RM "$outputname" && $LN_S "../$outputname" "$outputname" )' 'exit $?' ;;
++	  esac
+     esac
+     exit $EXIT_SUCCESS
+ }
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
 index f220c667..08de1616 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
+@@ -171,7 +171,11 @@ AC_REQUIRE([LT_PATH_LD])dnl
+ AC_REQUIRE([LT_PATH_NM])dnl
+ dnl
+ AC_REQUIRE([AC_PROG_LN_S])dnl
+-test -z "$LN_S" && LN_S="ln -s"
++if test "MS dumpbin" = "$lt_cv_nm_interface"; then
++  test -z "$LN_S" && LN_S="cmd /c mklink"
++else
++  test -z "$LN_S" && LN_S="ln -s"
++fi
+ _LT_DECL([], [LN_S], [1], [Whether we need soft or hard links])dnl
+ dnl
+ AC_REQUIRE([LT_CMD_MAX_LEN])dnl
 @@ -6812,14 +6812,14 @@ if test yes != "$_lt_caught_CXX_error"; then
  	  # Tell ltmain to make .dll files, not .so files.
  	  shrext_cmds=.dll
