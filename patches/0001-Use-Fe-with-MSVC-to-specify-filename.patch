@@ -1,0 +1,34 @@
+From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 11 Dec 2024 18:43:47 +0200
+Subject: [PATCH] libtool.m4: Use -Fe with MSVC to specify filename
+
+This is similar to commit 81e8abf3ddb341e1e86d57fd4d7f318c264276f1.
+
+* m4/libtool.m4: Use '-Fe' instead of '-o' for MSVC.
+
+---
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index f220c667..08de1616 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -6812,14 +6812,14 @@ if test yes != "$_lt_caught_CXX_error"; then
+ 	  # Tell ltmain to make .dll files, not .so files.
+ 	  shrext_cmds=.dll
+ 	  # FIXME: Setting linknames here is a bad hack.
+-	  _LT_TAGVAR(archive_cmds, $1)='$CC -o $output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
++	  _LT_TAGVAR(archive_cmds, $1)='$CC -Fe$output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
+ 	  _LT_TAGVAR(archive_expsym_cmds, $1)='if _LT_DLL_DEF_P([$export_symbols]); then
+               cp "$export_symbols" "$output_objdir/$soname.def";
+               echo "$tool_output_objdir$soname.def" > "$output_objdir/$soname.exp";
+             else
+               $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.exp;
+             fi~
+-            $CC -o $tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
++            $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
+             linknames='
+ 	  # The linker will not automatically build a static lib if we build a DLL.
+ 	  # _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
+--
+2.45.2
+

@@ -1,0 +1,44 @@
+From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 11 Dec 2024 18:43:47 +0200
+Subject: [PATCH] tests: Include check for __CYGWIN__ for crossbuilds
+
+* tests/demo.at, tests/lt_dlexit.at: Add __CYGWIN__ to check for
+crossbuilds of build cygwin with host mingw and the MSVC toolchain.
+
+---
+diff --git a/tests/demo.at b/tests/demo.at
+index a506a93e..eb97fc24 100644
+--- a/tests/demo.at
++++ b/tests/demo.at
+@@ -152,7 +152,7 @@ AT_DATA([foo.h],
+ #  endif
+ #endif
+ 
+-#if (defined _WIN32 || defined _WIN32_WCE) && !defined __GNUC__
++#if (defined _WIN32 || defined _WIN32_WCE || __CYGWIN__) && !defined __GNUC__
+ # ifdef BUILDING_LIBHELLO
+ #  ifdef DLL_EXPORT
+ #   define LIBHELLO_SCOPE extern __declspec (dllexport)
+diff --git a/tests/lt_dlexit.at b/tests/lt_dlexit.at
+index f2b4e2f7..1bbb73db 100644
+--- a/tests/lt_dlexit.at
++++ b/tests/lt_dlexit.at
+@@ -115,8 +115,12 @@ AT_DATA([b1.c],
+ [[#ifdef __cplusplus
+ extern "C" {
+ #endif
+-#if defined DLL_EXPORT && defined _WIN32 && defined _MSC_VER
+-#  define LIBA1_SCOPE extern __declspec (dllimport)
++#if defined DLL_EXPORT
++#  if defined __CYGWIN__ || defined _WIN32 || defined WIN32
++#    if defined _MSC_VER
++#      define LIBA1_SCOPE extern __declspec (dllimport)
++#    endif
++#  endif
+ #endif
+ #if !defined LIBA1_SCOPE
+ #  define LIBA1_SCOPE extern
+--
+2.45.2
+

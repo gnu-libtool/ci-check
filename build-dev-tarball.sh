@@ -39,7 +39,12 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-MSVC-numerous-test-failures.patch \
+(cd "$package" && patch -p1 < ../patches/0001-Use-Fe-with-MSVC-to-specify-filename.patch \
+               && patch -p1 < ../patches/0001-testsuite.at-Update-testsuite-config-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-tests-Skip-Fortran-tests-for-MSVC-toolchain.patch \
+               && patch -p1 < ../patches/0001-tagdemo.at-Update-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-tests-Include-check-for-CYGWIN-for-crossbuilds.patch \
+               && patch -p1 < ../patches/0001-libtoolize.in-Create-symlinks-with-mklink-for-MSVC.patch \
                && patch -p1 < ../patches/0001-libtool.m4-For-MS-dumpbin-drop-CR-first.patch \
                && patch -p1 < ../patches/0001-libtool.m4-preload-valid-C-symbol-names-only.patch)
 
