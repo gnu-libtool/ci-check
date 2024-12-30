@@ -1,0 +1,62 @@
+From 0262bce5df5ef4dcbd456df0bb84b804aeb26f99 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Mon, 30 Dec 2024 17:55:30 +0200
+Subject: [PATCH] libtoolize.at: Update checks based on linker used
+
+If mklink is used for symlinking files, the expout will not match, so
+stdout is used instead.
+
+* tests/libtoolize.at: Use stdout for checks instead of expout on MSVC.
+---
+ tests/libtoolize.at | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/tests/libtoolize.at b/tests/libtoolize.at
+index 1b562295..c3fa9ae4 100644
+--- a/tests/libtoolize.at
++++ b/tests/libtoolize.at
+@@ -521,7 +521,12 @@ AT_SETUP([copy ltdl.m4 with shared macro directory])
+ 
+ _LT_AT_LTDL_SETUP
+ 
+-LT_AT_CHECK_LIBTOOLIZE([--ltdl], 0, expout)
++case $LN_S in
++*mklink*)
++  LT_AT_CHECK_LIBTOOLIZE([--ltdl], 0, stdout) ;;
++*)
++  LT_AT_CHECK_LIBTOOLIZE([--ltdl], 0, expout) ;;
++esac
+ 
+ AT_CLEANUP
+ 
+@@ -533,7 +538,12 @@ AT_SETUP([correctly parse LTDL_INIT from configure.ac])
+ 
+ _LT_AT_LTDL_SETUP
+ 
+-LT_AT_CHECK_LIBTOOLIZE([], 0, expout)
++case $LN_S in
++*mklink*)
++  LT_AT_CHECK_LIBTOOLIZE([], 0, stdout) ;;
++*)
++  LT_AT_CHECK_LIBTOOLIZE([], 0, expout) ;;
++esac
+ 
+ AT_CLEANUP
+ 
+@@ -1082,7 +1092,12 @@ exit 1
+ ]])
+ chmod a+x ./no-m4
+ 
+-AT_CHECK([PATH=`pwd`:$PATH M4=`pwd`/no-m4 $LIBTOOLIZE --ltdl=ltdl], 0, expout)
++case $LN_S in
++*mklink*)
++  AT_CHECK([PATH=`pwd`:$PATH M4=`pwd`/no-m4 $LIBTOOLIZE --ltdl=ltdl], 0, stdout) ;;
++*)
++  AT_CHECK([PATH=`pwd`:$PATH M4=`pwd`/no-m4 $LIBTOOLIZE --ltdl=ltdl], 0, expout) ;;
++esac
+ 
+ AT_CLEANUP
+ 
+-- 
+2.45.2
+

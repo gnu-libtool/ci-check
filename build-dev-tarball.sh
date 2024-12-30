@@ -46,7 +46,8 @@ git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
                && patch -p1 < ../patches/0001-tests-Include-check-for-CYGWIN-for-crossbuilds.patch \
                && patch -p1 < ../patches/0001-libtoolize.in-Create-symlinks-with-mklink-for-MSVC.patch \
                && patch -p1 < ../patches/0001-libtool.m4-For-MS-dumpbin-drop-CR-first.patch \
-               && patch -p1 < ../patches/0001-libtool.m4-preload-valid-C-symbol-names-only.patch)
+               && patch -p1 < ../patches/0001-libtool.m4-preload-valid-C-symbol-names-only.patch \
+               && patch -p1 < ../patches/0001-libtoolize.at-Update-checks-based-on-linker-used.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
