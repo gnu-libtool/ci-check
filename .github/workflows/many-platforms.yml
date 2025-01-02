@@ -390,7 +390,7 @@ jobs:
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
             : "The only Fortran compiler available here is flang, not easy to use."
-            /usr/sbin/pkg_add m4 automake autoconf
+            /usr/sbin/pkg_add m4-1.4.19nb1 automake autoconf
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
