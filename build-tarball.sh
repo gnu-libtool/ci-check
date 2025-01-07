@@ -39,7 +39,8 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-ltmain.in-Update-information-supplied-to-user-for-ta.patch)
+(cd "$package" && patch -p1 < ../patches/0001-ltmain.in-Update-information-supplied-to-user-for-ta.patch \
+               && patch -p1 < ../patches/0001-demo.at-Skip-test-if-deplibs_check_method-is-not-pas.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
