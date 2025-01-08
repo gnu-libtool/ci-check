@@ -224,6 +224,7 @@ jobs:
   check-msvc:
     name: make check on MSVC
     needs: build-tarball
+    timeout-minutes: 180
     # These test runs show more than 50 test failures.
     # if: ${{ false }}
     # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
