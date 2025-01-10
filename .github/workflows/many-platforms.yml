@@ -111,7 +111,7 @@ jobs:
       # Install Ubuntu packages.
       # List of packages: https://packages.ubuntu.com/
       # - run: sudo apt update; sudo apt install ...
-      - run: sudo apt update; sudo apt install libgnustep-base-dev
+      - run: sudo apt update; sudo apt install libgnustep-base-dev gobjc++
       - run: |
           pwd
           export CPPFLAGS="-Wall"
