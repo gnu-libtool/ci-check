@@ -111,7 +111,7 @@ jobs:
       # Install Ubuntu packages.
       # List of packages: https://packages.ubuntu.com/
       # - run: sudo apt update; sudo apt install ...
-      - run: apt update; apt -y install libgnustep-base-dev
+      - run: sudo apt update; sudo apt install libgnustep-base-dev
       - run: |
           pwd
           export CPPFLAGS="-Wall"
@@ -344,7 +344,7 @@ jobs:
             pwd
             : "Install FreeBSD packages"
             : "List of packages: https://ports.freebsd.org/cgi/ports.cgi"
-            pkg install -y m4 automake gcc gnustep
+            pkg install -y m4 automake gcc
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
@@ -391,7 +391,7 @@ jobs:
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
             : "The only Fortran compiler available here is flang, not easy to use."
-            /usr/sbin/pkg_add m4-1.4.19nb1 automake autoconf gnustep
+            /usr/sbin/pkg_add m4-1.4.19nb1 automake autoconf
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
@@ -446,7 +446,7 @@ jobs:
             pwd
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
-            pkg_add m4 gnustep-make-2.9.1p1 automake-1.16.5 ${{ matrix.version == '7.5' && 'autoconf-2.71 gcc-11.2.0p11 g++-11.2.0p12' || 'autoconf-2.72p0 gcc-11.2.0p14 g++-11.2.0p15' }} gmake
+            pkg_add m4 automake-1.16.5 ${{ matrix.version == '7.5' && 'autoconf-2.71 gcc-11.2.0p11 g++-11.2.0p12' || 'autoconf-2.72p0 gcc-11.2.0p14 g++-11.2.0p15' }} gmake
             ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
