@@ -1,0 +1,35 @@
+From 12254b452e2b155e98e8b5d892bf0ca81f9ebc64 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Mon, 20 Jan 2025 17:49:37 +0200
+Subject: [PATCH] Revert "libtool.m4: Avoid warning message in test case 30"
+
+This reverts commit a08d2989cbee7022d63dc75d2eb9b3e96d3f174e.
+---
+ m4/libtool.m4 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index c750f2d8..c677ccfd 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -3628,7 +3628,7 @@ bsdi[[45]]*)
+ 
+ cygwin*)
+   # func_win32_libid is a shell function defined in ltmain.sh
+-  lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL|^x86 archive static'
++  lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL'
+   lt_cv_file_magic_cmd='func_win32_libid'
+   ;;
+ 
+@@ -3637,7 +3637,7 @@ mingw* | windows* | pw32*)
+   # func_win32_libid shell function, so use a weaker test based on 'objdump',
+   # unless we find 'file', for example because we are cross-compiling.
+   if ( file / ) >/dev/null 2>&1; then
+-    lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL|^x86 archive static'
++    lt_cv_deplibs_check_method='file_magic ^x86 archive import|^x86 DLL'
+     lt_cv_file_magic_cmd='func_win32_libid'
+   else
+     # Keep this pattern in sync with the one in func_win32_libid.
+-- 
+2.45.2
+

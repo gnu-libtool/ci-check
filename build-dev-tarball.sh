@@ -39,7 +39,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-ltmain.in-Compiler-dependencies-wrongly-deduplicated.patch)
+(cd "$package" && patch -p1 < ../patches/0001-Revert-libtool.m4-Avoid-warning-message-in-test-case.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
