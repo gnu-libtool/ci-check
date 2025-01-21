@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2024 Free Software Foundation, Inc.
+# Copyright (C) 2024-2025 Free Software Foundation, Inc.
 #
 # This file is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
@@ -39,7 +39,7 @@ cd build
 ../configure --config-cache $configure_options > log1 2>&1; rc=$?; cat log1; test $rc = 0 || exit 1
 
 # Build.
-$make > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
+$make V=1 > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
 case "$commit_message" in
   *"[pre-release]"*)
@@ -52,20 +52,20 @@ case "$commit_message" in
     do
         ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
-        $make check >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-        test $rc = 0 || echo "Failed: '$make check' for 'configure $configure_flag'" >> log"$inc"
+        $make check V=1 >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+        test $rc = 0 || echo "Failed: '$make check V=1' for 'configure $configure_flag'" >> log"$inc"
         cat log"$inc"
         inc=$(( $inc + 1 ))
     done
     ../configure $configure_options CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    $make check CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    test $rc = 0 || echo "Failed: '$make check CXX=g++'" >> log"$inc"
+    $make check V=1 CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+    test $rc = 0 || echo "Failed: '$make check V=1 CXX=g++'" >> log"$inc"
     cat log"$inc"
     test $ret_code = 0 || exit 1
     ;;
   *)
     # Run the tests.
-    $make check $make_options TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+    $make check $make_options V=1 TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
     ;;
 esac
 
