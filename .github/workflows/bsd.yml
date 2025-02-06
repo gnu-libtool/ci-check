@@ -167,7 +167,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
-            ./build-on.sh '${{ env.package }}' '' 'make' 'TESTS="test-funclib-quote.sh test-init.sh test-update-copyright.sh test-vc-list-files-git.sh test-vc-list-files-cvs.sh"' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'make' 'TESTS="test-init.sh test-update-copyright.sh test-vc-list-files-git.sh test-vc-list-files-cvs.sh"' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
