@@ -1,0 +1,40 @@
+From 858a175bf178133a8b758008de5ae6b8d00d7466 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Fri, 7 Feb 2025 20:08:02 +0200
+Subject: [PATCH] Skip test-option-parser.sh for 'ksh' shell on NetBSD
+
+---
+ gl/tests/test-option-parser.sh.diff | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 gl/tests/test-option-parser.sh.diff
+
+diff --git a/gl/tests/test-option-parser.sh.diff b/gl/tests/test-option-parser.sh.diff
+new file mode 100644
+index 00000000..7f24736f
+--- /dev/null
++++ b/gl/tests/test-option-parser.sh.diff
+@@ -0,0 +1,21 @@
++--- gl-mod/bootstrap/tests/test-option-parser.sh
+++++ gl/tests/test-option-parser.sh
++@@ -22,6 +22,18 @@
++ 
++ . "$abs_aux_dir"/options-parser || exit 1
++ 
+++host_os=`grep "host='" ../config.status`
+++case $host_os in
+++	*netbsd*)
+++		case "$__GL_ALL_SHELLS_SHELL" in
+++      *ksh*)
+++        $ECHO "Skipping due to issues with NetBSD's ksh shell"
+++        exit 0
+++      ;;
+++    esac
+++  ;;
+++esac
+++
++ helper="$__GL_ALL_SHELLS_SHELL $abs_srcdir/test-option-parser-helper"
++ 
++ check_output_inner ()
+-- 
+2.45.2
+
