@@ -22,7 +22,7 @@ index 00000000..7f24736f
 + 
 ++host_os=`grep "host='" ../config.status`
 ++case $host_os in
-++	*gnu*)
+++	*netbsd*)
 ++		case "$__GL_ALL_SHELLS_SHELL" in
 ++      *ksh*)
 ++        $ECHO "Skipping due to issues with NetBSD's ksh shell"
