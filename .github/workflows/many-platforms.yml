@@ -391,11 +391,11 @@ jobs:
             : "Install NetBSD packages"
             : "List of packages: https://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/index-all.html"
             : "The only Fortran compiler available here is flang, not easy to use."
-            /usr/sbin/pkg_add m4-1.4.19nb1 automake autoconf
+            /usr/sbin/pkg_add m4-1.4.19nb1 gmake-4.4.1 automake autoconf
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
-            ./build-on.sh '${{ env.package }}' '' 'make' 'TESTS="test-funclib-quote.sh test-init.sh test-update-copyright.sh test-vc-list-files-git.sh test-vc-list-files-cvs.sh"' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '' 'gmake' '' '${{ github.event.head_commit.message }}'
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
       #      https://github.com/actions/upload-artifact?tab=readme-ov-file#usage
       - if: ${{ always() }}
