@@ -39,9 +39,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
-               && patch -p1 < ../patches/0001-Revert-libtool-Skip-passing-CXX-flags-test-on-NetBSD.patch \
-               && patch -p1 < ../patches/0002-libtool.m4-Update-NetBSD-postdeps-for-shared-librari.patch )
+(cd "$package" && patch -p1 < ../patches/0001-Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
