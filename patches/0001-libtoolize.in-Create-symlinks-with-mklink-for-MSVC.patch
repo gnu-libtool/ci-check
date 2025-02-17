@@ -12,10 +12,10 @@ use of cygpath.
 
 ---
 diff --git a/libtoolize.in b/libtoolize.in
-index 77d0c9ed..b576ef58 100644
+index 6c15aa57..c70b0b8e 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
-@@ -437,6 +437,31 @@ func_copy ()
+@@ -437,6 +437,26 @@ func_copy ()
      else
        my_copycmd=$LN_S
        my_copy_type=linking
@@ -34,12 +34,7 @@ index 77d0c9ed..b576ef58 100644
 +        my_srcfile=`cygpath -aw "$my_srcfile"`
 +
 +        if test -d "$my_destfile"; then
-+          case $host_os in
-+          mingw*) # MSYS
-+            my_copycmd="$my_copycmd //d" ;;
-+          *)
-+            my_copycmd="$my_copycmd /d" ;;
-+          esac
++          my_copycmd="$my_copycmd /d"
 +        fi
 +      ;;
 +      *) ;;

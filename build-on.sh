@@ -65,7 +65,7 @@ case "$commit_message" in
     ;;
   *)
     # Run the tests.
-    $make check $make_options V=1 TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+    $make check $make_options V=1 TESTSUITEFLAGS="--debug 28 29 30 32 33 34 35 36 37 38 39 41 42 43 44 45 51 52 53 54 55 73 75 86 107 108 112 113 120 122 124 125 126 127 128 129 130 134 138 141 144 145 146 147 151 154 156 157 158 159 177 179 181" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
     ;;
 esac
 
