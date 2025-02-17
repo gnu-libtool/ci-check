@@ -10,15 +10,20 @@ diff --git a/tests/testsuite.at b/tests/testsuite.at
 index bacc72ce..ea3b80e3 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
-@@ -72,6 +72,12 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
+@@ -72,6 +72,17 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
  case $host_os in
  aix*) umask o-rwx ;;
  esac
 +
 +# Use mklink when symlinking for MSVC
 +if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' >/dev/null; then
-+LN_S="cmd /c mklink"
-+CXX=$CC
++  case $host_os in
++  mingw*) # MSYS
++    LN_S="cmd //c mklink" ;;
++  *)
++    LN_S="cmd /c mklink" ;;
++  esac
++  CXX=$CC
 +fi
  m4_divert_pop([PREPARE_TESTS])dnl
  
