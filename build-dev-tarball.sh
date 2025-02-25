@@ -39,7 +39,17 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/0001-darwin.at-Update-to-use-arm64-instead-of-i386.patch)
+(cd "$package" && patch -p1 < ../patches/0001-Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
+               && patch -p1 < ../patches/0001-libtool-Fix-mishandling-compiler-flags-with-MSVC-too.patch \
+               && patch -p1 < ../patches/0001-testsuite.at-Update-testsuite-config-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-tests-Skip-Fortran-tests-for-MSVC-toolchain.patch \
+               && patch -p1 < ../patches/0001-tagdemo.at-Update-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-tests-Include-check-for-CYGWIN-for-crossbuilds.patch \
+               && patch -p1 < ../patches/0001-libtoolize.in-Create-symlinks-with-mklink-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-libtool.m4-For-MS-dumpbin-drop-CR-first.patch \
+               && patch -p1 < ../patches/0001-libtool.m4-preload-valid-C-symbol-names-only.patch \
+               && patch -p1 < ../patches/0001-libtoolize.at-Update-checks-based-on-linker-used.patch \
+               && patch -p1 < ../patches/0001-ltmain.in-Fix-hang-with-cmd.exe-in-MSYS.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
