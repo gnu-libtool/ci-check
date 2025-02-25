@@ -1,6 +1,6 @@
-From b1af92ee1db2e6cd522c528c69ad87bebc35a758 Mon Sep 17 00:00:00 2001
+From 027813547aea521d37c1651e5a50e5638aa72fd5 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
-Date: Tue, 25 Feb 2025 21:24:30 +0200
+Date: Tue, 25 Feb 2025 21:59:27 +0200
 Subject: [PATCH] darwin.at: Update to use arm64 instead of i386
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] darwin.at: Update to use arm64 instead of i386
  1 file changed, 14 insertions(+), 8 deletions(-)
 
 diff --git a/tests/darwin.at b/tests/darwin.at
-index 5148f1e2..09c1baac 100644
+index 5148f1e2..b4a46368 100644
 --- a/tests/darwin.at
 +++ b/tests/darwin.at
 @@ -33,7 +33,7 @@ int main() { return 0;}
@@ -27,26 +27,26 @@ index 5148f1e2..09c1baac 100644
 -AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o foo.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 foo.c],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o foo.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch arm64 foo.c],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=link --tag=CC  $CC -static $CPPFLAGS $CFLAGS -o libfoo.a foo.lo],[0],[ignore],[ignore])
- 
--AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o baz.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 baz.c],[0],[ignore],[ignore])
++AT_CHECK([$LIBTOOL --mode=clean rm -f libfoo.a], [], [ignore], [ignore])
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o foo.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch arm64 foo.c],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=link --tag=CC  $CC -static $CPPFLAGS $CFLAGS -o libfoo.a foo.lo],[0],[ignore],[ignore])
  
--AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC -o libfoo.la $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch i386 foo.lo baz.lo],[0],[ignore],[ignore])
+-AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o baz.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 baz.c],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o foo.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch arm64 foo.c],[0],[ignore],[ignore])
  
--AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o bar.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 bar.c],[0],[ignore],[ignore])
+-AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC -o libfoo.la $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch i386 foo.lo baz.lo],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o baz.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch arm64 baz.c],[0],[ignore],[ignore])
  
--AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC  -o libbar.la $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch i386 bar.lo libfoo.la -rpath /nonexistent],[0],[ignore],[ignore])
+-AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o bar.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 bar.c],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC -o libfoo.la $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch arm64 foo.lo baz.lo],[0],[ignore],[ignore])
  
--AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o main.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 main.c],[0],[ignore],[ignore])
+-AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC  -o libbar.la $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch i386 bar.lo libfoo.la -rpath /nonexistent],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o bar.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch arm64 bar.c],[0],[ignore],[ignore])
  
--AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC  -o main$EXEEXT $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch i386 main.lo libbar.la],[0],[ignore],[ignore])
+-AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o main.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch i386 main.c],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC  -o libbar.la $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch arm64 bar.lo libfoo.la -rpath /nonexistent],[0],[ignore],[ignore])
-+
+ 
+-AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC  -o main$EXEEXT $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch i386 main.lo libbar.la],[0],[ignore],[ignore])
 +AT_CHECK([$LIBTOOL --mode=compile --tag=CC $CC -c -o main.lo $CPPFLAGS $CFLAGS -arch x86_64 -arch arm64 main.c],[0],[ignore],[ignore])
 +
 +AT_CHECK([$LIBTOOL --mode=link --tag=CC $CC  -o main$EXEEXT $CPPFLAGS $CFLAGS $LDFLAGS -arch x86_64 -arch arm64 main.lo libbar.la],[0],[ignore],[ignore])
