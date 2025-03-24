@@ -40,6 +40,7 @@ git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
 (cd "$package" && patch -p1 < ../patches/0001-Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
+               && patch -p1 < ../patches/libtool.m4-Fix-postdeps-in-NetBSD.diff \
                && patch -p1 < ../patches/0001-libtool-Fix-mishandling-compiler-flags-with-MSVC-too.patch \
                && patch -p1 < ../patches/0001-testsuite.at-Update-testsuite-config-for-MSVC.patch \
                && patch -p1 < ../patches/0001-tests-Skip-Fortran-tests-for-MSVC-toolchain.patch \
