@@ -305,7 +305,7 @@ jobs:
           export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
           export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD"
           export LD="link"
-          export NM="dumpbin -symbols"
+          export NM="dumpbin -all"
           export STRIP=":"
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
