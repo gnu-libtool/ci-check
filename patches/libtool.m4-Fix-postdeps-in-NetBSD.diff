@@ -1,0 +1,37 @@
+From 5c92a950b68d4556bba0964b0f174f6c647c3c51 Mon Sep 17 00:00:00 2001
+From: Anthony Mallet <anthony.mallet@laas.fr>
+Date: Sun, 23 Mar 2025 13:56:14 +0100
+Subject: [PATCH] libtool.m4: Fix postdeps in NetBSD
+
+commit:c7be1f229 addresses an issue with building C++ modules on NetBSD, by
+removing -lgcc_s and -lgcc. This may sometimes not work correctly, depending
+on the architecture, as libgcc_s.so and libgcc.a may contain required code to
+properly link the shared object. On NetBSD, libgcc.a is compiled with -fPIC
+and can be linked to a shared object without any issue.
+
+Reported: https://savannah.gnu.org/support/index.php?111210
+---
+ m4/libtool.m4 | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index def2c24a..2de70e24 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -7313,9 +7313,11 @@ if test yes != "$_lt_caught_CXX_error"; then
+ 	  _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
+ 	  _LT_TAGVAR(hardcode_direct, $1)=yes
+ 	  _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
++	else
++	  _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname -o $lib'
++	  _LT_TAGVAR(archive_expsym_cmds, $1)='$CC $pic_flag -shared $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname $wl-retain-symbols-file $wl$export_symbols -o $lib'
+ 	fi
+-	# Workaround some broken pre-1.5 toolchains
+-	output_verbose_link_cmd='$CC -shared $CFLAGS -v conftest.$objext 2>&1 | $GREP conftest.$objext | $SED -e "s:--as-needed -lgcc_s --no-as-needed -lgcc -lc --as-needed -lgcc_s --no-as-needed -lgcc::"'
++	output_verbose_link_cmd=func_echo_all
+ 	;;
+ 
+       *nto* | *qnx*)
+-- 
+2.47.1
+

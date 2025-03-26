@@ -122,7 +122,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '--enable-cxx-stdlib' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -167,7 +167,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/pkg/include -Wall"
             export LDFLAGS="-L/usr/pkg/lib"
-            ./build-on.sh '${{ env.package }}' '' 'gmake' '' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '--enable-cxx-stdlib' 'gmake' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
@@ -226,7 +226,7 @@ jobs:
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
-            ./build-on.sh '${{ env.package }}' '' 'gmake' '' '${{ github.event.head_commit.message }}'
+            ./build-on.sh '${{ env.package }}' '--enable-cxx-stdlib' 'gmake' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
