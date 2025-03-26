@@ -1,4 +1,4 @@
-From b7a097f0f0975719017f35dc0b4689319e407511 Mon Sep 17 00:00:00 2001
+From 33c45f3fbace2e8d898f74fd5da993e8c98da4cb Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 25 Mar 2025 17:57:44 +0200
 Subject: [PATCH] libtool: Add configuration options for CXX linking
@@ -17,9 +17,9 @@ linking C++ modules.
 ---
  NEWS             |  3 +++
  doc/libtool.texi | 12 ++++++++++++
- m4/libtool.m4    | 44 ++++++++++++++++++++++++--------------------
+ m4/libtool.m4    | 46 ++++++++++++++++++++++++++--------------------
  m4/ltoptions.m4  | 44 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 83 insertions(+), 20 deletions(-)
+ 4 files changed, 85 insertions(+), 20 deletions(-)
 
 diff --git a/NEWS b/NEWS
 index 0a613563..915fc34e 100644
@@ -59,7 +59,7 @@ index 710f238f..7631015b 100644
  
  @end defmac
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index 434f9ba7..2a40116f 100644
+index 434f9ba7..6984500d 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
 @@ -1201,8 +1201,8 @@ m4_defun([_LT_DARWIN_LINKER_FEATURES],
@@ -73,7 +73,23 @@ index 434f9ba7..2a40116f 100644
      fi
  ],[])
    else
-@@ -3541,7 +3541,7 @@ case $host_os in
+@@ -3016,6 +3016,7 @@ netbsdelf*-gnu)
+   shlibpath_overrides_runpath=no
+   hardcode_into_libs=yes
+   dynamic_linker='NetBSD ld.elf_so'
++  enable-cxx-stdlib=yes
+   ;;
+ 
+ netbsd*)
+@@ -3034,6 +3035,7 @@ netbsd*)
+   shlibpath_var=LD_LIBRARY_PATH
+   shlibpath_overrides_runpath=yes
+   hardcode_into_libs=yes
++  enable-cxx-stdlib=yes
+   ;;
+ 
+ *-mlibc)
+@@ -3541,7 +3543,7 @@ case $host_os in
      ;;
    darwin*)
      if test yes = "$GCC"; then
@@ -82,7 +98,7 @@ index 434f9ba7..2a40116f 100644
      else
        reload_cmds='$LD$reload_flag -o $output$reload_objs'
      fi
-@@ -6596,8 +6596,8 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -6596,8 +6598,8 @@ if test yes != "$_lt_caught_CXX_error"; then
        # Check if GNU C++ uses GNU ld as the underlying linker, since the
        # archiving commands below assume that GNU ld is being used.
        if test yes = "$with_gnu_ld"; then
@@ -93,7 +109,7 @@ index 434f9ba7..2a40116f 100644
  
          _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
          _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
-@@ -6622,7 +6622,7 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -6622,7 +6624,7 @@ if test yes != "$_lt_caught_CXX_error"; then
          # linker, instead of GNU ld.  If possible, this setting should
          # overridden to take advantage of the native linker features on
          # the platform it is being used on.
@@ -102,7 +118,7 @@ index 434f9ba7..2a40116f 100644
        fi
  
        # Commands to make compiler produce verbose output that lists
-@@ -6893,7 +6893,7 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -6893,7 +6895,7 @@ if test yes != "$_lt_caught_CXX_error"; then
  	  _LT_TAGVAR(file_list_spec, $1)='@'
  
  	  if $LD --help 2>&1 | $GREP 'auto-import' > /dev/null; then
@@ -111,7 +127,7 @@ index 434f9ba7..2a40116f 100644
  	    # If the export-symbols file already is a .def file, use it as
  	    # is; otherwise, prepend EXPORTS...
  	    _LT_TAGVAR(archive_expsym_cmds, $1)='if _LT_DLL_DEF_P([$export_symbols]); then
-@@ -6902,7 +6902,7 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -6902,7 +6904,7 @@ if test yes != "$_lt_caught_CXX_error"; then
                echo EXPORTS > $output_objdir/$soname.def;
                cat $export_symbols >> $output_objdir/$soname.def;
              fi~
@@ -120,7 +136,7 @@ index 434f9ba7..2a40116f 100644
  	  else
  	    _LT_TAGVAR(ld_shlibs, $1)=no
  	  fi
-@@ -7009,7 +7009,7 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7009,7 +7011,7 @@ if test yes != "$_lt_caught_CXX_error"; then
              ;;
            *)
              if test yes = "$GXX"; then
@@ -129,7 +145,7 @@ index 434f9ba7..2a40116f 100644
              else
                # FIXME: insert proper C++ library support
                _LT_TAGVAR(ld_shlibs, $1)=no
-@@ -7077,13 +7077,13 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7077,13 +7079,13 @@ if test yes != "$_lt_caught_CXX_error"; then
  	      if test no = "$with_gnu_ld"; then
  	        case $host_cpu in
  	          hppa*64*)
@@ -146,7 +162,7 @@ index 434f9ba7..2a40116f 100644
  	            ;;
  	        esac
  	      fi
-@@ -7124,9 +7124,9 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7124,9 +7126,9 @@ if test yes != "$_lt_caught_CXX_error"; then
            *)
  	    if test yes = "$GXX"; then
  	      if test no = "$with_gnu_ld"; then
@@ -158,7 +174,7 @@ index 434f9ba7..2a40116f 100644
  	      fi
  	    fi
  	    _LT_TAGVAR(link_all_deplibs, $1)=yes
-@@ -7400,10 +7400,10 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7400,10 +7402,10 @@ if test yes != "$_lt_caught_CXX_error"; then
  	      _LT_TAGVAR(allow_undefined_flag, $1)=' $wl-expect_unresolved $wl\*'
  	      case $host in
  	        osf3*)
@@ -171,7 +187,7 @@ index 434f9ba7..2a40116f 100644
  		  ;;
  	      esac
  
-@@ -7493,9 +7493,9 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7493,9 +7495,9 @@ if test yes != "$_lt_caught_CXX_error"; then
  	    if test yes,no = "$GXX,$with_gnu_ld"; then
  	      _LT_TAGVAR(no_undefined_flag, $1)=' $wl-z ${wl}defs'
  	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then
@@ -183,7 +199,7 @@ index 434f9ba7..2a40116f 100644
  
  	        # Commands to make compiler produce verbose output that lists
  	        # what "hidden" libraries, object files and flags are used when
-@@ -7504,9 +7504,9 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7504,9 +7506,9 @@ if test yes != "$_lt_caught_CXX_error"; then
  	      else
  	        # g++ 2.7 appears to require '-G' NOT '-shared' on this
  	        # platform.
@@ -195,7 +211,7 @@ index 434f9ba7..2a40116f 100644
  
  	        # Commands to make compiler produce verbose output that lists
  	        # what "hidden" libraries, object files and flags are used when
-@@ -7745,6 +7745,10 @@ if AC_TRY_EVAL(ac_compile); then
+@@ -7745,6 +7747,10 @@ if AC_TRY_EVAL(ac_compile); then
    # the conftest object file.
    pre_test_object_deps_done=no
  
