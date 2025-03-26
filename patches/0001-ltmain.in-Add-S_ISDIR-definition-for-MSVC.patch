@@ -1,0 +1,44 @@
+From 49c58a4e6d65891fc5761155a9068ba500d7d742 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 26 Mar 2025 17:19:39 +0200
+Subject: [PATCH] ltmain.in: Add 'S_ISDIR' definition for MSVC
+
+Several test failures occur from fix for sr #111191 with MSVC, which is
+fixed by defining S_ISDIR with a different variable name, MSVC_ISDIR.
+
+  error LNK2019: unresolved external symbol S_ISDIR referenced in func check_executable
+
+* build-aux/ltmain.in: Define and use macro MSVC_ISDIR.
+---
+ build-aux/ltmain.in | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index aaf48f14..38996f65 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -3846,6 +3846,7 @@ int setenv (const char *, const char *, int);
+ # define getcwd  _getcwd
+ # define putenv  _putenv
+ # define S_IXUSR _S_IEXEC
++# define MSVC_ISDIR(m)(((m) & S_IFMT) == S_IFDIR)
+ #elif defined __MINGW32__
+ # define setmode _setmode
+ # define stat    _stat
+@@ -4241,8 +4242,13 @@ check_executable (const char *path)
+   if ((!path) || (!*path))
+     return 0;
+ 
++#ifdef _MSC_VER
++  if ((stat (path, &st) >= 0) && !MSVC_ISDIR (st.st_mode)
++      && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)))
++#else
+   if ((stat (path, &st) >= 0) && !S_ISDIR (st.st_mode)
+       && (st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH)))
++#endif
+     return 1;
+   else
+     return 0;
+-- 
+2.45.2
+
