@@ -1,12 +1,11 @@
-From 53aea41af46d60774b5f4c9d9490d6c7c3245da2 Mon Sep 17 00:00:00 2001
+From 8ef633dad46620b483647a0a7d4c760b0db91c7f Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 31 Mar 2025 21:06:33 +0300
 Subject: [PATCH] MSVC test failure debugging
 
 ---
- m4/libtool.m4   | 2 +-
- tests/bindir.at | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ m4/libtool.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
 index ae0387db..9168152a 100644
@@ -21,19 +20,6 @@ index ae0387db..9168152a 100644
      soname_spec='$libname`echo $release | $SED -e 's/[[.]]/-/g'`$versuffix$shared_ext'
      library_names_spec='$libname.dll.lib'
  
-diff --git a/tests/bindir.at b/tests/bindir.at
-index 0e455c19..7e7bf66f 100644
---- a/tests/bindir.at
-+++ b/tests/bindir.at
-@@ -142,7 +142,7 @@ LT_AT_NOINST_EXEC_CHECK([./main])
- 
- func_save_and_prepend_path "$curdir/$objdir"
- $bindirneeded && {
--  LT_AT_NOINST_EXEC_CHECK([$objdir/main])
-+  LT_AT_NOINST_EXEC_CHECK([$objdir/main$EXEEXT])
- }
- 
- #  In fact, prepending the PATH as above is superfluous on the windows
 -- 
 2.45.2
 
