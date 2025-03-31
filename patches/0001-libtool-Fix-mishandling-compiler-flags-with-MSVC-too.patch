@@ -113,40 +113,6 @@ index b77eaedb..1e5f16f1 100644
              linknames='
  	  # The linker will not automatically build a static lib if we build a DLL.
  	  # _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
-diff --git a/tests/flags.at b/tests/flags.at
-index 8c40a7af..e59667ea 100644
---- a/tests/flags.at
-+++ b/tests/flags.at
-@@ -89,7 +89,7 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
-   -Wc, | -Xcompiler\ )
-     AT_CHECK([$LIBTOOL -n --tag=lt_tag --mode=compile $compile ]dnl
- 	     [$flag-foo -c $source], [], [stdout], [ignore])
--    AT_CHECK([$FGREP " -foo" stdout], [], [ignore])
-+    AT_CHECK([$GREP -- " -foo" stdout], [], [ignore])
-     flag_prefix_prog=
-     flag_prefix_lib=
-     flags_in_liblink=$compiler_flags_in_liblink
-@@ -103,7 +103,7 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
- 
-   AT_CHECK([$LIBTOOL -n --tag=lt_tag --mode=link $link ]dnl
- 	   [-o program$EXEEXT a.lo $flag-foo], [], [stdout], [ignore])
--  AT_CHECK([$FGREP " $flag_prefix_prog-foo" stdout], [], [ignore])
-+  AT_CHECK([$GREP -- "$flag_prefix_prog-foo" stdout], [], [ignore])
- 
-   eval set x "$library_and_module"
-   for output
-@@ -112,9 +112,9 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
-     AT_CHECK([$LIBTOOL -n --tag=lt_tag --mode=link $link ]dnl
- 	     [-o $output a.lo -rpath /nowhere $flag-foo], [], [stdout], [ignore])
-     if $flags_in_liblink; then
--      AT_CHECK([$FGREP " $flag_prefix_lib-foo" stdout], [], [ignore])
-+      AT_CHECK([$GREP -- "$flag_prefix_lib-foo" stdout], [], [ignore])
-     else
--      AT_CHECK([$FGREP " $flag_prefix_lib-foo" stdout], [1])
-+      AT_CHECK([$GREP -- " $flag_prefix_lib-foo" stdout], [1])
-     fi
-   done
- done
 -- 
 2.45.2
 
