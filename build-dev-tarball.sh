@@ -50,7 +50,8 @@ git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
                && patch -p1 < ../patches/0001-libtool.m4-preload-valid-C-symbol-names-only.patch \
                && patch -p1 < ../patches/0001-libtoolize.at-Update-checks-based-on-linker-used.patch \
                && patch -p1 < ../patches/0001-ltmain.in-Fix-hang-with-cmd.exe-in-MSYS.patch \
-               && patch -p1 < ../patches/0001-ltmain.in-Add-S_ISDIR-definition-for-MSVC.patch)
+               && patch -p1 < ../patches/0001-ltmain.in-Add-S_ISDIR-definition-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-MSVC-test-failure-debugging.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
