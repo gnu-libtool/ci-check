@@ -1,13 +1,27 @@
-From fce32d4628fb1af7daeea0750b9e196c055bc833 Mon Sep 17 00:00:00 2001
+From a3ccd81d1236b5aa1ab973ebce92d9b0dad50e93 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 31 Mar 2025 21:06:33 +0300
 Subject: [PATCH] MSVC test failure debugging
 
 ---
- tests/lt_dlexit.at | 6 +++---
- tests/shlibpath.at | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ build-aux/ltmain.in | 2 ++
+ tests/lt_dlexit.at  | 6 +++---
+ tests/shlibpath.at  | 6 +++---
+ 3 files changed, 8 insertions(+), 6 deletions(-)
 
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index aaf48f14..f447513a 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -8898,6 +8898,8 @@ func_mode_link ()
+ 	tool_oldlib=$func_to_tool_file_result
+ 	eval cmds=\"$old_archive_cmds\"
+ 
++	func_verbose "cmds=$cmds old_archive_cmds=$old_archive_cmds oldlib=$oldlib tool_oldlib=$tool_oldlib oldobjs=$oldobjs"
++
+ 	func_len " $cmds"
+ 	len=$func_len_result
+ 	if test "$len" -lt "$max_cmd_len" || test "$max_cmd_len" -le -1; then
 diff --git a/tests/lt_dlexit.at b/tests/lt_dlexit.at
 index 19adeec4..9c14e9a7 100644
 --- a/tests/lt_dlexit.at
