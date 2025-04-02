@@ -1,25 +1,58 @@
-From 8ef633dad46620b483647a0a7d4c760b0db91c7f Mon Sep 17 00:00:00 2001
+From fce32d4628fb1af7daeea0750b9e196c055bc833 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 31 Mar 2025 21:06:33 +0300
 Subject: [PATCH] MSVC test failure debugging
 
 ---
- m4/libtool.m4 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tests/lt_dlexit.at | 6 +++---
+ tests/shlibpath.at | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index ae0387db..9168152a 100644
---- a/m4/libtool.m4
-+++ b/m4/libtool.m4
-@@ -2670,7 +2670,7 @@ m4_if([$1], [],[
+diff --git a/tests/lt_dlexit.at b/tests/lt_dlexit.at
+index 19adeec4..9c14e9a7 100644
+--- a/tests/lt_dlexit.at
++++ b/tests/lt_dlexit.at
+@@ -147,14 +147,14 @@ for file in a1 b1; do
+   $LIBTOOL --mode=compile $CC $CPPFLAGS $CFLAGS -c $file.c
+ done
+ $CC $CPPFLAGS $CFLAGS -c main.c
+-AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o liba1.la a1.lo \
++AT_CHECK([$LIBTOOL --mode=link --verbose $CC $CFLAGS $LDFLAGS -o liba1.la a1.lo \
+           -rpath /foo -avoid-version], [], [ignore], [ignore])
+-AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o modb1.la b1.lo \
++AT_CHECK([$LIBTOOL --mode=link --verbose $CC $CFLAGS $LDFLAGS -o modb1.la b1.lo \
+           -rpath /foo -module -avoid-version liba1.la], [], [ignore], [ignore])
  
-   *,cl* | *,icl*)
-     # Native MSVC or ICC
--    libname_spec='$name'
-+    libname_spec='lib$name'
-     soname_spec='$libname`echo $release | $SED -e 's/[[.]]/-/g'`$versuffix$shared_ext'
-     library_names_spec='$libname.dll.lib'
+ # TODO: test -dlpreopen
+ for dlopen in -dlopen; do
+-  AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o main$EXEEXT main.$OBJEXT \
++  AT_CHECK([$LIBTOOL --mode=link --verbose $CC $CFLAGS $LDFLAGS -o main$EXEEXT main.$OBJEXT \
+            $dlopen modb1.la $LIBLTDL], [], [ignore], [ignore])
+   LT_AT_NOINST_EXEC_CHECK([./main], [-dlopen modb1.la])
+ done
+diff --git a/tests/shlibpath.at b/tests/shlibpath.at
+index 6984cb61..d035bc88 100644
+--- a/tests/shlibpath.at
++++ b/tests/shlibpath.at
+@@ -27,15 +27,15 @@ mkdir sub sub/lib sub/bin
+ echo 'int a () { return 0; }' > a.c
+ echo 'extern int a (); int main () { return a(); }' > m.c
+ $LIBTOOL --mode=compile $CC $CPPFLAGS $CFLAGS -c a.c
+-$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o liba.la a.lo -rpath `pwd`/sub/lib
++$LIBTOOL --mode=link --verbose $CC $CFLAGS $LDFLAGS -o liba.la a.lo -rpath `pwd`/sub/lib
+ $LIBTOOL --mode=install cp liba.la `pwd`/sub/lib/liba.la
+ $LIBTOOL --mode=clean rm -f liba.la
+ rm -f sub/lib/liba.la
  
+ $CC $CPPFLAGS $CFLAGS -c m.c
+-AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o m$EXEEXT m.$OBJEXT -Lsub/lib -la -R`pwd`/sub/lib],
++AT_CHECK([$LIBTOOL --mode=link --verbose $CC $CFLAGS $LDFLAGS -o m$EXEEXT m.$OBJEXT -Lsub/lib -la -R`pwd`/sub/lib],
+          [], [ignore], [ignore])
+-AT_CHECK([$LIBTOOL --mode=link $CC $CFLAGS $LDFLAGS -o m2$EXEEXT m.$OBJEXT -Lsub/lib -la],
++AT_CHECK([$LIBTOOL --mode=link --verbose $CC $CFLAGS $LDFLAGS -o m2$EXEEXT m.$OBJEXT -Lsub/lib -la],
+          [], [ignore], [ignore])
+ 
+ LT_AT_MVDIR([sub], [moved])
 -- 
 2.45.2
 
