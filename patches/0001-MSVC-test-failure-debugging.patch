@@ -1,16 +1,16 @@
-From 3841e25782e9248cbc07c2b3a13af41bb589d22c Mon Sep 17 00:00:00 2001
+From 7f8fb2d7f36e8a2100f20bba2d8f1f602335ab79 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 31 Mar 2025 21:06:33 +0300
 Subject: [PATCH] MSVC test failure debugging
 
 ---
- build-aux/ltmain.in | 6 ++++++
- tests/lt_dlexit.at  | 6 +++---
- tests/shlibpath.at  | 6 +++---
- 3 files changed, 12 insertions(+), 6 deletions(-)
+ build-aux/ltmain.in | 10 ++++++++++
+ tests/lt_dlexit.at  |  6 +++---
+ tests/shlibpath.at  |  6 +++---
+ 3 files changed, 16 insertions(+), 6 deletions(-)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index aaf48f14..d9aaa463 100644
+index aaf48f14..11c2a167 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
 @@ -5803,6 +5803,8 @@ func_mode_link ()
@@ -31,7 +31,25 @@ index aaf48f14..d9aaa463 100644
      case $linkmode in
      oldlib)
        if test -n "$dlfiles$dlprefiles" || test no != "$dlself"; then
-@@ -8898,6 +8902,8 @@ func_mode_link ()
+@@ -7063,6 +7067,7 @@ func_mode_link ()
+ 	name=$func_stripname_result
+ 	eval shared_ext=\"$shrext_cmds\"
+ 	eval libname=\"$libname_spec\"
++	func_verbose "name=$name libname_spec=$libname_spec libname=$libname outputname=$outputname"
+ 	;;
+       *)
+ 	test no = "$module" \
+@@ -7081,6 +7086,9 @@ func_mode_link ()
+ 	;;
+       esac
+ 
++
++	func_verbose "libname_spec=$libname_spec libname=$libname outputname=$outputname"
++
+       if test -n "$objs"; then
+ 	if test pass_all != "$deplibs_check_method"; then
+ 	  func_fatal_error "cannot build libtool library '$output' from non-libtool objects on this host:$objs"
+@@ -8898,6 +8906,8 @@ func_mode_link ()
  	tool_oldlib=$func_to_tool_file_result
  	eval cmds=\"$old_archive_cmds\"
  
