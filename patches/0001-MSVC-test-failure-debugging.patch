@@ -1,19 +1,37 @@
-From a3ccd81d1236b5aa1ab973ebce92d9b0dad50e93 Mon Sep 17 00:00:00 2001
+From 3841e25782e9248cbc07c2b3a13af41bb589d22c Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 31 Mar 2025 21:06:33 +0300
 Subject: [PATCH] MSVC test failure debugging
 
 ---
- build-aux/ltmain.in | 2 ++
+ build-aux/ltmain.in | 6 ++++++
  tests/lt_dlexit.at  | 6 +++---
  tests/shlibpath.at  | 6 +++---
- 3 files changed, 8 insertions(+), 6 deletions(-)
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index aaf48f14..f447513a 100644
+index aaf48f14..d9aaa463 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -8898,6 +8898,8 @@ func_mode_link ()
+@@ -5803,6 +5803,8 @@ func_mode_link ()
+     # Create the object directory.
+     func_mkdir_p "$output_objdir"
+ 
++    func_verbose "output=$output outputname=$outputname"
++
+     # Determine the type of output
+     case $output in
+     "")
+@@ -7023,6 +7025,8 @@ func_mode_link ()
+       dlprefiles=$newdlprefiles
+     fi
+ 
++    func_verbose "linkmode=$linkmode output=$output"
++
+     case $linkmode in
+     oldlib)
+       if test -n "$dlfiles$dlprefiles" || test no != "$dlself"; then
+@@ -8898,6 +8902,8 @@ func_mode_link ()
  	tool_oldlib=$func_to_tool_file_result
  	eval cmds=\"$old_archive_cmds\"
  
