@@ -3,8 +3,7 @@ From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 11 Dec 2024 18:43:47 +0200
 Subject: [PATCH] testsuite.at: Update testsuite config for MSVC
 
-* tests/testsuite.at: Make symlink tool mlink and c++ compiler equal
-to the c compiler for MSVC.
+* tests/testsuite.at: Make symlink tool mlink for MSVC.
 ---
 diff --git a/tests/testsuite.at b/tests/testsuite.at
 index bacc72ce..ea3b80e3 100644
@@ -19,7 +18,7 @@ index bacc72ce..ea3b80e3 100644
  configure_options=--prefix=/nonexistent
  if test -n "$host_alias"; then
    configure_options="$configure_options --host $host_alias"
-@@ -72,6 +72,19 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
+@@ -72,6 +72,18 @@ unset MFLAGS MAKEFLAGS MAKELEVEL __MKLVL__ MAKE_JOBS_FIFO
  case $host_os in
  aix*) umask o-rwx ;;
  esac
@@ -34,7 +33,6 @@ index bacc72ce..ea3b80e3 100644
 +  *)
 +    LN_S="cmd /c mklink" ;;
 +  esac
-+  CXX=$CC
 +fi
  m4_divert_pop([PREPARE_TESTS])dnl
  
