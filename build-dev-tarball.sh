@@ -42,6 +42,7 @@ git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 (cd "$package" && patch -p1 < ../patches/0001-Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
                && patch -p1 < ../patches/0001-libtool-Fix-mishandling-compiler-flags-with-MSVC-too.patch \
                && patch -p1 < ../patches/0001-testsuite.at-Update-testsuite-config-for-MSVC.patch \
+               && patch -p1 < ../patches/0001-libtool-Alter-expected-line-endings-in-testsuite.patch \
                && patch -p1 < ../patches/0001-tagdemo.at-Update-for-MSVC.patch \
                && patch -p1 < ../patches/0001-tests-Include-check-for-CYGWIN-for-crossbuilds.patch \
                && patch -p1 < ../patches/0001-libtoolize.in-Create-symlinks-with-mklink-for-MSVC.patch \
