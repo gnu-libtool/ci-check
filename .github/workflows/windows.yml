@@ -307,13 +307,12 @@ jobs:
           export CXX="`pwd`/compile cl -nologo"; export CXXFLAGS="-MD"
           export FC="no"
           export F77="no"
-          export LN_S="cmd /c mklink"
           export LD="link"
           export NM="dumpbin -all"
           export STRIP=":"
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
-          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
