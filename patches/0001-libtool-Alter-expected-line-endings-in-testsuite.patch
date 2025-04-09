@@ -1,4 +1,4 @@
-From 84ed6c521024f8efc875124c1d0a95d1baca61bb Mon Sep 17 00:00:00 2001
+From 159fc550b4d2ca5a02db682cddeaceff1f34d912 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 7 Apr 2025 19:55:23 +0300
 Subject: [PATCH] libtool: Alter expected line endings in testsuite
@@ -10,26 +10,21 @@ the LF character for line endings.
 
 * tests/testsuite.at: Removed '\r' from awk's printf command.
 ---
- tests/testsuite.at | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tests/testsuite.at | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tests/testsuite.at b/tests/testsuite.at
-index c5c85ec0..d0c4dd58 100644
+index c5c85ec0..67d6eeee 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
-@@ -272,7 +272,14 @@ AT_CHECK([test -z "$leftovers"])
+@@ -272,7 +272,9 @@ AT_CHECK([test -z "$leftovers"])
  m4_define([LT_AT_HOST_DATA],
  [AT_DATA([$1], [$2])
  case $host_os in mingw* | windows*)
 -  awk '{printf ("%s\r\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1 ;;
 +   awk '{printf ("%s\r\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1;;
 +cygwin*)
-+   if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' >/dev/null; then
-+    awk '{printf ("%s\r\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1
-+   else
-+    awk '{printf ("%s\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1
-+   fi
-+   ;;
++   awk '{printf ("%s\n", [$]0);}' < $1 > $1.t && mv -f $1.t $1;;
  esac])
  
  
