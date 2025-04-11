@@ -1,7 +1,7 @@
-From 0262bce5df5ef4dcbd456df0bb84b804aeb26f99 Mon Sep 17 00:00:00 2001
+From 58db7def0827f9758fd9204334415c59c5b18a72 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 30 Dec 2024 17:55:30 +0200
-Subject: [PATCH] libtoolize.at: Update checks based on linker used
+Subject: [PATCH 09/12] libtoolize.at: Update checks based on linker used
 
 If mklink is used for symlinking files, the expout will not match, so
 stdout is used instead.
@@ -12,7 +12,7 @@ stdout is used instead.
  1 file changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/tests/libtoolize.at b/tests/libtoolize.at
-index 1b562295..c3fa9ae4 100644
+index 43f7e72d..4e9d4281 100644
 --- a/tests/libtoolize.at
 +++ b/tests/libtoolize.at
 @@ -521,7 +521,12 @@ AT_SETUP([copy ltdl.m4 with shared macro directory])

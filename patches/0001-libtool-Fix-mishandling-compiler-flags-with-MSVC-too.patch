@@ -1,7 +1,7 @@
-From 583bc7bb5077646fe795bb66a2b339ddb21e0c40 Mon Sep 17 00:00:00 2001
+From f321bba9a4e0cea12c748496aa1694081b989b6e Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Tue, 7 Jan 2025 19:34:11 +0200
-Subject: [PATCH] libtool: Fix mishandling compiler flags with MSVC tools
+Subject: [PATCH 01/12] libtool: Fix mishandling compiler flags with MSVC tools
 
 With MSVC, linker flags were not properly being linked in during a
 compile command. A check has been added to verify if there are linker
@@ -20,10 +20,10 @@ Fixes applied for bug#74175.
  3 files changed, 34 insertions(+), 12 deletions(-)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index 8c48f14b..fc31facc 100644
+index aaf48f14..2342ed96 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -5130,8 +5130,13 @@ func_mode_link ()
+@@ -5147,8 +5147,13 @@ func_mode_link ()
  	  continue
  	  ;;
  	xlinker)
@@ -39,7 +39,7 @@ index 8c48f14b..fc31facc 100644
  	  prev=
  	  func_append compile_command " $wl$qarg"
  	  func_append finalize_command " $wl$qarg"
-@@ -5505,8 +5510,13 @@ func_mode_link ()
+@@ -5522,8 +5527,13 @@ func_mode_link ()
  	  IFS=$save_ifs
            func_quote_arg pretty "$flag"
  	  func_append arg " $wl$func_quote_arg_result"
@@ -56,10 +56,10 @@ index 8c48f14b..fc31facc 100644
  	IFS=$save_ifs
  	func_stripname ' ' '' "$arg"
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index b77eaedb..1e5f16f1 100644
+index ae0387db..e48b5a19 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
-@@ -5732,6 +5732,8 @@ _LT_EOF
+@@ -5776,6 +5776,8 @@ _LT_EOF
  	# Tell ltmain to make .dll files, not .so files.
  	shrext_cmds=.dll
  	# FIXME: Setting linknames here is a bad hack.
@@ -68,7 +68,7 @@ index b77eaedb..1e5f16f1 100644
  	_LT_TAGVAR(archive_cmds, $1)='$CC -Fe$output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
  	_LT_TAGVAR(archive_expsym_cmds, $1)='if _LT_DLL_DEF_P([$export_symbols]); then
              cp "$export_symbols" "$output_objdir/$soname.def";
-@@ -5739,7 +5741,11 @@ _LT_EOF
+@@ -5783,7 +5785,11 @@ _LT_EOF
            else
              $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.exp;
            fi~
@@ -81,7 +81,7 @@ index b77eaedb..1e5f16f1 100644
            linknames='
  	# The linker will not automatically build a static lib if we build a DLL.
  	# _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
-@@ -5771,7 +5777,7 @@ _LT_EOF
+@@ -5815,7 +5821,7 @@ _LT_EOF
  	# Tell ltmain to make .dll files, not .so files.
  	shrext_cmds=.dll
  	# FIXME: Setting linknames here is a bad hack.
@@ -90,7 +90,7 @@ index b77eaedb..1e5f16f1 100644
  	# The linker will automatically build a .lib file if we build a DLL.
  	_LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
  	# FIXME: Should let the user specify the lib program.
-@@ -6812,14 +6818,20 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -6856,14 +6862,20 @@ if test yes != "$_lt_caught_CXX_error"; then
  	  # Tell ltmain to make .dll files, not .so files.
  	  shrext_cmds=.dll
  	  # FIXME: Setting linknames here is a bad hack.
@@ -114,10 +114,10 @@ index b77eaedb..1e5f16f1 100644
  	  # The linker will not automatically build a static lib if we build a DLL.
  	  # _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
 diff --git a/tests/flags.at b/tests/flags.at
-index 8c40a7af..e59667ea 100644
+index b13ed0bd..82cfd8a6 100644
 --- a/tests/flags.at
 +++ b/tests/flags.at
-@@ -89,7 +89,7 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
+@@ -129,7 +129,7 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
    -Wc, | -Xcompiler\ )
      AT_CHECK([$LIBTOOL -n --tag=lt_tag --mode=compile $compile ]dnl
  	     [$flag-foo -c $source], [], [stdout], [ignore])
@@ -126,7 +126,7 @@ index 8c40a7af..e59667ea 100644
      flag_prefix_prog=
      flag_prefix_lib=
      flags_in_liblink=$compiler_flags_in_liblink
-@@ -103,7 +103,7 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
+@@ -143,7 +143,7 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
  
    AT_CHECK([$LIBTOOL -n --tag=lt_tag --mode=link $link ]dnl
  	   [-o program$EXEEXT a.lo $flag-foo], [], [stdout], [ignore])
@@ -135,7 +135,7 @@ index 8c40a7af..e59667ea 100644
  
    eval set x "$library_and_module"
    for output
-@@ -112,9 +112,9 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
+@@ -152,9 +152,9 @@ for flag in -Wc, -Wl, '-Xcompiler ' '-Xlinker '; do
      AT_CHECK([$LIBTOOL -n --tag=lt_tag --mode=link $link ]dnl
  	     [-o $output a.lo -rpath /nowhere $flag-foo], [], [stdout], [ignore])
      if $flags_in_liblink; then

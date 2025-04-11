@@ -1,7 +1,7 @@
-From 159fc550b4d2ca5a02db682cddeaceff1f34d912 Mon Sep 17 00:00:00 2001
+From 8ee42a43dbd00153180e98afb9b4ca52774ad18e Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Mon, 7 Apr 2025 19:55:23 +0300
-Subject: [PATCH] libtool: Alter expected line endings in testsuite
+Subject: [PATCH 03/12] libtool: Alter expected line endings in testsuite
 
 When comparing expected output in LT_AT_CHECK_EXECUTE, several tests
 fail with mismatched line endings. This patch should fix Windows
@@ -14,10 +14,10 @@ the LF character for line endings.
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tests/testsuite.at b/tests/testsuite.at
-index c5c85ec0..67d6eeee 100644
+index a080d70a..0d8c64e3 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
-@@ -272,7 +272,9 @@ AT_CHECK([test -z "$leftovers"])
+@@ -284,7 +284,9 @@ AT_CHECK([test -z "$leftovers"])
  m4_define([LT_AT_HOST_DATA],
  [AT_DATA([$1], [$2])
  case $host_os in mingw* | windows*)

@@ -1,12 +1,15 @@
-From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From 819b186ea29b44a62adc71a8b9721498df29a0cc Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 11 Dec 2024 18:43:47 +0200
-Subject: [PATCH] testsuite.at: Update testsuite config for MSVC
+Subject: [PATCH 02/12] testsuite.at: Update testsuite config for MSVC
 
 * tests/testsuite.at: Make symlink tool mlink for MSVC.
 ---
+ tests/testsuite.at | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
 diff --git a/tests/testsuite.at b/tests/testsuite.at
-index bacc72ce..ea3b80e3 100644
+index c5c85ec0..a080d70a 100644
 --- a/tests/testsuite.at
 +++ b/tests/testsuite.at
 @@ -32,7 +32,7 @@ for tool in ACLOCAL AUTOHEADER AUTOCONF AUTOMAKE AUTORECONF; do
@@ -37,6 +40,6 @@ index bacc72ce..ea3b80e3 100644
  m4_divert_pop([PREPARE_TESTS])dnl
  
  
---
+-- 
 2.45.2
 

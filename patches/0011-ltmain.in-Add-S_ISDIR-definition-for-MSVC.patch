@@ -1,7 +1,7 @@
-From 49c58a4e6d65891fc5761155a9068ba500d7d742 Mon Sep 17 00:00:00 2001
+From ceff83a9067d4486f6c65d0ba6bf7751bd467b5c Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 26 Mar 2025 17:19:39 +0200
-Subject: [PATCH] ltmain.in: Add 'S_ISDIR' definition for MSVC
+Subject: [PATCH 11/12] ltmain.in: Add 'S_ISDIR' definition for MSVC
 
 Several test failures occur from fix for sr #111191 with MSVC, which is
 fixed by defining S_ISDIR with a different variable name, MSVC_ISDIR.
@@ -14,10 +14,10 @@ fixed by defining S_ISDIR with a different variable name, MSVC_ISDIR.
  1 file changed, 6 insertions(+)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index aaf48f14..38996f65 100644
+index e4b4fe12..b52ab08a 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -3846,6 +3846,7 @@ int setenv (const char *, const char *, int);
+@@ -3851,6 +3851,7 @@ int setenv (const char *, const char *, int);
  # define getcwd  _getcwd
  # define putenv  _putenv
  # define S_IXUSR _S_IEXEC
@@ -25,7 +25,7 @@ index aaf48f14..38996f65 100644
  #elif defined __MINGW32__
  # define setmode _setmode
  # define stat    _stat
-@@ -4241,8 +4242,13 @@ check_executable (const char *path)
+@@ -4246,8 +4247,13 @@ check_executable (const char *path)
    if ((!path) || (!*path))
      return 0;
  

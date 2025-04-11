@@ -1,7 +1,7 @@
-From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From 256aa4a81c285cb42001fd02d5bacc265c2db169 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 11 Dec 2024 18:43:47 +0200
-Subject: [PATCH] libtoolize.in: Create symlinks with mklink for MSVC
+Subject: [PATCH 06/12] libtoolize.in: Create symlinks with mklink for MSVC
 
 Symlink files are not generated properly with 'ln -s' for MSVC to
 process, so mklink is used, which swaps the argument order of target
@@ -9,10 +9,12 @@ and link_name. This also requires absolute paths, generated with the
 use of cygpath.
 
 * libtoolize.in: Check if linking with mklink and update processing.
-
 ---
+ libtoolize.in | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
 diff --git a/libtoolize.in b/libtoolize.in
-index 77d0c9ed..b576ef58 100644
+index 77d0c9ed..fe8abe74 100644
 --- a/libtoolize.in
 +++ b/libtoolize.in
 @@ -437,6 +437,33 @@ func_copy ()
@@ -49,6 +51,6 @@ index 77d0c9ed..b576ef58 100644
      fi
      my_copy_msg="$my_copy_type file '$my_destfile'"
      $opt_verbose && my_copy_msg="$my_copycmd $my_srcfile $my_destdir"
---
+-- 
 2.45.2
 

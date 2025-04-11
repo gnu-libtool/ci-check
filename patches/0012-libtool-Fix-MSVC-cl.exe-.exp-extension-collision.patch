@@ -1,7 +1,7 @@
-From f669b2ed20d74cce04224126281632305abaa679 Mon Sep 17 00:00:00 2001
-From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
-Date: Thu, 10 Apr 2025 20:14:56 +0300
-Subject: [PATCH] libtool: Fix MSVC cl.exe .exp extension collision
+From a0d4196d24a98afc408ac4a56a97edd32a1c0bad Mon Sep 17 00:00:00 2001
+From: Mitch <mitch.capper+gnu33@gmail.com>
+Date: Mon, 2 Dec 2024 22:47:48 +0200
+Subject: [PATCH 12/12] libtool: Fix MSVC cl.exe .exp extension collision
 
 MSVC's compiler uses the .exp entension for their own export format,
 which causes a build failure when a subsequent build is run. The

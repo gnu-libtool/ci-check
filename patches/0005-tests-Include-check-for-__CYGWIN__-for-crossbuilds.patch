@@ -1,14 +1,17 @@
-From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From b6588bc736c3cea5b8850772348038b6fc6fea0b Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 11 Dec 2024 18:43:47 +0200
-Subject: [PATCH] tests: Include check for __CYGWIN__ for crossbuilds
+Subject: [PATCH 05/12] tests: Include check for __CYGWIN__ for crossbuilds
 
 * tests/demo.at, tests/lt_dlexit.at: Add __CYGWIN__ to check for
 crossbuilds of build cygwin with host mingw and the MSVC toolchain.
-
 ---
+ tests/demo.at      | 2 +-
+ tests/lt_dlexit.at | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
 diff --git a/tests/demo.at b/tests/demo.at
-index a506a93e..eb97fc24 100644
+index 036e434e..1b4a2e89 100644
 --- a/tests/demo.at
 +++ b/tests/demo.at
 @@ -152,7 +152,7 @@ AT_DATA([foo.h],
@@ -21,7 +24,7 @@ index a506a93e..eb97fc24 100644
  #  ifdef DLL_EXPORT
  #   define LIBHELLO_SCOPE extern __declspec (dllexport)
 diff --git a/tests/lt_dlexit.at b/tests/lt_dlexit.at
-index f2b4e2f7..1bbb73db 100644
+index 19adeec4..51f26f23 100644
 --- a/tests/lt_dlexit.at
 +++ b/tests/lt_dlexit.at
 @@ -115,8 +115,12 @@ AT_DATA([b1.c],
@@ -39,6 +42,6 @@ index f2b4e2f7..1bbb73db 100644
  #endif
  #if !defined LIBA1_SCOPE
  #  define LIBA1_SCOPE extern
---
+-- 
 2.45.2
 

@@ -1,7 +1,7 @@
-From 59bce5ffdb3462d1d83f61dad26903f78bb0ca7c Mon Sep 17 00:00:00 2001
+From b24e12c0d8816f26d5e8485ded7afe30330c29e7 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 19 Feb 2025 18:58:16 +0200
-Subject: [PATCH] ltmain.in: Fix hang with cmd.exe in MSYS
+Subject: [PATCH 10/12] ltmain.in: Fix hang with cmd.exe in MSYS
 
 Translating file paths from MSYS to W32 has been causing libtool to
 indefinitely hang when 'cmd.exe //c' is called. Instead, 'cygpath' is
@@ -13,7 +13,7 @@ packaged on MSYS, so it will now handle the path conversion.
  1 file changed, 12 insertions(+), 7 deletions(-)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index c59459d0..9f145ee1 100644
+index 2342ed96..e4b4fe12 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
 @@ -1029,9 +1029,14 @@ func_convert_core_msys_to_w32 ()

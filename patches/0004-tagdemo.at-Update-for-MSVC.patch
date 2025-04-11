@@ -1,14 +1,16 @@
-From c170c41062518a5f5f0c4c16feda6cdc07010c75 Mon Sep 17 00:00:00 2001
+From 12e6686a3bcf64644545aa7c0ec20a262011e488 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 11 Dec 2024 18:43:47 +0200
-Subject: [PATCH] tagdemo.at: Update for MSVC
+Subject: [PATCH 04/12] tagdemo.at: Update for MSVC
 
 * tests/tagdemo.at: Remove namespace support check, add iostream.h
 support check, and make iostream the default include, not iostream.h.
-
 ---
+ tests/tagdemo.at | 58 +++++++++++++++++++++---------------------------
+ 1 file changed, 25 insertions(+), 33 deletions(-)
+
 diff --git a/tests/tagdemo.at b/tests/tagdemo.at
-index 404ca5e8..9cb549dc 100644
+index 73ff891b..2e57ff58 100644
 --- a/tests/tagdemo.at
 +++ b/tests/tagdemo.at
 @@ -42,27 +42,25 @@ AC_PROG_CC_C_O
@@ -144,6 +146,6 @@ index 404ca5e8..9cb549dc 100644
    return HELLO_RET;
  }
  
---
+-- 
 2.45.2
 
