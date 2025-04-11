@@ -217,7 +217,7 @@ jobs:
             : "Install OpenBSD packages"
             : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.5/packages/amd64/"
             pkg_add m4 automake-1.16.5 ${{ matrix.version == '7.5' && 'autoconf-2.71 gcc-11.2.0p11 g++-11.2.0p12' || 'autoconf-2.72p0 gcc-11.2.0p14 g++-11.2.0p15' }} gmake
-            ls -l /usr/bin/acl* /usr/bin/auto* /usr/local/bin/acl* /usr/local/bin/auto*
+            ls -l /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
             export AUTOCONF_VERSION=${{ matrix.version == '7.5' && '2.71' || '2.72' }}
