@@ -44,7 +44,7 @@ git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
                && patch -p1 < ../patches/0002-testsuite.at-Update-testsuite-config-for-MSVC.patch \
                && patch -p1 < ../patches/0003-libtool-Alter-expected-line-endings-in-testsuite.patch \
                && patch -p1 < ../patches/0004-tagdemo.at-Update-for-MSVC.patch \
-               && patch -p1 < ../patches/0005-tests-Include-check-for-CYGWIN-for-crossbuilds.patch \
+               && patch -p1 < ../patches/0005-tests-Include-check-for-__CYGWIN__-for-crossbuilds.patch \
                && patch -p1 < ../patches/0006-libtoolize.in-Create-symlinks-with-mklink-for-MSVC.patch \
                && patch -p1 < ../patches/0007-libtool.m4-For-MS-dumpbin-drop-CR-first.patch \
                && patch -p1 < ../patches/0008-libtool.m4-preload-valid-C-symbol-names-only.patch \
