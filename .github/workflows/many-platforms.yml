@@ -50,6 +50,12 @@ on:
 env:
   package: libtool
   branch: development
+  # URL suitable for 'git clone'
+  #gnulib_url: https://git.savannah.gnu.org/git/gnulib.git
+  gnulib_url: https://github.com/coreutils/gnulib.git
+  # URL prefix suitable for downloading individual files through 'wget'
+  #gnulib_url_prefix: https://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;hb=HEAD;f=
+  gnulib_url_prefix: https://raw.githubusercontent.com/coreutils/gnulib/refs/heads/master/
 
 jobs:
   build-tarball:
@@ -756,8 +762,8 @@ jobs:
       - run: echo "$PATH"
       - run: ls -l /usr/bin
       - run: |
-          wget -O ar-lib 'https://git.savannah.gnu.org/gitweb/?p=automake.git;a=blob_plain;f=lib/ar-lib;hb=HEAD'
-          wget -O compile 'https://git.savannah.gnu.org/gitweb/?p=automake.git;a=blob_plain;f=lib/compile;hb=HEAD'
+          wget -O ar-lib "${gnulib_url_prefix}build-aux/ar-lib"
+          wget -O compile "${gnulib_url_prefix}build-aux/compile"
           chmod a+x ar-lib compile
       - name: Build in Cygwin
         env:
