@@ -26,6 +26,11 @@ commit_message="$5"
 
 set -x
 
+case "$configure_options" in
+  --host=riscv*) cross_compiling=true ;;
+  *)             cross_compiling=false ;;
+esac
+
 # Unpack the tarball.
 tarfile=`echo "$package"-*.tar.gz`
 packagedir=`echo "$tarfile" | sed -e 's/\.tar\.gz$//'`
@@ -41,32 +46,34 @@ cd build
 # Build.
 $make V=1 > log2 2>&1; rc=$?; cat log2; test $rc = 0 || exit 1
 
-case "$commit_message" in
-  *"[pre-release]"*)
-    # Run pre-release testing.
-    ret_code=0
-    inc=3
-    for configure_flag in "--disable-ltdl-install" \
-                "--program-prefix=g" \
-                "--disable-shared"
-    do
+if ! $cross_compiling; then
+  case "$commit_message" in
+    *"[pre-release]"*)
+      # Run pre-release testing.
+      ret_code=0
+      inc=3
+      for configure_flag in "--disable-ltdl-install" \
+                            "--program-prefix=g" \
+                            "--disable-shared"
+      do
         ../configure $configure_options $configure_flag >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: 'configure $configure_flag'" >> log"$inc"
         $make check V=1 >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
         test $rc = 0 || echo "Failed: '$make check V=1' for 'configure $configure_flag'" >> log"$inc"
         cat log"$inc"
         inc=$(( $inc + 1 ))
-    done
-    ../configure $configure_options CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    $make check V=1 CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
-    test $rc = 0 || echo "Failed: '$make check V=1 CXX=g++'" >> log"$inc"
-    cat log"$inc"
-    test $ret_code = 0 || exit 1
-    ;;
-  *)
-    # Run the tests.
-    $make check $make_options V=1 TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
-    ;;
-esac
+      done
+      ../configure $configure_options CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+      $make check V=1 CXX=g++ >> log"$inc" 2>&1; rc=$?; test $rc = 0 || ret_code=$rc
+      test $rc = 0 || echo "Failed: '$make check V=1 CXX=g++'" >> log"$inc"
+      cat log"$inc"
+      test $ret_code = 0 || exit 1
+      ;;
+    *)
+      # Run the tests.
+      $make check $make_options V=1 TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+      ;;
+  esac
+fi
 
 cd ..
