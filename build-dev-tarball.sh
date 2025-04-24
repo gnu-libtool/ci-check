@@ -52,8 +52,7 @@ git clone --depth 1 "${gnulib_url}"
                && patch -p1 < ../patches/0010-ltmain.in-Fix-hang-with-cmd.exe-in-MSYS.patch \
                && patch -p1 < ../patches/0011-ltmain.in-Add-S_ISDIR-definition-for-MSVC.patch \
                && patch -p1 < ../patches/0012-libtool-Fix-MSVC-cl.exe-.exp-extension-collision.patch \
-               && patch -p1 < ../patches/0013-inherited_flags.at-Fix-test-on-MSVC.patch \
-               && patch -p1 < ../patches/0014-MSVC-debugging.patch)
+               && patch -p1 < ../patches/0013-inherited_flags.at-Fix-test-on-MSVC.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
