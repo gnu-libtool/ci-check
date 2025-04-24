@@ -29,7 +29,7 @@ set -e
 # it is not at least 2 the unit test
 #   libtoolize.at: "14: verbatim aclocal.m4 w/o AC_CONFIG_MACRO_DIRS"
 # fails.
-git clone --depth 2 https://git.savannah.gnu.org/git/"$package".git
+git clone --depth 2 https://https.git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
