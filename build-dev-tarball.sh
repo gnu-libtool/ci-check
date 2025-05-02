@@ -54,7 +54,8 @@ git clone --depth 1 "${gnulib_url}"
                && patch -p1 < ../patches/0012-libtool-Fix-MSVC-cl.exe-.exp-extension-collision.patch \
                && patch -p1 < ../patches/0013-inherited_flags.at-Fix-test-on-MSVC.patch \
                && patch -p1 < ../patches/0014-Pick-up-clang_rt-static-archives-compiler-internal-l.patch \
-               && patch -p1 < ../patches/0015-Allow-statically-linking-compiler-support-libraries-.patch)
+               && patch -p1 < ../patches/0015-Allow-statically-linking-compiler-support-libraries-.patch \
+               && patch -p1 < ../patches/Move-mlibc-case-matches-above-GNU_Linux-and-similar-ones.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
