@@ -1,0 +1,38 @@
+From 88c1c05f139e64cb4a6f4860f25076f5bbb1f2b7 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Tue, 6 May 2025 19:59:03 +0300
+Subject: [PATCH 16/16] libtool.m4: Fix deplibs test for Cygwin/MSVC cross
+ build
+
+Test "deplibs without file command" fails for Cygwin/MSVC cross build,
+since paths have not been converted properly for dumpbin.
+
+* m4/libtool.m4: Add path conversion for dumpbin when doing cross builds
+  with Cygwin and MSVC.
+---
+ m4/libtool.m4 | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index f009a5db..b6a4b3d2 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -8703,11 +8703,14 @@ AC_CACHE_VAL(lt_cv_to_tool_file_cmd,
+ [#assume ordinary cross tools, or native build.
+ lt_cv_to_tool_file_cmd=func_convert_file_noop
+ case $host in
+-  *-*-mingw* | *-*-windows* )
++  *-*-mingw* | *-*-windows* | *-*-cygwin* )
+     case $build in
+       *-*-mingw* | *-*-windows* ) # actually msys
+         lt_cv_to_tool_file_cmd=func_convert_file_msys_to_w32
+         ;;
++      *-*-cygwin* )
++        lt_cv_to_tool_file_cmd=func_convert_file_cygwin_to_w32
++        ;;
+     esac
+     ;;
+ esac
+-- 
+2.45.2
+
