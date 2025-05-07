@@ -1,0 +1,54 @@
+From a719b5d7ee02450a281d960fe9cedbed9d2ed671 Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Wed, 7 May 2025 17:39:36 +0300
+Subject: [PATCH] tests: Skip failing tests on MSVC
+
+Test 'deplibs without file command' fails on MSVC with a 'hard failure'.
+Since this test was created for MinGW, skipping for now.
+
+Test 'Libtool stress test.' fails on MSVC when the cl compiler cannot
+open an expsym file, which appears to exist but is empty.
+
+* tests/deplibs-mingw.at: Add check for MSVC build to skip test.
+* tests/stresstest.at: Add check for MSVC build to skip test.
+---
+ tests/deplibs-mingw.at | 5 +++++
+ tests/stresstest.at    | 6 ++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/tests/deplibs-mingw.at b/tests/deplibs-mingw.at
+index bfa7b25d..1d997ff2 100644
+--- a/tests/deplibs-mingw.at
++++ b/tests/deplibs-mingw.at
+@@ -24,6 +24,11 @@
+ AT_SETUP([deplibs without file command])
+ AT_KEYWORDS([libtool])
+ 
++# Skip failing test on MSVC
++if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' >/dev/null; then
++  AT_CHECK([exit 77])
++fi
++
+ cwd=`pwd`
+ instdir=$cwd/inst
+ libdir=$instdir/lib
+diff --git a/tests/stresstest.at b/tests/stresstest.at
+index 63f17d58..e99de503 100644
+--- a/tests/stresstest.at
++++ b/tests/stresstest.at
+@@ -28,6 +28,12 @@
+ AT_BANNER([Libtool stress test.])
+ AT_SETUP([Link option thorough search test])
+ AT_KEYWORDS([libtool expensive])
++
++# Skip failing test on MSVC
++if $LIBTOOL --config | $EGREP '^nm_interface="MS dumpbin"' >/dev/null; then
++  AT_CHECK([exit 77])
++fi
++
+ eval `$LIBTOOL --config | $EGREP '^(CC|objdir|allow_undefined_flag)='`
+ 
+ mkdir sub sub2 sub3 2>/dev/null
+-- 
+2.45.2
+

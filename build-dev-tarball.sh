@@ -51,10 +51,11 @@ git clone --depth 1 "${gnulib_url}"
                && patch -p1 < ../patches/0009-libtoolize.at-Update-checks-based-on-linker-used.patch \
                && patch -p1 < ../patches/0010-ltmain.in-Fix-hang-with-cmd.exe-in-MSYS.patch \
                && patch -p1 < ../patches/0011-ltmain.in-Add-S_ISDIR-definition-for-MSVC.patch \
+               && patch -p1 < ../patches/0012-libtool-Fix-MSVC-cl.exe-.exp-extension-collision.patch \
                && patch -p1 < ../patches/0013-inherited_flags.at-Fix-test-on-MSVC.patch \
                && patch -p1 < ../patches/0014-Pick-up-clang_rt-static-archives-compiler-internal-l.patch \
                && patch -p1 < ../patches/0015-Allow-statically-linking-compiler-support-libraries-.patch \
-               && patch -p1 < ../patches/0016-deplibs-mingw.at-Skip-test-on-MSVC.patch)
+               && patch -p1 < ../patches/0016-tests-Skip-failing-tests-on-MSVC.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
