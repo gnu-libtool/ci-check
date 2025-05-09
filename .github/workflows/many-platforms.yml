@@ -713,7 +713,7 @@ jobs:
           retention-days: 7
           overwrite: true
   check-msvc:
-    name: make check on MSVC
+    name: make check on MSVC (with --host flag)
     needs: build-tarball
     timeout-minutes: 180
     # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs

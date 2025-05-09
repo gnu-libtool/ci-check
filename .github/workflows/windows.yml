@@ -228,10 +228,9 @@ jobs:
           compression-level: 0
           overwrite: true
   check-msvc:
-    name: make check on MSVC
+    name: make check on MSVC (no --host flag)
     needs: build-tarball
     timeout-minutes: 180
-    # These test runs show more than 50 test failures.
     # if: ${{ false }}
     # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     strategy:
@@ -318,7 +317,7 @@ jobs:
           export STRIP=":"
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
-          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
