@@ -14,14 +14,14 @@ Reported: https://savannah.gnu.org/support/?111157
 * m4/libtool.m4: Replace .exp extension with .expsym.
 ---
  build-aux/ltmain.in | 10 +++----
- m4/libtool.m4       | 68 ++++++++++++++++++++++-----------------------
- 2 files changed, 39 insertions(+), 39 deletions(-)
+ m4/libtool.m4       | 64 ++++++++++++++++++++++-----------------------
+ 2 files changed, 37 insertions(+), 37 deletions(-)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index b52ab08a..ac7b8221 100644
+index af014430..425de05a 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -2917,7 +2917,7 @@ extern \"C\" {
+@@ -2925,7 +2925,7 @@ extern \"C\" {
  
  	  # Prepare the list of exported symbols
  	  if test -z "$export_symbols"; then
@@ -30,7 +30,7 @@ index b52ab08a..ac7b8221 100644
  	    $opt_dry_run || {
  	      $RM $export_symbols
  	      eval "$SED -n -e '/^: @PROGRAM@ $/d' -e 's/^.* \(.*\)$/\1/p' "'< "$nlist" > "$export_symbols"'
-@@ -2930,8 +2930,8 @@ extern \"C\" {
+@@ -2938,8 +2938,8 @@ extern \"C\" {
  	    }
  	  else
  	    $opt_dry_run || {
@@ -41,7 +41,7 @@ index b52ab08a..ac7b8221 100644
  	      eval '$MV "$nlist"T "$nlist"'
  	      case $host in
  	        *cygwin* | *mingw* | *windows* | *cegcc* )
-@@ -7900,7 +7900,7 @@ func_mode_link ()
+@@ -7915,7 +7915,7 @@ func_mode_link ()
  	if test -z "$export_symbols"; then
  	  if test yes = "$always_export_symbols" || test -n "$export_symbols_regex"; then
  	    func_verbose "generating symbol list for '$libname.la'"
@@ -50,7 +50,7 @@ index b52ab08a..ac7b8221 100644
  	    $opt_dry_run || $RM $export_symbols
  	    cmds=$export_symbols_cmds
  	    save_ifs=$IFS; IFS='~'
-@@ -8166,7 +8166,7 @@ func_mode_link ()
+@@ -8181,7 +8181,7 @@ func_mode_link ()
  
  	    ${skipped_export-false} && {
  	      func_verbose "generating symbol list for '$libname.la'"
@@ -60,7 +60,7 @@ index b52ab08a..ac7b8221 100644
  	      libobjs=$output
  	      # Append the command to create the export file.
 diff --git a/m4/libtool.m4 b/m4/libtool.m4
-index be22e8b6..0ec713ed 100644
+index 5f485dac..c34a4f7d 100644
 --- a/m4/libtool.m4
 +++ b/m4/libtool.m4
 @@ -1680,9 +1680,9 @@ AC_CACHE_CHECK([$1], [$2],
@@ -117,7 +117,7 @@ index be22e8b6..0ec713ed 100644
        fi
        ;;
  
-@@ -5783,14 +5783,14 @@ _LT_EOF
+@@ -5783,11 +5783,11 @@ _LT_EOF
  	_LT_TAGVAR(archive_cmds, $1)='$CC -Fe$output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
  	_LT_TAGVAR(archive_expsym_cmds, $1)='if _LT_DLL_DEF_P([$export_symbols]); then
              cp "$export_symbols" "$output_objdir/$soname.def";
@@ -127,16 +127,12 @@ index be22e8b6..0ec713ed 100644
 -            $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.exp;
 +            $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.expsym;
            fi~
-           if test -z "$linker_flags"; then
--             $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-+             $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.expsym" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-           else
--             $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,$linker_flags-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-+             $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.expsym" -Wl,$linker_flags-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-           fi~
+-          $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
++          $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.expsym" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
            linknames='
  	# The linker will not automatically build a static lib if we build a DLL.
-@@ -6102,8 +6102,8 @@ _LT_EOF
+ 	# _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
+@@ -6098,8 +6098,8 @@ _LT_EOF
        else
  	_LT_TAGVAR(allow_undefined_flag, $1)=' -expect_unresolved \*'
  	_LT_TAGVAR(archive_cmds, $1)='$CC -shared$allow_undefined_flag $libobjs $deplibs $compiler_flags -msym -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry $output_objdir/so_locations -o $lib'
@@ -147,7 +143,7 @@ index be22e8b6..0ec713ed 100644
  
  	# Both c and cxx compiler support -rpath directly
  	_LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-rpath $libdir'
-@@ -6120,21 +6120,21 @@ _LT_EOF
+@@ -6116,21 +6116,21 @@ _LT_EOF
        if test yes = "$GCC"; then
  	wlarc='$wl'
  	_LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $wl-z ${wl}text $wl-h $wl$soname -o $lib $libobjs $deplibs $compiler_flags'
@@ -175,7 +171,7 @@ index be22e8b6..0ec713ed 100644
  	  ;;
  	esac
        fi
-@@ -6869,14 +6869,14 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -6865,11 +6865,11 @@ if test yes != "$_lt_caught_CXX_error"; then
  	  _LT_TAGVAR(archive_cmds, $1)='$CC -Fe$output_objdir/$soname $libobjs $compiler_flags $deplibs -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~linknames='
  	  _LT_TAGVAR(archive_expsym_cmds, $1)='if _LT_DLL_DEF_P([$export_symbols]); then
                cp "$export_symbols" "$output_objdir/$soname.def";
@@ -185,16 +181,12 @@ index be22e8b6..0ec713ed 100644
 -              $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.exp;
 +              $SED -e '\''s/^/-link -EXPORT:/'\'' < $export_symbols > $output_objdir/$soname.expsym;
              fi~
-             if test -z "$linker_flags"; then
--               $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-+               $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.expsym" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-             else
--               $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,$linker_flags-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-+               $CC -Fe$tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.expsym" -Wl,$linker_flags-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib";
-             fi~
+-            $CC -o $tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.exp" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
++            $CC -o $tool_output_objdir$soname $libobjs $compiler_flags $deplibs "@$tool_output_objdir$soname.expsym" -Wl,-DLL,-IMPLIB:"$tool_output_objdir$libname.dll.lib"~
              linknames='
  	  # The linker will not automatically build a static lib if we build a DLL.
-@@ -7395,10 +7395,10 @@ if test yes != "$_lt_caught_CXX_error"; then
+ 	  # _LT_TAGVAR(old_archive_from_new_cmds, $1)='true'
+@@ -7387,10 +7387,10 @@ if test yes != "$_lt_caught_CXX_error"; then
  	      *)
  	        _LT_TAGVAR(allow_undefined_flag, $1)=' -expect_unresolved \*'
  	        _LT_TAGVAR(archive_cmds, $1)='$CC -shared$allow_undefined_flag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags -msym -soname $soname `test -n "$verstring" && func_echo_all "-set_version $verstring"` -update_registry $output_objdir/so_locations -o $lib'
@@ -209,7 +201,7 @@ index be22e8b6..0ec713ed 100644
  	        _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-rpath $libdir'
  		;;
  	    esac
-@@ -7477,8 +7477,8 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7469,8 +7469,8 @@ if test yes != "$_lt_caught_CXX_error"; then
              _LT_TAGVAR(archive_cmds_need_lc,$1)=yes
  	    _LT_TAGVAR(no_undefined_flag, $1)=' -zdefs'
  	    _LT_TAGVAR(archive_cmds, $1)='$CC -G$allow_undefined_flag -h$soname -o $lib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags'
@@ -220,7 +212,7 @@ index be22e8b6..0ec713ed 100644
  
  	    _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='-R$libdir'
  	    _LT_TAGVAR(hardcode_shlibpath_var, $1)=no
-@@ -7514,8 +7514,8 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7506,8 +7506,8 @@ if test yes != "$_lt_caught_CXX_error"; then
  	      _LT_TAGVAR(no_undefined_flag, $1)=' $wl-z ${wl}defs'
  	      if $CC --version | $GREP -v '^2\.7' > /dev/null; then
  	        _LT_TAGVAR(archive_cmds, $1)='$CC -shared $pic_flag $stdlibflag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-h $wl$soname -o $lib'
@@ -231,7 +223,7 @@ index be22e8b6..0ec713ed 100644
  
  	        # Commands to make compiler produce verbose output that lists
  	        # what "hidden" libraries, object files and flags are used when
-@@ -7525,8 +7525,8 @@ if test yes != "$_lt_caught_CXX_error"; then
+@@ -7517,8 +7517,8 @@ if test yes != "$_lt_caught_CXX_error"; then
  	        # g++ 2.7 appears to require '-G' NOT '-shared' on this
  	        # platform.
  	        _LT_TAGVAR(archive_cmds, $1)='$CC -G $stdlibflag $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-h $wl$soname -o $lib'
