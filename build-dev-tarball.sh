@@ -40,6 +40,7 @@ git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
 (cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
+               && patch -p1 < ../patches/gnulib-Recognize-MSVC-linker-option.patch \
                && patch -p1 < ../patches/0001-libtool-Fix-mishandling-compiler-flags-with-MSVC-too.patch \
                && patch -p1 < ../patches/0002-testsuite.at-Update-testsuite-config-for-MSVC.patch \
                && patch -p1 < ../patches/0003-libtool-Alter-expected-line-endings-in-testsuite.patch \
