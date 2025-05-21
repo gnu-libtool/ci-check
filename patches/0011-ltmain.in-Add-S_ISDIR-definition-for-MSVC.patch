@@ -17,7 +17,7 @@ diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
 index e4b4fe12..b52ab08a 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
-@@ -3851,6 +3851,7 @@ int setenv (const char *, const char *, int);
+@@ -3859,6 +3859,7 @@ int setenv (const char *, const char *, int);
  # define getcwd  _getcwd
  # define putenv  _putenv
  # define S_IXUSR _S_IEXEC
@@ -25,7 +25,7 @@ index e4b4fe12..b52ab08a 100644
  #elif defined __MINGW32__
  # define setmode _setmode
  # define stat    _stat
-@@ -4246,8 +4247,13 @@ check_executable (const char *path)
+@@ -4254,8 +4255,13 @@ check_executable (const char *path)
    if ((!path) || (!*path))
      return 0;
  
