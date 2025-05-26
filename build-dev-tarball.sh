@@ -39,21 +39,7 @@ git clone --depth 2 -b "$branch" https://https.git.savannah.gnu.org/git/"$packag
 git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
-               && patch -p1 < ../patches/0001-libtool-Fix-mishandling-compiler-flags-with-MSVC-too.patch \
-               && patch -p1 < ../patches/0002-testsuite.at-Update-testsuite-config-for-MSVC.patch \
-               && patch -p1 < ../patches/0003-libtool-Alter-expected-line-endings-in-testsuite.patch \
-               && patch -p1 < ../patches/0004-tagdemo.at-Update-for-MSVC.patch \
-               && patch -p1 < ../patches/0005-tests-Include-check-for-__CYGWIN__-for-crossbuilds.patch \
-               && patch -p1 < ../patches/0006-libtoolize.in-Create-symlinks-with-mklink-for-MSVC.patch \
-               && patch -p1 < ../patches/0007-libtool.m4-For-MS-dumpbin-drop-CR-first.patch \
-               && patch -p1 < ../patches/0008-libtool.m4-preload-valid-C-symbol-names-only.patch \
-               && patch -p1 < ../patches/0009-libtoolize.at-Update-checks-based-on-linker-used.patch \
-               && patch -p1 < ../patches/0010-ltmain.in-Fix-hang-with-cmd.exe-in-MSYS.patch \
-               && patch -p1 < ../patches/0011-ltmain.in-Add-S_ISDIR-definition-for-MSVC.patch \
-               && patch -p1 < ../patches/0012-libtool-Fix-MSVC-cl.exe-.exp-extension-collision.patch \
-               && patch -p1 < ../patches/0013-inherited_flags.at-Fix-test-on-MSVC.patch \
-               && patch -p1 < ../patches/0014-tests-Skip-failing-tests-on-MSVC.patch)
+(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
