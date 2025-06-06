@@ -308,8 +308,8 @@ jobs:
           : "Possible values are _WIN32_WINNT_WINXP, _WIN32_WINNT_VISTA, _WIN32_WINNT_WIN7"
           win32_target=_WIN32_WINNT_WINXP
           export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
-          export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD"
-          export CXX="`pwd`/compile cl -nologo"; export CXXFLAGS="-MD"
+          export CC="`pwd`/compile clang-cl -nologo"; export CFLAGS="-MD"
+          export CXX="`pwd`/compile clang-cl -nologo"; export CXXFLAGS="-MD"
           export FC="no"
           export F77="no"
           export LD="link"
@@ -317,7 +317,7 @@ jobs:
           export STRIP=":"
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
-          ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
+          ./build-on.sh '${{ env.package }}' '--host=${{ matrix.bitness == 32 && 'i686' || 'x86_64' }}-w64-mingw32' 'make' '' '${{ github.event.head_commit.message }}'
       - if: ${{ always() && !contains(github.event.head_commit.message, '[pre-release]') }}
         run: tar czf ${{ env.package }}-build.tar.gz ${{ env.package }}-*/
       # Doc: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
