@@ -1,0 +1,48 @@
+From feac37b814cfe9b15966395c0ef6a67c43adc93f Mon Sep 17 00:00:00 2001
+From: Kirill Makurin <maiddaisuki@outlook.com>
+Date: Thu, 5 Jun 2025 16:22:42 +0000
+Subject: [PATCH] libltdl: Undeclared reference to access on Windows
+
+On native Windows (MSVC/mingw), access is declared in io.h, which is
+not included.
+
+* Reported: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=78701
+
+* libltdl/ltdl.h: Include io.h on Windows platforms.
+* libltdl/ltdl.mk: Update serial.
+---
+ libltdl/ltdl.h  | 4 ++++
+ libltdl/ltdl.mk | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/libltdl/ltdl.h b/libltdl/ltdl.h
+index 2d01e7e7..2c1b9d32 100644
+--- a/libltdl/ltdl.h
++++ b/libltdl/ltdl.h
+@@ -34,6 +34,10 @@ License along with GNU Libltdl.  If not, see <https://www.gnu.org/licenses/>.
+ #include <libltdl/lt_error.h>
+ #include <libltdl/lt_dlloader.h>
+ 
++#if defined (_WIN32) && !defined (__CYGWIN__)
++#include <io.h>
++#endif
++
+ LT_BEGIN_C_DECLS
+ 
+ 
+diff --git a/libltdl/ltdl.mk b/libltdl/ltdl.mk
+index 7cf9f386..46109775 100644
+--- a/libltdl/ltdl.mk
++++ b/libltdl/ltdl.mk
+@@ -35,7 +35,7 @@ AM_CPPFLAGS	       += -DLT_CONFIG_H='<$(LT_CONFIG_H)>' \
+ 			  -I$(srcdir)/libltdl -Ilibltdl/libltdl \
+ 			  -I$(srcdir)/libltdl/libltdl
+ AM_LDFLAGS	       += -no-undefined
+-LTDL_VERSION_INFO	= -version-info 10:3:3
++LTDL_VERSION_INFO	= -version-info 10:4:3
+ 
+ noinst_LTLIBRARIES	+= $(LT_DLLOADERS)
+ 
+-- 
+2.45.2
+
