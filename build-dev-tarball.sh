@@ -39,7 +39,8 @@ git clone --depth 2 -b "$branch" https://https.git.savannah.gnu.org/git/"$packag
 git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch)
+(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
+               && patch -p1 < ../patches/0001-libtool-Forward-slash-escaping-check-on-Windows.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
