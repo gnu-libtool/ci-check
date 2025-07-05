@@ -52,7 +52,7 @@ env:
   package: libtool
   branch: development
   # URL suitable for 'git clone'
-  #gnulib_url: https://https.git.savannah.gnu.org/git/gnulib.git
+  #gnulib_url: https://git.savannah.gnu.org/git/gnulib.git
   gnulib_url: https://github.com/coreutils/gnulib.git
 
 jobs:
