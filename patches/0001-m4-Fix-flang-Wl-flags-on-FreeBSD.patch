@@ -1,0 +1,25 @@
+From 19603b03a24532ba8f4fe0648fe42323350b05d5 Mon Sep 17 00:00:00 2001
+From: Gleb Popov <arrowd@FreeBSD.org>
+Date: Tue, 1 Jul 2025 21:15:30 +0300
+Subject: [PATCH] m4: Fix flang -Wl flags on FreeBSD
+
+---
+ m4/libtool.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 48e47748..2e95aaf3 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -4877,7 +4877,7 @@ m4_if([$1], [CXX], [
+       _LT_TAGVAR(lt_prog_compiler_static, $1)='-static'
+       ;;
+ 
+-    linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu*)
++    linux* | k*bsd*-gnu | kopensolaris*-gnu | gnu* | freebsd*)
+       case $cc_basename in
+       # old Intel for x86_64, which still supported -KPIC.
+       ecc*)
+-- 
+2.45.2
+
