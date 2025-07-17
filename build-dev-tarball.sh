@@ -40,7 +40,7 @@ git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
 (cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
-               && patch -p1 < ../patches/0001-m4-Fix-flang-Wl-flags-on-FreeBSD.patch)
+               && patch -p1 < ../patches/0001-ltmain.in-Fix-reordering-as-needed.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"

@@ -1,0 +1,51 @@
+From 340e6a12f01f64924fb0a41802d3a3325da4c6c6 Mon Sep 17 00:00:00 2001
+From: Pierre Ossman <ossman@cendio.se>
+Date: Tue, 1 Apr 2025 16:44:51 +0300
+Subject: [PATCH] ltmain.in: Fix reordering --as-needed
+
+Libtool was reordering flags like, --as-needed, which broke its usage,
+since the relevant libraries were no longer following the flag.
+
+Reported: https://savannah.gnu.org/support/?111213
+
+* build-aux/ltmain.in: Add check for --as-needed and --no-as-needed
+  flags.
+---
+ build-aux/ltmain.in | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 1417745c..294ed43c 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5580,6 +5580,11 @@ func_mode_link ()
+ 	arg=$func_stripname_result
+ 	;;
+ 
++	-Wl,--as-needed|-Wl,--no-as-needed)
++	deplibs="$deplibs $arg"
++	continue
++	;;
++
+       -Wl,*)
+ 	func_stripname '-Wl,' '' "$arg"
+ 	args=$func_stripname_result
+@@ -6008,6 +6013,15 @@ func_mode_link ()
+ 	lib=
+ 	found=false
+ 	case $deplib in
++	-Wl,--as-needed|-Wl,--no-as-needed)
++	   if test prog,link = "$linkmode,$pass"; then
++         compile_deplibs="$deplib $compile_deplibs"
++         finalize_deplibs="$deplib $finalize_deplibs"
++       else
++         deplibs="$deplib $deplibs"
++       fi
++       continue
++       ;;
+ 	-mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe \
+         |-threads|-fopenmp|-fopenmp=*|-openmp|-mp|-xopenmp|-omp|-qsmp=*)
+ 	  if test prog,link = "$linkmode,$pass"; then
+-- 
+2.45.2
+
