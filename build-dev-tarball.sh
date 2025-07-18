@@ -40,7 +40,8 @@ git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
 (cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
-               && patch -p1 < ../patches/0001-ltmain.in-Fix-reordering-as-needed.patch)
+               && patch -p1 < ../patches/0001-ltmain.in-Fix-reordering-as-needed.patch \
+               && patch -p1 < ../patches/0002-libltdl-Fix-libltdl-early-failures-for-multi-arch.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"

@@ -1,7 +1,7 @@
 From 340e6a12f01f64924fb0a41802d3a3325da4c6c6 Mon Sep 17 00:00:00 2001
 From: Pierre Ossman <ossman@cendio.se>
 Date: Tue, 1 Apr 2025 16:44:51 +0300
-Subject: [PATCH] ltmain.in: Fix reordering --as-needed
+Subject: [PATCH 1/2] ltmain.in: Fix reordering --as-needed
 
 Libtool was reordering flags like, --as-needed, which broke its usage,
 since the relevant libraries were no longer following the flag.
