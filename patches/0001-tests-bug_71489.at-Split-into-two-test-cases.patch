@@ -1,0 +1,46 @@
+From 0d274c66ec146f87de73e5d596350f7d20819c7c Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Thu, 24 Jul 2025 17:50:49 +0300
+Subject: [PATCH 1/2] tests/bug_71489.at: Split into two test cases
+
+---
+ tests/bug_71489.at | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tests/bug_71489.at b/tests/bug_71489.at
+index a97733b4..4e94666e 100644
+--- a/tests/bug_71489.at
++++ b/tests/bug_71489.at
+@@ -23,7 +23,7 @@
+ 
+ AT_BANNER([Testing bug 71489:])
+ 
+-AT_SETUP([Use local version])
++AT_SETUP([Local version of program with local library])
+ 
+ AT_KEYWORDS([bug_71489])
+ 
+@@ -111,7 +111,7 @@ fi
+ AC_DEFINE_UNQUOTED([LTBUG_ID],["$LTBUG_ID"],
+  [Text string identifying the library])
+ 
+-AC_SUBST([CF_LIB_FLAGS],['-L$(libdir) -Wl,-rpath -Wl,$(libdir)'])
++AC_SUBST([CF_LIB_FLAGS],['-L$(libdir) -rpath $(libdir)'])
+ 
+ AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile])
+ 
+@@ -172,8 +172,10 @@ build_local/src/ltb1 > stdout
+ 
+ echo "Comparing expout to the build binary"
+ AT_CHECK([cmp -s stdout expout], [0])
++AT_CLEANUP
++
+ 
+-rm -rf $top_dir $lib $src build_inst build_local prefix_dir
++AT_SETUP([Local version of program with external library])
+ 
+ # Test local version of installed program is used with external library.
+ 
+-- 
+2.45.2
+
