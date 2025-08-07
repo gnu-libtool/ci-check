@@ -704,8 +704,7 @@ jobs:
   check-msvc:
     name: make check on MSVC
     needs: build-tarball
-    # These test runs show more than 50 test failures.
-    if: ${{ false }}
+    timeout-minutes: 180
     # Doc: https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     strategy:
       fail-fast: false
@@ -783,8 +782,11 @@ jobs:
           win32_target=_WIN32_WINNT_WINXP
           export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
           export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD"
+          export CXX="`pwd`/compile cl -nologo"; export CXXFLAGS="-MD"
+          export FC="no"
+          export F77="no"
           export LD="link"
-          export NM="dumpbin -symbols"
+          export NM="dumpbin -all"
           export STRIP=":"
           export AR="`pwd`/ar-lib lib"
           export RANLIB=":"
