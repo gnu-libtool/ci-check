@@ -1,0 +1,356 @@
+From 41e81b7b969a373f2909695d62e328ab17dc4d9d Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Thu, 21 Aug 2025 17:54:14 +0300
+Subject: [PATCH] Add support for ML64
+
+The Microsoft Macro Assembler can be used to assemble and link one
+or more assembly-language source files with libtool.
+
+Reported: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=48993
+
+* Makefile.am: Pass ML64 flags to tests.
+* configure.ac: Add language support for the Microsoft Macro Assembler.
+* doc/libtool.texi: Update documentation to include ML64.
+* m4/libtool.m4: Enable macro support for ML64.
+* tests/flags.at: Add test for ML64 flags.
+* tests/infer-tag.at: Add test for ML64 tag.
+* NEWS: Update.
+---
+ Makefile.am        |   1 +
+ NEWS               |   2 +
+ configure.ac       |   1 +
+ doc/libtool.texi   |   6 +--
+ m4/libtool.m4      | 128 ++++++++++++++++++++++++++++++++++++++++++++-
+ tests/flags.at     |  20 ++++++-
+ tests/infer-tag.at |  19 +++++++
+ 7 files changed, 171 insertions(+), 6 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index c5728aef..e869211b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -755,6 +755,7 @@ TESTS_ENVIRONMENT = MAKE="$(MAKE)" CC="$(CC)" CFLAGS="$(CFLAGS)" \
+ 	CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" CXXCPP="$(CXXCPP)" \
+ 	OBJC="$(OBJC)" OBJCFLAGS="$(OBJCFLAGS)" \
+ 	OBJCXX="$(OBJCXX)" OBJCXXFLAGS="$(OBJCXXFLAGS)" \
++	ML64="$(ML64)" ML64FLAGS="$(ML64FLAGS)" \
+ 	F77="$(F77)" FFLAGS="$(FFLAGS)" \
+ 	FC="$(FC)" FCFLAGS="$(FCFLAGS)" \
+ 	GCJ="$(GCJ)" GCJFLAGS="$(GCJFLAGS)" \
+diff --git a/NEWS b/NEWS
+index b167fd74..09d201a2 100644
+--- a/NEWS
++++ b/NEWS
+@@ -59,6 +59,8 @@ NEWS - list of user-visible changes between releases of GNU Libtool
+ 
+   - Support additional Intel OneAPI compilers, 'icx', 'icpx', and 'ifx'.
+ 
++  - Support ML64 (Microsoft Macro Assembler).
++
+ 
+ * Noteworthy changes in release 2.5.4 (2024-11-20) [stable]
+ 
+diff --git a/configure.ac b/configure.ac
+index f9a485ba..8926cfe8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -154,6 +154,7 @@ _LTDL_SETUP
+ LT_LANG(C++)
+ LT_LANG(Objective-C)
+ LT_LANG(Objective-C++)
++LT_LANG(Microsoft Macro Assembler)
+ LT_LANG(Fortran 77)
+ LT_LANG(Fortran)
+ LT_LANG(Go)
+diff --git a/doc/libtool.texi b/doc/libtool.texi
+index ba64245e..2ec65c9f 100644
+--- a/doc/libtool.texi
++++ b/doc/libtool.texi
+@@ -2403,7 +2403,7 @@ The user may still override this default by specifying
+ @defmac LT_LANG (@var{language})
+ Enable @command{libtool} support for the language given if it
+ has not yet already been enabled.  Languages accepted are ``C++'',
+-``Objective-C'', ``Objective-C++'', ``Fortran 77'', ``Java'', ``Go'',
++``Objective-C'', ``Objective-C++'', ``ML64``, ``Fortran 77'', ``Java'', ``Go'',
+ and ``Windows Resource''.
+ 
+ If Autoconf language support macros such as @code{AC_PROG_CXX} are
+@@ -5629,7 +5629,7 @@ Automake.
+ @item @file{tests/flags.at}
+ Tests include checks that compile and linker flags get passed through
+ @command{libtool}.  Tests flags for C, C++, Objective-C, Objective-C++,
+-Fortran 77, Fortran 90, and Java.
++ML64, Fortran 77, Fortran 90, and Java.
+ 
+ @item @file{tests/help.at}
+ Tests a variety of mode commands, including mode short-hands, to ensure basic
+@@ -5642,7 +5642,7 @@ on @file{libconv}, which depends on @file{libb}, which depends on @file{liba}.
+ 
+ @item @file{tests/infer-tag.at}
+ Tests that @code{func_infer_tag} works by compiling various code snippets in
+-various languages (C, C++, Objective-C, Objective-C++, Fortran, Java) without
++various languages (C, C++, Objective-C, Objective-C++, ML64, Fortran, Java) without
+ a @option{--tag} flag.
+ 
+ @item @file{tests/inherited_flags.at}
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index cb869809..5ccb3a81 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -537,6 +537,26 @@ m4_defun([_LT_OBJECTIVE_C], [
+     [Check for compiling Objective C and C++ code])
+ ])
+ 
++m4_defun([_LT_ML64], [
++  AC_CACHE_CHECK([for ML64 compilation],
++    [lt_cv_ml64_compiles],
++    [ save_CFLAGS=$CFLAGS
++      CFLAGS=$ML64FLAGS
++      AC_COMPILE_IFELSE(
++        [AC_LANG_PROGRAM([ret
++],[])],
++        lt_cv_ml64_compiles=yes,
++        lt_cv_ml64_compiles=no
++      )
++      CFLAGS=$save_CFLAGS
++    ]
++  )
++  objc_compiles=$lt_cv_objc_compiles
++  _LT_DECL([], [ml64_compiles], [1],
++    [Check for compiling ml64 code])
++])
++
++
+ # _LT_CONFIG_COMMANDS
+ # -------------------
+ # Send accumulated output to $CONFIG_STATUS.  Thanks to the lists of
+@@ -858,6 +878,7 @@ m4_case([$1],
+   [C++],		[_LT_LANG(CXX)],
+   [Objective-C],		[_LT_LANG(OBJC)],
+   [Objective-C++],	[_LT_LANG(OBJCXX)],
++  [Microsoft Macro Assembler],  [_LT_LANG(ML64)],
+   [Go],			[_LT_LANG(GO)],
+   [Java],		[_LT_LANG(GCJ)],
+   [Fortran 77],		[_LT_LANG(F77)],
+@@ -880,6 +901,26 @@ m4_defun([_LT_LANG],
+ ])# _LT_LANG
+ 
+ 
++m4_ifndef([AC_PROG_ML64], [
++m4_defun([AC_PROG_ML64],
++[AC_LANG_PUSH(ML64)dnl
++AC_ARG_VAR([ML64],     [ml64 compiler command])dnl
++AC_ARG_VAR([ML64FLAGS], [ml64 compiler flags])dnl
++_AC_ARG_VAR_LDFLAGS()dnl
++AC_CHECK_TOOL(ML64, ml64)
++if test -z "$ML64"; then
++  if test -n "$ac_tool_prefix"; then
++    AC_CHECK_PROG(ML64, [${ac_tool_prefix}ml64], [${ac_tool_prefix}ml64])
++  fi
++fi
++if test -z "$ML64"; then
++  AC_CHECK_PROG(ML64, ml64, ml64, false)
++fi
++])#m4_defun
++])#m4_ifndef
++
++
++
+ m4_ifndef([AC_PROG_GO], [
+ ############################################################
+ # NOTE: This macro has been submitted for inclusion into   #
+@@ -930,11 +971,11 @@ AC_PROVIDE_IFELSE([AC_PROG_GCJ],
+       [LT_LANG(GCJ)],
+       [m4_ifdef([AC_PROG_GCJ],
+ 	[m4_define([AC_PROG_GCJ], defn([AC_PROG_GCJ])[LT_LANG(GCJ)])])
++
+        m4_ifdef([A][M_PROG_GCJ],
+ 	[m4_define([A][M_PROG_GCJ], defn([A][M_PROG_GCJ])[LT_LANG(GCJ)])])
+        m4_ifdef([LT_PROG_GCJ],
+ 	[m4_define([LT_PROG_GCJ], defn([LT_PROG_GCJ])[LT_LANG(GCJ)])])])])])
+-
+ AC_PROVIDE_IFELSE([AC_PROG_GO],
+   [LT_LANG(GO)],
+   [m4_define([AC_PROG_GO], defn([AC_PROG_GO])[LT_LANG(GO)])])
+@@ -947,10 +988,17 @@ AC_PROVIDE_IFELSE([AC_PROG_OBJCXX],
+   [LT_LANG(OBJCXX)],
+   [m4_define([AC_PROG_OBJCXX], defn([AC_PROG_OBJCXX])[LT_LANG(OBJCXX)])])
+ 
++AC_PROVIDE_IFELSE([AC_PROG_ML64],
++  [LT_LANG(ML64)],
++  [m4_define([AC_PROG_ML64], defn([AC_PROG_ML64])[LT_LANG(ML64)])])
+ AC_PROVIDE_IFELSE([LT_PROG_RC],
+   [LT_LANG(RC)],
+   [m4_define([LT_PROG_RC], defn([LT_PROG_RC])[LT_LANG(RC)])])
+-])# _LT_LANG_DEFAULT_CONFIG
++
++
++])
++
++# _LT_LANG_DEFAULT_CONFIG
+ 
+ # Obsolete macros:
+ AU_DEFUN([AC_LIBTOOL_CXX], [LT_LANG(C++)])
+@@ -8236,6 +8284,76 @@ CFLAGS=$lt_save_CFLAGS
+ ])# _LT_LANG_GCJ_CONFIG
+ 
+ 
++# _LT_LANG_ML64_CONFIG([TAG])
++# --------------------------
++# Ensure that the configuration variables for the ML64 assembler
++# are suitably defined.  These variables are subsequently used by _LT_CONFIG
++# to write the compiler configuration to 'libtool'.
++m4_defun([_LT_LANG_ML64_CONFIG],
++[AC_REQUIRE([LT_PROG_ML64])dnl
++AC_LANG_SAVE
++
++# Source file extension for ML64 test sources.
++ac_ext=asm
++
++#Object file extension for compile ML64 test sources.
++objext=o
++_LT_TAGVAR(objext, $1)=$objext
++
++# Code to be used in simple compile tests
++lt_simple_compile_test_code="main PROC ret main ENDP"
++
++# Code to be used in simple link tests
++lt_simple_link_test_code="main PROC ret main ENDP"
++
++# ltmain only uses $CC for tagged configurations so make sure $CC is set.
++_LT_TAG_COMPILER
++
++# save warnings/boilerplate of simple test code
++_LT_COMPILER_BOILERPLATE
++_LT_LINKER_BOILERPLATE
++
++# TODO? Check for compilation issues with ML64 flags.
++
++# Allow CC to be a program name with arguments.
++lt_save_CC=$CC
++lt_save_CFLAGS=$CFLAGS
++lt_save_GCC=$GCC
++GCC=yes
++CC=${ML64-"gcc"}
++CFLAGS=$ML64FLAGS
++compiler=$CC
++_LT_TAGVAR(compiler, $1)=$CC
++_LT_TAGVAR(LD, $1)=$LD
++_LT_CC_BASENAME([$compiler])
++
++_LT_TAGVAR(old_archive_cmds, $1)=$old_archive_cmds
++_LT_TAGVAR(reload_flag, $1)=$reload_flag
++_LT_TAGVAR(reload_cmds, $1)=$reload_cmds
++
++## CAVEAT EMPTOR:
++## There is no encapsulation within the following macros, do not change
++## the running order or otherwise move them around unless you know exactly
++## what you are doing...
++if test -n "$compiler"; then
++  _LT_COMPILER_NO_RTTI($1)
++  _LT_COMPILER_PIC($1)
++  _LT_COMPILER_C_O($1)
++  _LT_COMPILER_FILE_LOCKS($1)
++  _LT_LINKER_SHLIBS($1)
++  _LT_LINKER_HARDCODE_LIBPATH($1)
++
++  _LT_CONFIG($1)
++fi
++
++AC_LANG_RESTORE
++
++GCC=$lt_save_GCC
++CC=$lt_save_CC
++CFLAGS=$lt_save_CFLAGS
++])# _LT_LANG_ML64_CONFIG
++
++
+ # _LT_LANG_GO_CONFIG([TAG])
+ # --------------------------
+ # Ensure that the configuration variables for the GNU Go compiler
+@@ -8504,6 +8622,12 @@ CC=$lt_save_CC
+ CFLAGS=$lt_save_CFLAGS
+ ])# _LT_LANG_RC_CONFIG
+ 
++# LT_PROG_ML64
++# -----------
++AC_DEFUN([LT_PROG_ML64],
++[AC_CHECK_TOOL(ML64, ml64,)
++])
++
+ 
+ # LT_PROG_OBJC
+ # -----------
+diff --git a/tests/flags.at b/tests/flags.at
+index d88eea02..7aa435c7 100644
+--- a/tests/flags.at
++++ b/tests/flags.at
+@@ -18,7 +18,7 @@
+ # along with GNU Libtool.  If not, see <https://www.gnu.org/licenses/>.
+ ####
+ 
+-m4_foreach([lt_tag], [CC, CXX, OBJC, OBJCXX, F77, FC, GCJ],
++m4_foreach([lt_tag], [CC, CXX, OBJC, OBJCXX, F77, FC, GCJ, ML64],
+ [AT_SETUP([passing lt_tag flags through libtool])
+ AT_KEYWORDS([libtool])
+ LT_AT_TAG(m4_defn([lt_tag]))
+@@ -99,8 +99,26 @@ compile="$FC $FCFLAGS" link="$FC $FCFLAGS $LDFLAGS" source=a.f90
+ [[class a {}
+ ]])
+ compile="$GCJ $GCJFLAGS" link="$GCJ $GCJFLAGS $LDFLAGS" source=a.java
++],
++[ML64], [AT_DATA([a.asm],
++[[
++.data
++value QWORD 5 ; Define variable named value = 5.
++
++.code
++main PROC
++  mov rax, value ; :Load value into memory
++  inc rax ; Increment value by one
++  mov value, rax ; Store the incrememnted result back into 'value'
++  mov eax, dword ptr value ; Load the lower 32 bits of 'value' into EAX to use as the return code
++  ret
++main ENDP
++END
++]])
++compile="$ML64 $ML64FLAGS" link="$ML64 $ML64FLAGS $LDFLAGS" source=a.asm
+ ])
+ 
++
+ # Linker flags are not passed to the archiver, so don't test static libraries.
+ if $LIBTOOL --features | $GREP 'enable shared libraries'; then
+   library_and_module='library.la "module.la -module -avoid-version"'
+diff --git a/tests/infer-tag.at b/tests/infer-tag.at
+index e74fe8ed..cb16a126 100644
+--- a/tests/infer-tag.at
++++ b/tests/infer-tag.at
+@@ -162,6 +162,25 @@ AT_CHECK([$LIBTOOL --mode=compile $GCJ $GCJCFLAGS -c A.java],
+ 
+ AT_CLEANUP
+ 
++AT_SETUP([ML64 inferred tag])
++LT_AT_TAG([ML64])
++AT_KEYWORDS([libtool])
++
++AT_DATA([a.asm],
++[[.code
++main PROC
++  mov eax, 5 ; Load constant value
++  inc eax ; Increment
++  ret ; Return result
++main ENDP
++end
++]])
++
++AT_CHECK([$LIBTOOL --mode=compile $ML64 $ML64FLAGS -c a.asm],
++	 [], [ignore], [ignore])
++
++AT_CLEANUP
++
+ # Unsupported compiler check
+ AT_SETUP([Unsupported compiler inferred tag check])
+ AT_KEYWORDS([libtool])
+-- 
+2.50.1
+
