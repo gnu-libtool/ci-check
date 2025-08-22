@@ -39,8 +39,7 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
-               && patch -p1 < ../patches/0001-Add-support-for-ML64.patch)
+(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch)
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"
