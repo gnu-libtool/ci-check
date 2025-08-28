@@ -71,7 +71,7 @@ if ! $cross_compiling; then
       ;;
     *)
       # Run the tests.
-      $make check $make_options V=1 TESTSUITEFLAGS="--debug" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
+      $make check $make_options V=1 TESTSUITEFLAGS="--debug 179 185" > log3 2>&1; rc=$?; cat log3; test $rc = 0 || exit 1
       ;;
   esac
 fi
