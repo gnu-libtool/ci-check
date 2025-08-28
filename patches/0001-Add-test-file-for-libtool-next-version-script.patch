@@ -1,4 +1,4 @@
-From b43b71bca4437ad70887bd5289b00b3f82487e89 Mon Sep 17 00:00:00 2001
+From 80738ff7827863b00c5a026a998ded8bf370cda3 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -43,7 +43,7 @@ index 2ec65c9f..07aa1e7e 100644
  behaviour of @command{libtool} versioning flags @option{-version-info} and
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..ca24154e
+index 00000000..c83f6b75
 --- /dev/null
 +++ b/tests/versioning_script.at
 @@ -0,0 +1,297 @@
@@ -257,7 +257,7 @@ index 00000000..ca24154e
 +# Verify --version works
 +$script_path --version > actual
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
-+expected=2.5.0
++expected="libtool-next-version (GNU libtool)"
 +expected=$(remove_whitespace "$expected")
 +echo "expected is $expected"
 +AT_CHECK([$GREP -i $expected actual],
