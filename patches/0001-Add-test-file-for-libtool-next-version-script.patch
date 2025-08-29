@@ -1,4 +1,4 @@
-From e1978600b58cd2f6ecd00dc8d9ab6e0c532618d3 Mon Sep 17 00:00:00 2001
+From ce141ac5772dbd700f4dbdccefc348482ddc8d91 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -7,11 +7,13 @@ Subject: [PATCH] Add test file for libtool-next-version script
 * doc/libtool.texi: Update to describe new test file.
 * tests/versioning_script.at: Autotest file for testing the output of
   the libtool-next-version script.
+* tests/testsuite.at: Evaluate libext for tests.
 ---
  Makefile.am                |   1 +
  doc/libtool.texi           |   4 +
- tests/versioning_script.at | 297 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 302 insertions(+)
+ tests/testsuite.at         |   2 +-
+ tests/versioning_script.at | 299 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 305 insertions(+), 1 deletion(-)
  create mode 100644 tests/versioning_script.at
 
 diff --git a/Makefile.am b/Makefile.am
@@ -41,12 +43,25 @@ index 2ec65c9f..07aa1e7e 100644
  @item @file{tests/versioning.at}
  Tests @command{libtool}'s versioning system.  Tests begin with verifying the
  behaviour of @command{libtool} versioning flags @option{-version-info} and
+diff --git a/tests/testsuite.at b/tests/testsuite.at
+index 0d8c64e3..d03aeb56 100644
+--- a/tests/testsuite.at
++++ b/tests/testsuite.at
+@@ -31,7 +31,7 @@ for tool in ACLOCAL AUTOHEADER AUTOCONF AUTOMAKE AUTORECONF; do
+   if eval \$$tool --version >/dev/null 2>&1; then :; else eval $tool=no; fi
+ done
+ export ACLOCAL AUTOHEADER AUTOCONF AUTOMAKE AUTORECONF
+-eval `$LIBTOOL --config | $EGREP '^(objdir|objext)'`
++eval `$LIBTOOL --config | $EGREP '^(objdir|objext|libext)'`
+ eval `$LIBTOOL --config | $EGREP '^(host|host_os|host_alias|build|build_os|build_alias|to_host_file_cmd|to_tool_file_cmd)='`
+ configure_options=--prefix=/nonexistent
+ if test -n "$host_alias"; then
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..c83f6b75
+index 00000000..7536e227
 --- /dev/null
 +++ b/tests/versioning_script.at
-@@ -0,0 +1,297 @@
+@@ -0,0 +1,299 @@
 +# versioning_script.at -- test the libtool versioning script: libtool-next-version         -*- Autotest -*-
 +#
 +#   Copyright (C) 2025 Free Software Foundation, Inc.
@@ -240,7 +255,7 @@ index 00000000..c83f6b75
 +
 +# Set version to 1.0.0. Select the default options for determining the new version of the library.
 +(echo "1"; echo "0"; echo "0"; echo yes; echo no; echo no; echo yes) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext > actual
 +
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
 +
@@ -267,7 +282,7 @@ index 00000000..c83f6b75
 +
 +# Case 1: Indicate to the script that there has not been any code change.
 +(echo "1"; echo "0"; echo "0"; echo no) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext > actual
 +
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
 +expected_version="This is the libtool version of the library for the new release: LTV_CURRENT=1 LTV_REVISION=0 LTV_AGE=0"
@@ -277,7 +292,7 @@ index 00000000..c83f6b75
 +
 +# Case 2: There is a code change. An interface has been removed.
 +(echo "1"; echo "0"; echo "0"; echo yes; echo yes) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext > actual
 +
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
 +expected_version="This is the libtool version of the library for the new release: LTV_CURRENT=2 LTV_REVISION=0 LTV_AGE=0"
@@ -287,7 +302,7 @@ index 00000000..c83f6b75
 +
 +# Case 3: There is a code change. No interfaces have been removed. An interface has changed.
 +(echo "1"; echo "0"; echo "0"; echo yes; echo no; echo yes) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext> actual
 +
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
 +expected_version="This is the libtool version of the library for the new release: LTV_CURRENT=2 LTV_REVISION=0 LTV_AGE=0"
@@ -297,7 +312,7 @@ index 00000000..c83f6b75
 +
 + # Case 4: There is a code change. No interfaces have been removed. No interfaces have changed. An interface has been added.
 +(echo "1"; echo "0"; echo "0"; echo yes; echo no; echo no; echo yes) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext > actual
 +
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
 +expected_version="This is the libtool version of the library for the new release: LTV_CURRENT=2 LTV_REVISION=0 LTV_AGE=1"
@@ -307,7 +322,7 @@ index 00000000..c83f6b75
 +
 +# Case 5: There is a code change. No interfaces have been removed. No interfaces have changed. No interfaces have been added.
 +(echo "1"; echo "0"; echo "0"; echo yes; echo no; echo no; echo no; echo yes) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext > actual
 +
 +tr -d '[[:space:]]' < actual > temp && mv temp actual
 +expected_version="This is the libtool version of the library for the new release: LTV_CURRENT=1 LTV_REVISION=1 LTV_AGE=0"
@@ -323,7 +338,7 @@ index 00000000..c83f6b75
 +    echo "Version script testing code change differences on $host_os"
 +    # Test on differences from the old library to the new library
 +    (echo "1"; echo "0"; echo "0"; echo yes; echo no; echo no; echo yes) \
-+    | $script_path libexample/.libs/libexample.a new_libexample/.libs/libexample.a > actual
++    | $script_path libexample/.libs/libexample.$libext new_libexample/.libs/libexample.$libext > actual
 +
 +    tr -d '[[:space:]]' < actual > temp && mv temp actual
 +
@@ -335,10 +350,12 @@ index 00000000..c83f6b75
 +            [0], [ignore])
 +
 +    # Verify the symbol list has changed and is a new_function
-+    expected="The symbol list changed. Here are the differences: > new_function Please answer yes or no (probably yes)."
-+    expected=$(remove_whitespace "$expected")
-+    echo "expected is $expected"
-+    AT_CHECK([$GREP -i $expected actual],
++    expected_1="The symbol list changed. Here are the differences:"
++    expected_2=new_function
++    expected_1=$(remove_whitespace "$expected_1")
++    expected_2=$(remove_whitespace "$expected_2")
++    echo "expected is $expected_1 && $expected_2"
++    AT_CHECK([$GREP -i $expected_1 actual && $GREP -i $expected_2 actual],
 +            [0], [ignore])
 +esac
 +
