@@ -1,4 +1,4 @@
-From 80738ff7827863b00c5a026a998ded8bf370cda3 Mon Sep 17 00:00:00 2001
+From 46ba2cf30f8361f9aae810ad5f735a636a1d51a6 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -10,8 +10,8 @@ Subject: [PATCH] Add test file for libtool-next-version script
 ---
  Makefile.am                |   1 +
  doc/libtool.texi           |   4 +
- tests/versioning_script.at | 297 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 302 insertions(+)
+ tests/versioning_script.at | 299 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 304 insertions(+)
  create mode 100644 tests/versioning_script.at
 
 diff --git a/Makefile.am b/Makefile.am
@@ -43,10 +43,10 @@ index 2ec65c9f..07aa1e7e 100644
  behaviour of @command{libtool} versioning flags @option{-version-info} and
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..c83f6b75
+index 00000000..db4d9263
 --- /dev/null
 +++ b/tests/versioning_script.at
-@@ -0,0 +1,297 @@
+@@ -0,0 +1,299 @@
 +# versioning_script.at -- test the libtool versioning script: libtool-next-version         -*- Autotest -*-
 +#
 +#   Copyright (C) 2025 Free Software Foundation, Inc.
@@ -335,10 +335,12 @@ index 00000000..c83f6b75
 +            [0], [ignore])
 +
 +    # Verify the symbol list has changed and is a new_function
-+    expected="The symbol list changed. Here are the differences: > new_function Please answer yes or no (probably yes)."
-+    expected=$(remove_whitespace "$expected")
++    expected_1="The symbol list changed. Here are the differences:"
++    expected_2="new_function Please answer yes or no (probably yes)."
++    expected_1=$(remove_whitespace "$expected_1")
++    expected_2=$(remove_whitespace "$expected_2")
 +    echo "expected is $expected"
-+    AT_CHECK([$GREP -i $expected actual],
++    AT_CHECK([$GREP -i $expected_1 actual && $GREP -i $expected_2 actual],
 +            [0], [ignore])
 +esac
 +
