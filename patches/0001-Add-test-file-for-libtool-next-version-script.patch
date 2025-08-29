@@ -1,4 +1,4 @@
-From a3660d87bc161dcb8c58b03d216909c041a8727c Mon Sep 17 00:00:00 2001
+From 44f1a3571d0328578edd151c8ee187f7cd972c7a Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -43,7 +43,7 @@ index 2ec65c9f..07aa1e7e 100644
  behaviour of @command{libtool} versioning flags @option{-version-info} and
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..fc2cbc6e
+index 00000000..e3feb78b
 --- /dev/null
 +++ b/tests/versioning_script.at
 @@ -0,0 +1,303 @@
@@ -222,7 +222,7 @@ index 00000000..fc2cbc6e
 +)
 +
 +remove_whitespace() {
-+    local input_string="$1"
++    input_string=$1
 +    echo "$input_string" | tr -d '[[:space:]]'
 +}
 +
