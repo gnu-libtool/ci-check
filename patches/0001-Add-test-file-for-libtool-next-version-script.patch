@@ -1,4 +1,4 @@
-From 46ba2cf30f8361f9aae810ad5f735a636a1d51a6 Mon Sep 17 00:00:00 2001
+From 0c58502576fbb35b68c7b4dd59fcdac242e0f53f Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -43,7 +43,7 @@ index 2ec65c9f..07aa1e7e 100644
  behaviour of @command{libtool} versioning flags @option{-version-info} and
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..db4d9263
+index 00000000..cba5f6c2
 --- /dev/null
 +++ b/tests/versioning_script.at
 @@ -0,0 +1,299 @@
@@ -339,7 +339,7 @@ index 00000000..db4d9263
 +    expected_2="new_function Please answer yes or no (probably yes)."
 +    expected_1=$(remove_whitespace "$expected_1")
 +    expected_2=$(remove_whitespace "$expected_2")
-+    echo "expected is $expected"
++    echo "expected is $expected_1 && $expected_2"
 +    AT_CHECK([$GREP -i $expected_1 actual && $GREP -i $expected_2 actual],
 +            [0], [ignore])
 +esac
