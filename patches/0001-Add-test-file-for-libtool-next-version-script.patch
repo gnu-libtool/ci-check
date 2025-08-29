@@ -1,4 +1,4 @@
-From b3587425de93a956b1db28524fb91cfecdbb0211 Mon Sep 17 00:00:00 2001
+From e1978600b58cd2f6ecd00dc8d9ab6e0c532618d3 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -43,7 +43,7 @@ index 2ec65c9f..07aa1e7e 100644
  behaviour of @command{libtool} versioning flags @option{-version-info} and
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..9c4fae08
+index 00000000..c83f6b75
 --- /dev/null
 +++ b/tests/versioning_script.at
 @@ -0,0 +1,297 @@
@@ -335,7 +335,7 @@ index 00000000..9c4fae08
 +            [0], [ignore])
 +
 +    # Verify the symbol list has changed and is a new_function
-+    expected="Some symbols have been added: new_function Please answer yes or no (probably yes)."
++    expected="The symbol list changed. Here are the differences: > new_function Please answer yes or no (probably yes)."
 +    expected=$(remove_whitespace "$expected")
 +    echo "expected is $expected"
 +    AT_CHECK([$GREP -i $expected actual],
