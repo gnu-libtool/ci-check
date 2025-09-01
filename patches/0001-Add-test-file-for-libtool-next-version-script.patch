@@ -1,4 +1,4 @@
-From 604a65e02c3b41f2274b9f1683683da607387fc9 Mon Sep 17 00:00:00 2001
+From 912a36eab1ba0ccd5db3e59a2738aa0b940e7b98 Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Thu, 28 Aug 2025 20:58:52 +0300
 Subject: [PATCH] Add test file for libtool-next-version script
@@ -7,13 +7,11 @@ Subject: [PATCH] Add test file for libtool-next-version script
 * doc/libtool.texi: Update to describe new test file.
 * tests/versioning_script.at: Autotest file for testing the output of
   the libtool-next-version script.
-* libtool-next-version.in: Update SunOS version.
 ---
  Makefile.am                |   1 +
  doc/libtool.texi           |   4 +
- libtool-next-version.in    |   2 +-
  tests/versioning_script.at | 303 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 309 insertions(+), 1 deletion(-)
+ 3 files changed, 308 insertions(+)
  create mode 100644 tests/versioning_script.at
 
 diff --git a/Makefile.am b/Makefile.am
@@ -43,22 +41,9 @@ index 2ec65c9f..07aa1e7e 100644
  @item @file{tests/versioning.at}
  Tests @command{libtool}'s versioning system.  Tests begin with verifying the
  behaviour of @command{libtool} versioning flags @option{-version-info} and
-diff --git a/libtool-next-version.in b/libtool-next-version.in
-index 36b02fb9..849d1abc 100644
---- a/libtool-next-version.in
-+++ b/libtool-next-version.in
-@@ -178,7 +178,7 @@ case `uname -s` in
-   IRIX) nm_filter="grep '|\\(GLOB\\|WEAK\\)' | sed -e 's/^.*|//'" ;;
-   SunOS)
-     case `uname -r` in
--      5.10) nm_filter="sed -n -e 's/^.* [ATWDRBV] //p'" ;;
-+      5.1[0|1]) nm_filter="sed -n -e 's/^.* [ATWDRBV] //p'" ;;
-       *) nm_filter="grep '|\\(GLOB\\|WEAK\\)' | grep -v '|UNDEF' | grep -v '|SUNW' | sed -e 's/^.*|//'" ;;
-     esac
-     ;;
 diff --git a/tests/versioning_script.at b/tests/versioning_script.at
 new file mode 100644
-index 00000000..e3feb78b
+index 00000000..d0c1c907
 --- /dev/null
 +++ b/tests/versioning_script.at
 @@ -0,0 +1,303 @@
@@ -335,8 +320,8 @@ index 00000000..e3feb78b
 +         [0], [ignore])
 +
 +case $host_os in
-+mingw* | windows* | cygwin*)
-+    echo "Version script not testing code change differences on Windows platforms".
++mingw* | windows* | cygwin* | solaris* | linux-musl*)
++    echo "Version script not testing code change differences on Solaris, Alpine Linux, and Windows platforms".
 +  ;;
 +*)
 +    echo "Version script testing code change differences on $host_os"
