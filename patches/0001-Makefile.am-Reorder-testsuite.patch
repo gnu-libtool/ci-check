@@ -1,0 +1,39 @@
+From a317aec0728ee227e8e118672034b82449150b0d Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Tue, 2 Sep 2025 20:10:44 +0300
+Subject: [PATCH] Makefile.am: Reorder testsuite
+
+---
+ Makefile.am | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index f25663d8..ccca7dcb 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -698,6 +698,7 @@ TESTSUITE_AT	= tests/testsuite.at \
+ 		  tests/nocase.at \
+ 		  tests/install.at \
+ 		  tests/versioning.at \
++		  tests/versioning_script.at \
+ 		  tests/destdir.at \
+ 		  tests/old-m4-iface.at \
+ 		  tests/am-subdir.at \
+@@ -733,12 +734,11 @@ TESTSUITE_AT	= tests/testsuite.at \
+ 		  tests/dumpbin-symbols.at \
+ 		  tests/deplibs-mingw.at \
+ 		  tests/sysroot.at \
+-		  tests/stresstest.at \
+-		  tests/cmdline_wrap.at \
+ 		  tests/bug_62343.at	\
+ 		  tests/bug_71489.at \
+ 		  tests/bug_42313.at \
+-		  tests/versioning_script.at \
++		  tests/stresstest.at \
++		  tests/cmdline_wrap.at \
+ 		  $(NOTHING_ELSE)
+ 
+ EXTRA_DIST     += $(testsuite) $(TESTSUITE_AT) $(package_m4)
+-- 
+2.50.1
+
