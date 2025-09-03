@@ -1,0 +1,42 @@
+From 0e41ccbc184b319475838f311c1a70e769549fa0 Mon Sep 17 00:00:00 2001
+From: Elizabeth Figura <zfigura@codeweavers.com>
+Date: Mon, 25 Aug 2025 18:10:18 -0500
+Subject: [PATCH] ltmain.in: Pass through all warning flags to the linker.
+
+When link-time optimization (LTO) is used, some warnings are reported
+while linking, and the flags must be passed to the linker to enable or
+disable them.
+
+-W* also catches -Wl,* and -Wa,*, but the former is already accounted
+for in an earlier switch case, and the latter is already passed through.
+
+* build-aux/ltmain.in: Pass through all warning flags to the linker.
+---
+ build-aux/ltmain.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 294ed43c..0f2c81f8 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5664,7 +5664,7 @@ func_mode_link ()
+       # --unwindlib=*        select unwinder library with clang
+       # -f{file|debug|macro|profile}-prefix-map=* needed for lto linking
+       # -Wa,*                Pass flags directly to the assembler
+-      # -Werror, -Werror=*   Report (specified) warnings as errors
++      # -W*                  Warnings, needed for lto
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*|--target=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-no-canonical-prefixes| \
+@@ -5672,7 +5672,7 @@ func_mode_link ()
+       -specs=*|-fsanitize=*|-fno-sanitize*|-shared-libsan|-static-libsan| \
+       -ffile-prefix-map=*|-fdebug-prefix-map=*|-fmacro-prefix-map=*|-fprofile-prefix-map=*| \
+       -fdiagnostics-color*|-frecord-gcc-switches| \
+-      -fuse-ld=*|-static-*|-fcilkplus|-Wa,*|-Werror|-Werror=*)
++      -fuse-ld=*|-static-*|-fcilkplus|-W*)
+         func_quote_arg pretty "$arg"
+ 	arg=$func_quote_arg_result
+         func_append compile_command " $arg"
+-- 
+2.50.1
+
