@@ -29,13 +29,19 @@ fi
 
 set -e
 
+# Improve efficiency of checkout of git submodules.
+git config --global url.git://git.savannah.gnu.org/.insteadof git://git.git.savannah.gnu.org/
+git config --global url.https://git.savannah.gnu.org/git/.insteadof https://https.git.savannah.gnu.org/git/
+git config --global url.git://git.savannah.gnu.org/gnulib.git.insteadof https://github.com/coreutils/gnulib.git
+git config --global url.https://git.savannah.gnu.org/git/gnulib.git.insteadof https://github.com/coreutils/gnulib.git
+
 # Fetch sources (uses package 'git').
 # The depth here needs to be at least 2, because the number of commits in the
 # git history of HEAD is stored as "serial" number in m4/ltversion.m4, and if
 # it is not at least 2 the unit test
 #   libtoolize.at: "14: verbatim aclocal.m4 w/o AC_CONFIG_MACRO_DIRS"
 # fails.
-git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
+git clone --depth 2 -b "$branch" https://https.git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 "${gnulib_url}"
 
 # Apply patches.
