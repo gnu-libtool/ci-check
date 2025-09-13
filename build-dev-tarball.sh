@@ -29,6 +29,8 @@ fi
 
 set -e
 
+. ./init-git.sh
+
 # Fetch sources (uses package 'git').
 # The depth here needs to be at least 2, because the number of commits in the
 # git history of HEAD is stored as "serial" number in m4/ltversion.m4, and if
@@ -36,7 +38,7 @@ set -e
 #   libtoolize.at: "14: verbatim aclocal.m4 w/o AC_CONFIG_MACRO_DIRS"
 # fails.
 git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
-git clone --depth 1 "${gnulib_url}"
+git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
 (cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch)
