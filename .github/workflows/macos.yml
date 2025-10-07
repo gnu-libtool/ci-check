@@ -100,7 +100,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, macos-14, macos-15]
+        os: [macos-13, macos-14, macos-15, macos-26]
     runs-on: ${{ matrix.os }}
     steps:
       # This is needed because we run a script stored in this repository.
