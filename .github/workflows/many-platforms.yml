@@ -420,7 +420,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['7.6']
+        version: ['7.7']
     runs-on: ubuntu-22.04
     steps:
       # This is needed because we run a script stored in this repository.
