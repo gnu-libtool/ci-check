@@ -222,7 +222,7 @@ jobs:
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
             export AUTOCONF_VERSION=2.72
             : "The OpenBSD port of automake needs this, if more than one version is installed."
-            export AUTOMAKE_VERSION=1.16
+            export AUTOMAKE_VERSION=1.17
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
