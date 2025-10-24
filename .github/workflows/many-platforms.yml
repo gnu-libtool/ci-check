@@ -448,8 +448,8 @@ jobs:
             env | LC_ALL=C sort
             pwd
             : "Install OpenBSD packages"
-            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.6/packages/amd64/"
-            pkg_add m4 automake-1.16.5 autoconf-2.72p0 gcc-11.2.0p14 g++-11.2.0p15 gmake
+            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.7/packages/amd64/"
+            pkg_add m4 automake-1.17 autoconf-2.72p0 gcc-11.2.0p15 g++-11.2.0p16 gmake
             ls -l /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
