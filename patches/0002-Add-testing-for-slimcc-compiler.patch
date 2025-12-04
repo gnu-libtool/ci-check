@@ -1,4 +1,4 @@
-From 775ca4a7fccc930ef54f643008bdb6f37bf36836 Mon Sep 17 00:00:00 2001
+From 74bc6f5229b7891e6db6a8cf5ed548064d91d79b Mon Sep 17 00:00:00 2001
 From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
 Date: Wed, 3 Dec 2025 18:57:53 +0200
 Subject: [PATCH 2/2] Add testing for slimcc compiler
@@ -27,7 +27,7 @@ index ccca7dcb..21fb56d5 100644
  		  tests/runpath-in-lalib.at \
 diff --git a/tests/slimcc.at b/tests/slimcc.at
 new file mode 100644
-index 00000000..93a19c47
+index 00000000..968c19bd
 --- /dev/null
 +++ b/tests/slimcc.at
 @@ -0,0 +1,101 @@
@@ -60,7 +60,7 @@ index 00000000..93a19c47
 +module=no
 +eval shared_ext=\"$shrext_cmds\"
 +
-+AT_CHECK([$LIBTOOL --config | $EGREP '^CC=slimcc' && (exit 77)], 1)
++AT_CHECK([$LIBTOOL --config | $EGREP '^CC=slimcc' || exit 77], 1)
 +
 +prefix_old=`pwd`/old
 +prefix_new=`pwd`/new
