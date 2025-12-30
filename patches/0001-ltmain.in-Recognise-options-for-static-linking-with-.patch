@@ -1,0 +1,35 @@
+From 384bb0d7f3d033bdaf48a5f3198cfe84787d842e Mon Sep 17 00:00:00 2001
+From: Ileana Dumitrescu <ileanadumitrescu95@gmail.com>
+Date: Tue, 30 Dec 2025 18:08:05 +0200
+Subject: [PATCH] ltmain.in: Recognise options for static linking with Clang
+
+Reported: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=78072
+---
+ build-aux/ltmain.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index bb72916a..491f3a79 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -4910,7 +4910,7 @@ func_mode_link ()
+ 	build_old_libs=no
+ 	break
+ 	;;
+-      -all-static | -static | -static-libtool-libs)
++      -all-static | -static | -static-libtool-libs | --static | -Bstatic)
+ 	case $arg in
+ 	-all-static)
+ 	  if test yes = "$build_libtool_libs" && test -z "$link_static_flag"; then
+@@ -4927,7 +4927,7 @@ func_mode_link ()
+ 	  fi
+ 	  prefer_static_libs=built
+ 	  ;;
+-	-static-libtool-libs)
++	-static-libtool-libs | --static | -Bstatic)
+ 	  if test -z "$pic_flag" && test -n "$link_static_flag"; then
+ 	    dlopen_self=$dlopen_self_static
+ 	  fi
+-- 
+2.50.1
+
