@@ -1,4 +1,4 @@
-From fed97d657e77efc4806878b3aff2ef5535464487 Mon Sep 17 00:00:00 2001
+From 68234e34604f5092978499757aa618ea55b3179d Mon Sep 17 00:00:00 2001
 From: Nicolas Boulenguez <nicolas@debian.org>
 Date: Mon, 23 Feb 2026 17:32:35 +0100
 Subject: [PATCH] ltmain.in: Recognise explicit shared library args
@@ -75,7 +75,7 @@ index 9108006c..df85f00b 100644
  	    deplibs="$deplib $deplibs"
 diff --git a/tests/deplib-path.at b/tests/deplib-path.at
 new file mode 100644
-index 00000000..7fe66670
+index 00000000..69d67ea7
 --- /dev/null
 +++ b/tests/deplib-path.at
 @@ -0,0 +1,82 @@
@@ -143,7 +143,7 @@ index 00000000..7fe66670
 +[[
 +AUTOMAKE_OPTIONS = no-dependencies foreign
 +ACLOCAL_AMFLAGS = -I m4
-+AM_LDFLAGS = -Wl,--no-undefined
++AM_LDFLAGS = -no-undefined
 +lib_LTLIBRARIES = libsum.la
 +libsum_la_SOURCES = sum.c
 +libsum_la_LIBADD = libone.so -L. -l:libtwo.so -lthree
