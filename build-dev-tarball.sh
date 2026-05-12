@@ -41,7 +41,12 @@ git clone --depth 2 -b "$branch" https://git.savannah.gnu.org/git/"$package".git
 git clone --depth 1 https://git.savannah.gnu.org/git/gnulib.git
 
 # Apply patches.
-(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch )
+(cd "$package" && patch -p1 < ../patches/Skip-test-option-parser.sh-for-ksh-shell-on-NetBSD.patch \
+               && patch -p1 < ../patches/0001-ltmain.in-Avoid-using-deprecated-MSVC-o-option.patch \
+               && patch -p1 < ../patches/0002-ltmain.in-ensure-old-libraries-are-not-archived.patch \
+               && patch -p1 < ../patches/0003-tests-extend-archive-in-archive-with-dependency-forw.patch \
+               && patch -p1 < ../patches/0004-ltmain.in-defer-warn-dependency-to-static-library.patch \
+               && patch -p1 < ../patches/0005-ltmain.in-overlinking-dependency_libs-when-linking-a.patch )
 
 export GNULIB_SRCDIR=`pwd`/gnulib
 cd "$package"

@@ -1,0 +1,54 @@
+From d67c00912ca3a70f1efa8031c4f1a056780ed386 Mon Sep 17 00:00:00 2001
+From: Anthony Mallet <anthony.mallet@laas.fr>
+Date: Thu, 7 May 2026 00:20:33 +0300
+Subject: [PATCH 5/5] ltmain.in: overlinking dependency_libs when linking
+ against a libtool library
+
+On NetBSD, linking a shared lib A with a libtool shared library B always
+adds B's dependency to the dependencies of A, which is wrong on ELF systems.
+
+Reported: https://savannah.gnu.org/support/?111406
+
+* build-aux/ltmain.in: Move section of code to avoid overlinking
+  dependency_libs on ELF systems.
+---
+ build-aux/ltmain.in | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index f36e3d7b..6cff9347 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -6350,19 +6350,19 @@ func_mode_link ()
+ 	    # It is a libtool convenience library, so add in its objects.
+ 	    func_append convenience " $ladir/$objdir/$old_library"
+ 	    func_append old_convenience " $ladir/$objdir/$old_library"
++	    tmp_libs=
++	    for deplib in $dependency_libs; do
++	      deplibs="$deplib $deplibs"
++	      if $opt_preserve_dup_deps; then
++	        case "$tmp_libs " in
++	          *" $deplib "*) func_append specialdeplibs " $deplib" ;;
++	        esac
++	      fi
++	      func_append tmp_libs " $deplib"
++	    done
+ 	  elif test prog != "$linkmode" && test lib != "$linkmode"; then
+ 	    func_fatal_error "'$lib' is not a convenience library"
+ 	  fi
+-	  tmp_libs=
+-	  for deplib in $dependency_libs; do
+-	    deplibs="$deplib $deplibs"
+-	    if $opt_preserve_dup_deps; then
+-	      case "$tmp_libs " in
+-	      *" $deplib "*) func_append specialdeplibs " $deplib" ;;
+-	      esac
+-	    fi
+-	    func_append tmp_libs " $deplib"
+-	  done
+ 	  continue
+ 	fi # $pass = conv
+ 
+-- 
+2.50.1
+
