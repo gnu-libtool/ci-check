@@ -1,4 +1,4 @@
-From 9bd44c5a46671b26a9e9bf0b4918e43577ceb33a Mon Sep 17 00:00:00 2001
+From 09aadfef3462e8f42b909b0bbde7c4b3cced9dc8 Mon Sep 17 00:00:00 2001
 From: Alexandre Janniaux <ajanni@videolabs.io>
 Date: Fri, 2 Apr 2021 13:14:41 +0200
 Subject: [PATCH 3/3] ltmain.in: defer warn dependency to static library
@@ -19,7 +19,7 @@ Reported: https://savannah.gnu.org/patch/?10569
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index f0ea63a0..045df238 100644
+index 7947a3bf..e874b44a 100644
 --- a/build-aux/ltmain.in
 +++ b/build-aux/ltmain.in
 @@ -6246,7 +6246,9 @@ func_mode_link ()

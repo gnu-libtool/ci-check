@@ -1,4 +1,4 @@
-From a0a29f1ab882aa9ed3bf517870b845ca214975d7 Mon Sep 17 00:00:00 2001
+From d8dc5a2fbb486741287bb8e7ef0a746757f60229 Mon Sep 17 00:00:00 2001
 From: Alexandre Janniaux <ajanni@videolabs.io>
 Date: Tue, 28 Apr 2026 16:11:01 +0200
 Subject: [PATCH 2/3] tests: extend archive-in-archive with dependency
