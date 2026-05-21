@@ -1,4 +1,4 @@
-From 09aadfef3462e8f42b909b0bbde7c4b3cced9dc8 Mon Sep 17 00:00:00 2001
+From 2dfd9132f835657f6be7a63645a8331f048370a6 Mon Sep 17 00:00:00 2001
 From: Alexandre Janniaux <ajanni@videolabs.io>
 Date: Fri, 2 Apr 2021 13:14:41 +0200
 Subject: [PATCH 3/3] ltmain.in: defer warn dependency to static library
