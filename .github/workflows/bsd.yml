@@ -54,7 +54,7 @@ env:
 jobs:
   build-tarball:
     if: ${{ startsWith(github.event.head_commit.message, '[bsd]') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
     needs: build-tarball
     # The FreeBSD runners sometimes get stuck.
     timeout-minutes: 15
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -139,7 +139,7 @@ jobs:
   check-netbsd:
     name: make check on NetBSD
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -188,7 +188,7 @@ jobs:
       fail-fast: false
       matrix:
         version: ['7.7']
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4

@@ -54,7 +54,7 @@ env:
 jobs:
   build-tarball:
     if: ${{ startsWith(github.event.head_commit.message, '[solaris]') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
   check-solaris11:
     name: make check on Solaris 11
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
   check-solaris11-omnios:
     name: make check on Solaris 11 OmniOS
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4

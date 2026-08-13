@@ -55,7 +55,7 @@ env:
 jobs:
   build-tarball:
     if: ${{ startsWith(github.event.head_commit.message, '[macos]') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4

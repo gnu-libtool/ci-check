@@ -54,7 +54,7 @@ env:
 jobs:
   build-tarball:
     if: ${{ startsWith(github.event.head_commit.message, '[linux]') }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
   check-linux-gnu-ubuntu:
     name: make check on Ubuntu GNU/Linux
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -130,7 +130,7 @@ jobs:
   check-linux-gnu-centos:
     name: make check on CentOS GNU/Linux
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -173,7 +173,7 @@ jobs:
   check-linux-gnu-alma:
     name: make check on AlmaLinux GNU/Linux
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
@@ -218,7 +218,7 @@ jobs:
   check-linux-alpine:
     name: make check on Alpine Linux
     needs: build-tarball
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
       - uses: actions/checkout@v4
