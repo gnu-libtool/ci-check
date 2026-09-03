@@ -851,7 +851,7 @@ jobs:
           msystem: ${{ case(matrix.cpu == 'arm64', 'CLANGARM64', matrix.compiler == 'clang', 'CLANG64', matrix.crt == 'ucrt', 'UCRT64', 'MINGW64') }}
           update: true
           # List of packages: https://packages.msys2.org/search
-          install: make diffutils
+          install: make diffutils m4
                    ${{ case(matrix.cpu == 'arm64',      'mingw-w64-clang-aarch64-clang',
                             matrix.compiler == 'clang', 'mingw-w64-clang-x86_64-clang',
                             matrix.crt == 'ucrt',       'mingw-w64-ucrt-x86_64-gcc',
