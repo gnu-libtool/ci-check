@@ -1,0 +1,54 @@
+From 220e2b8678c55d8350beec5db893147aba361751 Mon Sep 17 00:00:00 2001
+From: Erik A Johnson <JohnsonE@usc.edu>
+Date: Sun, 26 Jul 2026 02:07:00 +0300
+Subject: [PATCH] tests: Fix tests on macOS Tahoe 2.5.2
+
+[GNU Libtool 2.6.2] testsuite: 156 187 failed
+
+Reported: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=81497
+
+* tests/exceptions.at:
+* tests/versioning_script.at:
+---
+ tests/exceptions.at        | 2 ++
+ tests/versioning_script.at | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tests/exceptions.at b/tests/exceptions.at
+index b1f7408c..42363ba2 100644
+--- a/tests/exceptions.at
++++ b/tests/exceptions.at
+@@ -395,6 +395,8 @@ AT_CHECK([$LIBTOOL --mode=link --tag=CXX $CXX $CXXFLAGS $LDFLAGS -o main$EXEEXT
+ 	 [main.$OBJEXT l/liba.la l/libcommon.la -dlopen m/module.la $LIBLTDL -export-dynamic],
+ 	 [], [ignore], [ignore])
+ 
++LTDL_LIBRARY_PATH=`pwd`
++export LTDL_LIBRARY_PATH
+ LT_AT_NOINST_EXEC_CHECK([./main], [-dlopen m/module.la], [], [ignore], [ignore])
+ 
+ AT_CHECK([$LIBTOOL --mode=install cp l/libcommon.la $libdir],
+diff --git a/tests/versioning_script.at b/tests/versioning_script.at
+index f1107fbb..f8edd2ea 100644
+--- a/tests/versioning_script.at
++++ b/tests/versioning_script.at
+@@ -159,7 +159,7 @@ echo "Running autoreconf on libexample directory, the original library"
+     cd libexample
+     LT_AT_LIBTOOLIZE([--copy --ltdl])
+     LT_AT_AUTORECONF([-ivf])
+-    LT_AT_CONFIGURE([], [configure])
++    LT_AT_CONFIGURE([])
+     LT_AT_MAKE([])
+ )
+ 
+@@ -168,7 +168,7 @@ echo "Running autoreconf on new_libexample directory, the updated library"
+     cd new_libexample
+     LT_AT_LIBTOOLIZE([--copy --ltdl])
+     LT_AT_AUTORECONF([-ivf])
+-    LT_AT_CONFIGURE([], [configure])
++    LT_AT_CONFIGURE([])
+     LT_AT_MAKE([])
+ )
+ 
+-- 
+2.50.1
+
