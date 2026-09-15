@@ -325,7 +325,7 @@ jobs:
       # Doc: https://github.com/vmactions/freebsd-vm
       - uses: vmactions/freebsd-vm@v1
         with:
-          release: '14.0'
+          release: '15.1'
           mem: 1024
           usesh: true
           run: |
@@ -371,7 +371,7 @@ jobs:
       # Doc: https://github.com/vmactions/netbsd-vm
       - uses: vmactions/netbsd-vm@v1
         with:
-          release: '10.0'
+          release: '11.0'
           mem: 1024
           usesh: true
           run: |
@@ -409,7 +409,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['7.7']
+        version: ['7.9']
     runs-on: ubuntu-24.04
     steps:
       # This is needed because we run a script stored in this repository.
@@ -437,14 +437,14 @@ jobs:
             env | LC_ALL=C sort
             pwd
             : "Install OpenBSD packages"
-            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.7/packages/amd64/"
-            pkg_add m4 automake-1.17 autoconf-2.72p0 gcc-11.2.0p15 g++-11.2.0p16 gmake
+            : "List of packages: https://cdn.openbsd.org/pub/OpenBSD/7.9/packages/amd64/"
+            pkg_add m4 automake-1.18.1 autoconf-2.72p0 gcc-15.2.0p5 g++-15.2.0p5 gmake
             ls -l /usr/local/bin/acl* /usr/local/bin/auto*
             export PATH=/usr/local/bin:$PATH
             : "The OpenBSD port of autoconf needs this. See <https://marc.info/?l=openbsd-misc&m=115868167816272&w=2>."
             export AUTOCONF_VERSION=2.72
             : "The OpenBSD port of automake needs this, if more than one version is installed."
-            export AUTOMAKE_VERSION=1.17
+            export AUTOMAKE_VERSION=1.18.1
             ls -l
             export CPPFLAGS="-I/usr/local/include -Wall"
             export LDFLAGS="-L/usr/local/lib"
