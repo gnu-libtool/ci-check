@@ -1,6 +1,6 @@
 # A GitHub Actions workflow that builds a package on many platforms.
 
-# Copyright (C) 2024-2025 Free Software Foundation, Inc.
+# Copyright (C) 2024-2026 Free Software Foundation, Inc.
 #
 # This file is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
@@ -305,8 +305,8 @@ jobs:
           : "Possible values are _WIN32_WINNT_WINXP, _WIN32_WINNT_VISTA, _WIN32_WINNT_WIN7"
           win32_target=_WIN32_WINNT_WINXP
           export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
-          export CC="`pwd`/compile clang-cl -nologo"; export CFLAGS="-MD"
-          export CXX="`pwd`/compile clang-cl -nologo"; export CXXFLAGS="-MD"
+          export CC="`pwd`/compile clang-cl -nologo"; export CFLAGS="-MD -O2"
+          export CXX="`pwd`/compile clang-cl -nologo"; export CXXFLAGS="-MD -O2"
           export FC="no"
           export F77="no"
           export LD="link"
