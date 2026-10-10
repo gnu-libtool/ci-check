@@ -778,8 +778,8 @@ jobs:
           : "Possible values are _WIN32_WINNT_WINXP, _WIN32_WINNT_VISTA, _WIN32_WINNT_WIN7"
           win32_target=_WIN32_WINNT_WINXP
           export CPPFLAGS="-D_WIN32_WINNT=$win32_target"
-          export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD"
-          export CXX="`pwd`/compile cl -nologo"; export CXXFLAGS="-MD"
+          export CC="`pwd`/compile cl -nologo"; export CFLAGS="-MD -O2"
+          export CXX="`pwd`/compile cl -nologo"; export CXXFLAGS="-MD -O2"
           export FC="no"
           export F77="no"
           export LD="link"
