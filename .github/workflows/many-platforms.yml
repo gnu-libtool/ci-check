@@ -916,8 +916,8 @@ jobs:
       - run: |
           pwd
           export CPPFLAGS="-Wall"
-          export CC="clang -fsanitize=address,undefined,signed-integer-overflow,shift,integer-divide-by-zero -fno-sanitize-recover=undefined"
-          export LDFLAGS="-fsanitize=address,undefined,signed-integer-overflow,shift,integer-divide-by-zero -fno-sanitize-recover=undefined"
+          export CC="clang -fsanitize=address,undefined,signed-integer-overflow,shift,integer-divide-by-zero,bounds -fno-sanitize-recover=undefined"
+          export LDFLAGS="-fsanitize=address,undefined,signed-integer-overflow,shift,integer-divide-by-zero,bounds -fno-sanitize-recover=undefined"
           export CFLAGS="-O0 -fno-omit-frame-pointer -ggdb"
           export ASAN_OPTIONS="detect_leaks=0 abort_on_error=1 allocator_may_return_null=1"
           ./build-on.sh '${{ env.package }}' '' 'make' '' '${{ github.event.head_commit.message }}'
